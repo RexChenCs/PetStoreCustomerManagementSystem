@@ -50,6 +50,23 @@ function updateMemberInfoValidation(){
     return true;
 }
 
+function updateEmailNoticeInfoValidation(){
+
+    var publicKey = document.getElementById('publicKey').value;
+    var serviceId = document.getElementById('serviceId').value;
+    var templateId = document.getElementById('templateId').value;
+    var fromName = document.getElementById('fromName').value;
+    var toName = document.getElementById('toName').value;
+    var replyTo = document.getElementById('replyTo').value;
+
+
+    if(checkValue(publicKey) || checkValue(serviceId) || checkValue(templateId) || checkValue(fromName) || checkValue(toName) || checkValue(replyTo)){
+        Swal.fire("错误提醒", "必要内容不能为空", "warning");
+        return false;
+    }
+    return true;
+}
+
 
 function updateTransactionValidation(){
     var transactionAmountInfo = document.getElementById("transactionAmountInfo").value;

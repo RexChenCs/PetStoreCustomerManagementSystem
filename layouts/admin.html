@@ -72,7 +72,9 @@
                     <div class="col-md-6"></div>
                     <div class="col-md-6">
                         <div class="social-icon pull-right">
-                            <a href="#"><i class="fa fa-user"></i><spam id="userEmail" ></spam></a>
+                            <a href="#"><i class="fa fa-user"></i>
+                                <spam id="userEmail"></spam>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -200,6 +202,22 @@
                     </div>
 
 
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="portfolio-wrapper text-center">
+
+                    <div class="col-md-3 col-sm-6 col-xs-12"
+                        onclick="document.getElementById('edit_email_notice_modal').style.display='block'">
+                        <div class="community-edition">
+                            <i class="fa-solid fa-bell"></i>
+                            <div class="separator"></div>
+                            <h4>修改提醒邮件设置</h4>
+                            <p>Edit Email Notice Configration</p>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -416,7 +434,7 @@
                             </div>
 
                             <div class="col-sm-3 form-group">
-                                <label for="transactionAmountInfo"  class="required" >价格</label>
+                                <label for="transactionAmountInfo" class="required">价格</label>
                                 <input id="transactionAmountInfo" class="form-control" type="text"
                                     placeholder="$1,000.00" required></input>
                             </div>
@@ -946,6 +964,87 @@
             </div>
     </div>
 
+
+    <!--邮箱提醒信息修改-->
+    <div id="edit_email_notice_modal" class="modal">
+        <span onclick="document.getElementById('edit_email_notice_modal').style.display='none'" class="close"
+            title="Close Modal">&times;</span>
+        <section class="price sections">
+            <div class="contain">
+                <div class="tab-content">
+
+                    <div class="head_title text-center">
+                        <h1>邮箱提醒设置修改</h1>
+                    </div>
+
+
+                    <div class="form_container">
+
+                        <div class="row">
+
+                            <div class="col-sm-4 form-group">
+                                <label for="publicKey" class="required">Public Key</label>
+                                <input type="text" class="form-control" id="publicKey">
+                            </div>
+
+                            <div class="col-sm-4 form-group">
+                                <label for="serviceId" class="required">Service Id</label>
+                                <input type="text" class="form-control" id="serviceId">
+                            </div>
+
+                            <div class="col-sm-4 form-group">
+                                <label for="templateId" class="required">Template Id</label>
+                                <input type="text" class="form-control" id="templateId">
+                            </div>
+
+                            <div class="col-sm-4 form-group">
+                                <label for="fromName" class="required">From Name</label>
+                                <input type="text" class="form-control" id="fromName">
+                            </div>
+
+                            <div class="col-sm-4 form-group">
+                                <label for="toName" class="required">To Name</label>
+                                <input type="text" class="form-control" id="toName">
+                            </div>
+
+                            <div class="col-sm-4 form-group">
+                                <label for="replyTo" class="required">Reply To</label>
+                                <input type="text" class="form-control" id="replyTo">
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12 form-group">
+
+                                <div class="buttoncontainer">
+                                    <a class="button button--hoo" onclick="updateEmailNoticeInfo()">
+                                        <div class="button__wrapper">
+                                            <span class="button__text">保存</span>
+                                        </div>
+                                        <div class="characterBox">
+                                            <div class="character wakeup">
+                                                <div class="character__face"></div>
+                                            </div>
+                                            <div class="character wakeup">
+                                                <div class="character__face"></div>
+                                            </div>
+                                            <div class="character">
+                                                <div class="character__face"></div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </div>
     </section>
     </div>
 

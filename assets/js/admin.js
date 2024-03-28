@@ -6,6 +6,7 @@ $(document).ready(function () {
     readEmployeeInfoTable();
     readAcctUserInfoTable('acctUserInfo_table');
     readAcctUserInfoTable('acctUserInfo_table_copy');
+    readEmailNoticeInfo();
     isAdmin("adminsection");
 
 
@@ -735,6 +736,27 @@ function readEmployeeInfoTable() {
 }
 
 
+function readEmailNoticeInfo() {
+
+    firebase.database().ref('emailNoticeConfig/').on("value", function (snapshot) {
+
+        var publicKey = snapshot.child("publicKey").val();
+        var serviceId = snapshot.child("serviceId").val();
+        var templateId = snapshot.child("templateId").val();
+        var fromName = snapshot.child("fromName").val();
+        var toName = snapshot.child("toName").val();
+        var replyTo = snapshot.child("replyTo").val();
+
+        document.getElementById('publicKey').value = publicKey;
+        document.getElementById('serviceId').value = serviceId;
+        document.getElementById('templateId').value = templateId;
+        document.getElementById('fromName').value = fromName;
+        document.getElementById('toName').value = toName;
+        document.getElementById('replyTo').value = replyTo;
+
+    });
+}
+
 function addAcctUser() {
     var uid = document.getElementById('acctUserIdForAdd').value.trim();
     var email = document.getElementById('acctUserEmailForAdd').value.trim().toLowerCase();
@@ -774,6 +796,23 @@ function readAcctUserInfoTable(tableId) {
 
         });
     });
+}
+
+
+function updateEmailNoticeInfo(){
+
+    if(updateEmailNoticeInfoValidation()){
+        var publicKey = document.getElementById('publicKey').value;
+        var serviceId = document.getElementById('serviceId').value;
+        var templateId = document.getElementById('templateId').value;
+        var fromName = document.getElementById('fromName').value;
+        var toName = document.getElementById('toName').value;
+        var replyTo = document.getElementById('replyTo').value;
+
+        var emailNoticeConfig = firebase.database().ref('emailNoticeConfig/');
+        emailNoticeConfig.set({ 'publicKey': publicKey, 'serviceId': serviceId, 'templateId': templateId, 'fromName': fromName, 'toName': toName,'replyTo': replyTo});
+        Swal.fire("成功", "设置已更改", "success");
+    }
 }
 
 
