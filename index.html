@@ -48,7 +48,7 @@
     <!--add firebase-->
     <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
     <script src="./assets/js/firebase_action.js"></script>
-
+    <script src="./assets/js/index.js"></script>
 </head>
 
 <body>
@@ -121,11 +121,15 @@
                 </div>
 
                 <hr>
-                <label for="signin_email"><b>Email</b></label>
-                <input id="signin_email" type="text" placeholder="Enter Email" name="login_email" required>
+                <div>
+                    <label for="signin_email"><b>Email</b></label>
+                    <input id="signin_email" type="text" placeholder="Enter Email" name="login_email" required>
 
-                <label for="signin_psw"><b>Password</b></label>
-                <input id="signin_psw" type="password" placeholder="Enter Password" name="login_psw" required>
+                    <label for="signin_psw"><b>Password</b></label>
+                    <input id="signin_psw" type="password" placeholder="Enter Password" name="login_psw" required>
+
+                    <input type="checkbox" onclick="showPassword()">show
+                </div>
 
                 <div class="clearfix">
                     <button type="button" onclick="document.getElementById('login_modal').style.display='none'"
@@ -213,7 +217,7 @@
                 <div class="footer-wrapper">
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="copyright">
-                            <p> © 2023, Rex Chen, All rights reserved.</p>
+                            <p> © 2024, Rex Chen, All rights reserved.</p>
                         </div>
                     </div>
 
