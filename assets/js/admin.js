@@ -29,10 +29,12 @@ $(document).ready(function () {
             wrapCurrency($(this));
         },
         blur: function () {
-            let isNum = /^\d+$/.test($(this).val());
-            if (isNum) {
+            if (isNumeric($(this).val())) {
                 calDiscountRate($(this).val(), 'memberDiscountRateInfo');
                 formatCurrency($(this));
+            }else{
+                Swal.fire("错误提醒", "请输入正确数额", "warning");
+                $(this).val('');
             }
         }
     });
@@ -58,9 +60,11 @@ $(document).ready(function () {
             wrapCurrency($(this));
         },
         blur: function () {
-            let isNum = /^\d+$/.test($(this).val());
-            if (isNum) {
+            if (isNumeric($(this).val())) {
                 formatCurrency($(this));
+            }else{
+                Swal.fire("错误提醒", "请输入正确数额", "warning");
+                $(this).val('');
             }
         }
     });
@@ -78,6 +82,11 @@ $(document).ready(function () {
     });
 });
 
+function isNumeric(stringValue){
+    return /^[+-]?\d+(\.\d+)?$/.test(stringValue);
+}
+
+
 let USDollar = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -85,7 +94,7 @@ let USDollar = new Intl.NumberFormat('en-US', {
 
 function wrapCurrency(input) {
     var output;
-    output = input.val().replace(/[^0-9]/g, '');
+    output = input.val().replace(/[^0-9,.]/g, '');
     input.val(output);
 }
 

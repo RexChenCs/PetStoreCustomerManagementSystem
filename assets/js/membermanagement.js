@@ -1,7 +1,5 @@
 $(document).ready(function () {
 
-    emailjs.init('xvV7CVzEmcHnWPBZt');//publcic key 
-
     $("input[type='tel']").on({
         click: function () {
             $(this).val('');
@@ -19,10 +17,12 @@ $(document).ready(function () {
             wrapCurrency($(this));  
         },
         blur: function () {
-            let isNum = /^\d+$/.test($(this).val());
-            if(isNum){
+            if(isNumeric($(this).val())){
                 calDiscountRate($(this).val(), 'memberDiscountRate');
                 formatCurrency($(this));
+            }else{
+                Swal.fire("错误提醒", "请输入正确数额", "warning");
+                $(this).val('');
             }
         }
     });
@@ -35,10 +35,12 @@ $(document).ready(function () {
             wrapCurrency($(this));
         },
         blur: function () {
-            let isNum = /^\d+$/.test($(this).val());
-            if(isNum){
+            if(isNumeric($(this).val())){
                 calDiscountRate($(this).val(), 'add_credit_discountRate');
                 formatCurrency($(this));
+            }else{
+                Swal.fire("错误提醒", "请输入正确数额", "warning");
+                $(this).val('');
             }
         }
     });
@@ -51,9 +53,8 @@ $(document).ready(function () {
             wrapCurrency($(this));
         },
         blur: function () {
-            let isNum = /^\d+$/.test($(this).val());
             var originalAmount = Number($(this).val());
-            if(isNum){
+            if(isNumeric($(this).val())){
                 var settingInfo = firebase.database().ref('setting/');
                 settingInfo.on("value", function (snapshot) {
                     var isEnable =snapshot.child('discountRateAutoApply').val();
@@ -67,6 +68,9 @@ $(document).ready(function () {
                     }
                 });
                 formatCurrency($(this));
+            }else{
+                Swal.fire("错误提醒", "请输入正确数额", "warning");
+                $(this).val('');
             }
         }
     });
@@ -79,9 +83,11 @@ $(document).ready(function () {
             wrapCurrency($(this));
         },
         blur: function () {
-            let isNum = /^\d+$/.test($(this).val());
-            if(isNum){
+            if(isNumeric($(this).val())){
                 formatCurrency($(this));
+            }else{
+                Swal.fire("错误提醒", "请输入正确数额", "warning");
+                $(this).val('');
             }
         }
     });
@@ -147,6 +153,10 @@ $(document).ready(function () {
 
 });
 
+function isNumeric(stringValue){
+    return /^[+-]?\d+(\.\d+)?$/.test(stringValue);
+}
+
 function formatPhone(input) {
     var phoneValue = input.val();
     var output;
@@ -172,7 +182,7 @@ function wrapPhoneNumber(phoneValue) {
 
 function wrapCurrency(input) {
     var output;
-    output = input.val().replace(/[^0-9]/g, '');
+    output = input.val().replace(/[^0-9,.]/g, '');
     input.val(output);
 }
 
