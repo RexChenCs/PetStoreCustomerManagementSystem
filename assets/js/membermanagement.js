@@ -280,7 +280,7 @@ function addCreditForMember() {
                 var newDiscountRate = Number(document.getElementById('add_credit_discountRate').value.trim());
 
                 var addCreditNote = document.getElementById('add_credit_note').value;
-                var newBalance = parseInt(memberBalance) + parseInt(creditAmount);
+                var newBalance = Number(memberBalance) + Number(creditAmount);
                 var memberInfo = firebase.database().ref('members/' + memberId);
                 memberInfo.update({
                     'memberBalance': newBalance,
@@ -343,7 +343,7 @@ function spendCreditForMember() {
                 var memberId = document.getElementById('memberIdSearchedForSpendCredit').value.trim();
                 var memberBalance = document.getElementById('memberBalanceSearchedForSpendCredit').value.trim();
                 var memberDiscountRate = Number(document.getElementById('memberDiscountRateSearchedForSpendCredit').value.trim());
-                var newBalance = parseInt(memberBalance) - parseInt(creditAmount);
+                var newBalance = Number(memberBalance) - Number(creditAmount);
 
                 if (newBalance < 0) {
                     swalWithBootstrapButtons.fire("余额不足", "会员: " + memberId + " 余额 $" + memberBalance + ". 请先充值！", "warning");
