@@ -80,7 +80,7 @@ function readExportTable() {
                 var employeeId = data.child('employeeId').val();
                 var date = data.child('date').val();
                 var amount = data.child('amount').val();
-                var discountRate = data.child('discountRate').val();
+                var remainingBalace = data.child('memberRemainingBalance').val();
                 var note = data.child('note').val();
                 var type = data.child('type').val();
                 var status = data.child('status').val();
@@ -95,7 +95,7 @@ function readExportTable() {
 
                 firebase.database().ref('employees/'+employeeId).once("value", function (snapshot) {     
                     var employeeName = snapshot.child('employeeName').val();
-                    table.row.add([memberId, transactionId, employeeName, date, type, "$" + amount, discountRate, status, note]).draw();
+                    table.row.add([memberId, transactionId, employeeName, date, type, "$" + amount, "$" + remainingBalace, status, note]).draw();
                 });
 
             });

@@ -90,9 +90,15 @@ input[type="color"],
 }
 .label-control {
     border: 0px solid rgba(0, 0, 0, 0.08);
-    font-size: 20px;
+    font-size: 16px;
     height: 45px;
+    margin-left: 3px;
 }
+
+/* border: 1px solid #DEDEDE;
+height:45px;
+border-radius: 0px;
+margin-right: -3px; */
 
 h1,
 h2,

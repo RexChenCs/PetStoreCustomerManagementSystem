@@ -157,7 +157,6 @@ function sendEmail(message) {
 
 
 function memberInfoLookUpTable(memberId) {
-
     var memberInfo = firebase.database().ref('members/' + memberId);
     return memberInfo.once('value').then(snapshot => {
         let memberInfoJson = null;
@@ -189,18 +188,13 @@ function memberPhoneLookUpTable(phoneNumber) {
 
     var memberInfo = firebase.database().ref('members/');
     return memberInfo.orderByChild('memberPhone').equalTo(phoneNumber).once("value").then(snapshot => {
-
         var isExistPhoneNumber = false;
-
         snapshot.forEach(function (data) {
             if (data.child('memberPhone').val() == phoneNumber) {
                 isExistPhoneNumber = true;
             }
-
         });
-
         return isExistPhoneNumber;
-
     });
 
 }
@@ -217,6 +211,40 @@ function userEmailLookUpTable(email) {
     });
 }
 
+function transactionInfoLookUpTable(transactionId) {
+    var transactionInfo = firebase.database().ref('transactions/' + transactionId);
+    return transactionInfo.once('value').then(snapshot => {
+        let transactionInfoJson = null;
+        if (!snapshot.exists()) {
+            Swal.fire("错误提醒", "查询的交易号不存在", "error");
+        } else {
+            var transactionId = snapshot.key;
+            var transactionAmount = snapshot.child("amount").val();
+            var transactionDate = snapshot.child("date").val();
+            var transactionDiscountRate = snapshot.child("discountRate").val();
+            var transactionEmployeeId = snapshot.child("employeeId").val();
+            var transactionMemberId = snapshot.child("memberId").val();
+            var transactionNote = snapshot.child("note").val();
+            var transactionStatus = snapshot.child("status").val();
+            var transactionType = snapshot.child("type").val();
+            var transactioRemainingBalance = snapshot.child("memberRemainingBalance").val();
+
+            transactionInfoJson = '{ "id":"' + transactionId + '",'
+                + '"amount":"' + transactionAmount + '",'
+                + '"date":"' + transactionDate + '",'
+                + '"discountRate":"' + transactionDiscountRate + '",'
+                + '"employeeId":"' + transactionEmployeeId + '",'
+                + '"memberId":"' + transactionMemberId + '",'
+                + '"note":"' + transactionNote + '",'
+                + '"status":"' + transactionStatus + '",'
+                + '"type":"' + transactionType + '",'
+                + '"remainingBalance":"' + transactioRemainingBalance + '"'
+                + '}';
+        }
+        return JSON.parse(transactionInfoJson);
+    });
+
+}
 
 function calDiscountRate(input, elementId) {
     var discountRate = 1;

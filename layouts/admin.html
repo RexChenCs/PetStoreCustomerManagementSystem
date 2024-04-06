@@ -429,6 +429,12 @@
                             </div>
 
                             <div class="col-sm-3 form-group">
+                                <label for="transactionRemainingBalanceInfo">余额</label>
+                                <input id="transactionRemainingBalanceInfo" class="form-control" type="text"
+                                    placeholder="$1,000.00" readonly></input>
+                            </div>
+
+                            <div class="col-sm-3 form-group">
                                 <label for="transactionDateInfo" class="required">交易日期</label>
                                 <input id="transactionDateInfo" type="date" class="form-control" required></input>
                             </div>
@@ -451,61 +457,36 @@
 
                         </div>
 
+
                         <div class="row">
-                            <div class="col-sm-6 form-group">
-
-                                <div class="buttoncontainer">
-                                    <a class="button button--hoo" onclick="voidTransactionInfo()">
-                                        <div class="button__wrapper">
-                                            <span class="button__text">VOID</span>
+                            <div class="buttoncontainer">
+                                <a class="button button--hoo" onclick="updateTransactionInfo()">
+                                    <div class="button__wrapper">
+                                        <span class="button__text">UPDATE</span>
+                                    </div>
+                                    <div class="characterBox">
+                                        <div class="character wakeup">
+                                            <div class="character__face"></div>
                                         </div>
-                                        <div class="characterBox">
-                                            <div class="character wakeup">
-                                                <div class="character__face"></div>
-                                            </div>
-                                            <div class="character wakeup">
-                                                <div class="character__face"></div>
-                                            </div>
-                                            <div class="character">
-                                                <div class="character__face"></div>
-                                            </div>
+                                        <div class="character wakeup">
+                                            <div class="character__face"></div>
                                         </div>
-                                    </a>
-
-                                </div>
+                                        <div class="character">
+                                            <div class="character__face"></div>
+                                        </div>
+                                    </div>
+                                </a>
                             </div>
-
-
-
-                            <div class="col-sm-6 form-group">
-
-                                <div class="buttoncontainer">
-                                    <a class="button button--hoo" onclick="updateTransactionInfo()">
-                                        <div class="button__wrapper">
-                                            <span class="button__text">UPDATE</span>
-                                        </div>
-                                        <div class="characterBox">
-                                            <div class="character wakeup">
-                                                <div class="character__face"></div>
-                                            </div>
-                                            <div class="character wakeup">
-                                                <div class="character__face"></div>
-                                            </div>
-                                            <div class="character">
-                                                <div class="character__face"></div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-
                         </div>
+
 
                     </div>
 
                 </div>
+
             </div>
-        </section>
+    </div>
+    </section>
     </div>
 
 
@@ -1056,7 +1037,7 @@
                 <div class="footer-wrapper">
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="copyright">
-                            <p> © 2024, Rex Chen, All rights reserved.</p>
+                            <p> © 2023, Rex Chen, All rights reserved.</p>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,5 @@
 $(document).ready(function () {
 
-
     generateNewEmployeeId();
     employeeSelectedOptionForAdminManagement();
     readEmployeeInfoTable();
@@ -8,8 +7,6 @@ $(document).ready(function () {
     readAcctUserInfoTable('acctUserInfo_table_copy');
     readEmailNoticeInfo();
     isAdmin("adminsection");
-
-
 
     $("input[type='tel']").on({
         click: function () {
@@ -19,7 +16,6 @@ $(document).ready(function () {
             formatPhone($(this));
         }
     });
-
 
     $("input[id='memberBalanceInfo']").on({
         click: function () {
@@ -51,7 +47,6 @@ $(document).ready(function () {
         }
     });
 
-
     $("input[id='transactionAmountInfo']").on({
         click: function () {
             $(this).val('');
@@ -62,7 +57,7 @@ $(document).ready(function () {
         blur: function () {
             if (isNumeric($(this).val())) {
                 formatCurrency($(this));
-            }else{
+            }else if(!checkValue($(this).val())){
                 Swal.fire("错误提醒", "请输入正确数额", "warning");
                 $(this).val('');
             }
@@ -140,12 +135,10 @@ function wrapPhoneNumber(phoneValue) {
         output = "(" + area + ")" + " " + pre + " - " + tel;
     }
     return output;
-
 }
 
 
 function employeeSelectedOptionForAdminManagement() {
-
     var employeeInfo = firebase.database().ref('employees/').orderByKey();
     employeeInfo.on("value", function (snapshot) {
         var employeeSelectAttr = document.getElementById('addNewMemberByEmployeeInfo');
@@ -157,7 +150,6 @@ function employeeSelectedOptionForAdminManagement() {
             const opt = document.createElement("option");
             const opt1 = document.createElement("option");
             const opt2 = document.createElement("option");
-
             opt.value = employeeId;
             opt.text = employeeName;
             opt1.value = employeeId;
@@ -168,20 +160,15 @@ function employeeSelectedOptionForAdminManagement() {
             employeeSelectAttr1.add(opt1, null);
             employeeSelectAttr2.add(opt2, null);
         });
-
     });
 }
 
 var current_employee_for_new_member;
-
 function findMemberByIdForEditInfo() {
 
     var memberId = document.getElementById('memberIdSearchingForEditInfo').value.trim();
-
     if (memberId == null || memberId == "") {
-
         Swal.fire("错误提醒", "请输入会员账号", "warning");
-
     } else {
 
         var memberInfo = firebase.database().ref('members/' + memberId);
@@ -212,9 +199,7 @@ function findMemberByIdForEditInfo() {
                 var memberBalance = Data.child("memberBalance").val();
                 var addNewMemberByEmployee = Data.child("employee").val();
                 var addNewMemberNote = Data.child("note").val();
-
                 current_employee_for_new_member = addNewMemberByEmployee;
-
                 document.getElementById('memberIdInfo').value = memberId;
                 document.getElementById('memberNameInfo').value = memberName;
                 document.getElementById('memberPetNameInfo').value = memberPetName;
@@ -234,25 +219,20 @@ function findMemberByIdForEditInfo() {
 function findEmployeeByIdForEditInfo() {
 
     var employeeId = document.getElementById('employeeIdSearchingForEditInfo').value.trim();
-
     if (employeeId == null || employeeId == "") {
         Swal.fire("错误提醒", "请输入员工账号", "warning");
     } else {
-
         var memberInfo = firebase.database().ref('employees/' + employeeId);
         memberInfo.once('value').then(snapshot => {
             var Data = snapshot;
             if (!snapshot.exists()) {
-
                 Swal.fire("错误提醒", "查询的员工账号： " + snapshot.key + " 不存在", "error");
                 document.getElementById('employeeIdInfo').value = null;
                 document.getElementById('employeeNameInfo').value = null;
                 document.getElementById('employeePhoneInfo').value = null;
                 document.getElementById('employeePositionInfo').value = null;
                 document.getElementById('employeeNoteInfo').value = null;
-
             } else {
-
                 var employeeId = Data.key;
                 var employeeName = Data.child("employeeName").val();
                 var employeePhone = Data.child("employeePhone").val();
@@ -270,18 +250,13 @@ function findEmployeeByIdForEditInfo() {
 
 
 function findTransactionByIdForEditInfo() {
-
     var transactionId = document.getElementById('transactionIdSearchingForEditInfo').value.trim();
-
     if (transactionId == null || transactionId == "") {
-
         Swal.fire("错误提醒", "请输入交易查询号", "warning");
-
     } else {
 
         var transactionInfo = firebase.database().ref('transactions/' + transactionId);
         transactionInfo.once('value').then(snapshot => {
-
             var Data = snapshot;
             if (!snapshot.exists()) {
                 Swal.fire("错误提醒", "查询的交易号： " + snapshot.key + " 不存在", "error");
@@ -294,7 +269,7 @@ function findTransactionByIdForEditInfo() {
                 document.getElementById('transactionByEmployeeInfo').value = null;
                 document.getElementById('transactionDiscountRateInfo').value = null;
                 document.getElementById('transactionNoteInfo').value = null;
-
+                document.getElementById('transactionRemainingBalanceInfo').value = null;
             } else {
                 var transactionId = Data.key;
                 var transactionType = Data.child("type").val();
@@ -305,7 +280,7 @@ function findTransactionByIdForEditInfo() {
                 var transactionStatus = Data.child('status').val();
                 var transactionNote = Data.child("note").val();
                 var transactionDiscountRate = Data.child("discountRate").val();
-
+                var transactionRemainingBalance = Data.child("memberRemainingBalance").val();
                 document.getElementById('transactionIdInfo').value = transactionId;
                 document.getElementById('transactionTypeInfo').value = transactionType;
                 document.getElementById('transactionMemberIdInfo').value = transactionMemberId;
@@ -315,6 +290,7 @@ function findTransactionByIdForEditInfo() {
                 document.getElementById('transactionStatusInfo').value = transactionStatus;
                 document.getElementById('transactionDiscountRateInfo').value = transactionDiscountRate;
                 document.getElementById('transactionNoteInfo').value = transactionNote;
+                document.getElementById('transactionRemainingBalanceInfo').value = transactionRemainingBalance;
             }
         });
     }
@@ -337,10 +313,10 @@ function updateMemberInfo() {
         memberJoinDate = document.getElementById('memberJoinDateInfo').value;
         memberPhone = document.getElementById('memberPhoneInfo').value;
         memberBalance = document.getElementById('memberBalanceInfo').value;
+        memberBalance = convertCurrencyToNumber(memberBalance);
         memberDiscountRate = document.getElementById('memberDiscountRateInfo').value;
         addNewMemberByEmployee = document.getElementById('addNewMemberByEmployeeInfo').value;
         addNewMemberNote = document.getElementById('addNewMemberNoteInfo').value;
-
         var memberInfo = firebase.database().ref('members/' + memberId);
 
         if (current_employee_for_new_member != addNewMemberByEmployee) {
@@ -368,19 +344,14 @@ function updateEmployeeInfo() {
         var employeePhone = document.getElementById('employeePhoneInfo').value;
         var employeePosition = document.getElementById('employeePositionInfo').value;
         var employeeNote = document.getElementById('employeeNoteInfo').value;
-
         var employeeInfo = firebase.database().ref('employees/' + employeeId);
-
         employeeInfo.update({ 'employeeName': employeeName, 'employeePhone': employeePhone, 'employeePosition': employeePosition, 'employeeNote': employeeNote });
-
         Swal.fire("成功", "员工信息已保存", "success").then(() => {
             location.reload();
         });
     }
 
 }
-
-
 
 
 function voidTransactionInfo() {
@@ -429,56 +400,58 @@ function updateTransactionInfo() {
     var transactionDiscountRate = Number(document.getElementById('transactionDiscountRateInfo').value);
     var transactionByEmployee = document.getElementById('transactionByEmployeeInfo').value;
     var transactionNote = document.getElementById('transactionNoteInfo').value;
-    var UpdatedTransactionInfoDetail = {
-        'memberId': transactionMemberId,
-        'amount': transactionAmount,
-        'type': transactionType,
-        'date': transactionDate,
-        'employeeId': transactionByEmployee,
-        'discountRate': transactionDiscountRate,
-        'status': 'paid',
-        'note': transactionNote
-    };
+    var transactionRemainingBalance = document.getElementById('transactionRemainingBalanceInfo').value;
 
-    if (transactionId == null || transactionId == "") {
-        Swal.fire("错误提醒", "请输入交易查询号", "warning");
-    } else if(!updateTransactionValidation()){
-        return;
-    }else if (status === 'void') {
-        Swal.fire("错误提醒", "订单已经被消除，不可以修改", "warning");
-    } else {
-        const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-                confirmButton: 'btn btn-success',
-                cancelButton: 'btn btn-danger'
-            }, buttonsStyling: true
-        });
-        swalWithBootstrapButtons.fire({
-            title: '确定要修改交易订单吗?',
-            text: "订单号#" + transactionId,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                memberAcctHandlerForUpdateTransaction(transactionId, UpdatedTransactionInfoDetail);
-
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                swalWithBootstrapButtons.fire('修改失败', '本次修改已取消', 'error');
-            }
-        });
-
+    if(Number(transactionAmount)==0){
+        voidTransactionInfo();
+    } else{
+        var UpdatedTransactionInfoDetail = {
+            'memberId': transactionMemberId,
+            'amount': transactionAmount,
+            'type': transactionType,
+            'date': transactionDate,
+            'employeeId': transactionByEmployee,
+            'discountRate': transactionDiscountRate,
+            'memberRemainingBalance': transactionRemainingBalance,
+            'status': 'paid',
+            'note': transactionNote
+        };
+    
+        if (transactionId == null || transactionId == "") {
+            Swal.fire("错误提醒", "请输入交易查询号", "warning");
+        } else if(!updateTransactionValidation()){
+            return;
+        }else if (status === 'void') {
+            Swal.fire("错误提醒", "订单已经被消除，不可以修改", "warning");
+        } else {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                }, buttonsStyling: true
+            });
+            swalWithBootstrapButtons.fire({
+                title: '确定要修改交易订单吗?',
+                text: "订单号#" + transactionId,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    memberAcctHandlerForUpdateTransaction(transactionId, UpdatedTransactionInfoDetail);
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    swalWithBootstrapButtons.fire('修改失败', '本次修改已取消', 'error');
+                }
+            });
+        }
     }
 }
 
 function memberAcctHandlerForVoidTransaction(transactionId) {
 
-    var transactionInfo = firebase.database().ref('transactions/' + transactionId);
-
-    //Modify user acct back to original amount
-    transactionInfo.once('value').then(snapshot => {
+    firebase.database().ref('transactions/' + transactionId).once('value').then(snapshot => {
         if (snapshot.exists()) {
             var transactionType = snapshot.child("type").val();
             var transactionMemberId = snapshot.child("memberId").val();
@@ -487,7 +460,6 @@ function memberAcctHandlerForVoidTransaction(transactionId) {
             memberAcctModify(transactionType, transactionMemberId, transactionAmount, transactionDiscountRate);
         }
     });
-
     // make transaction status as void
     markTransactionAsVoid(transactionId);
 }
@@ -495,30 +467,38 @@ function memberAcctHandlerForVoidTransaction(transactionId) {
 function memberAcctHandlerForUpdateTransaction(oldTransactionId, UpdatedTransactionInfoDetail) {
 
     var transactionInfo = firebase.database().ref('transactions/' + oldTransactionId);
-
     //Modify user acct back to original amount
-    transactionInfo.once('value').then(snapshot => {
+    var isSuccessfulUpdateMemberAcct= transactionInfo.once('value').then(snapshot => {
         if (snapshot.exists()) {
             var transactionAmount = snapshot.child("amount").val();
             var transactionType = snapshot.child("type").val();
             var transactionMemberId = snapshot.child("memberId").val();
             var transactionAmount = snapshot.child("amount").val();
             var transactionDiscountRate = snapshot.child("discountRate").val();
-            memberAcctModify(transactionType, transactionMemberId, transactionAmount - UpdatedTransactionInfoDetail.amount, transactionDiscountRate);
+            return memberAcctModify(transactionType, transactionMemberId, transactionAmount - UpdatedTransactionInfoDetail.amount, transactionDiscountRate);
         }
     });
 
-    // make transaction status as void
-    var transactionInfo = firebase.database().ref('transactions/');
-    const newTransactionId = generateTransactionId();
-    UpdatedTransactionInfoDetail.note = UpdatedTransactionInfoDetail.note + " [Ref: void transactionId: " + oldTransactionId + "]";
-    transactionInfo.child(newTransactionId).set(UpdatedTransactionInfoDetail);
-    transactionInfo.child(oldTransactionId).update({
-        'status': 'void'
-    });
-    document.getElementById('transactionIdSearchingForEditInfo').value = newTransactionId;
-    findTransactionByIdForEditInfo();
-    Swal.fire("成功", "新订单已生成,订单号: " + newTransactionId);
+    //  if add => old balance - old amount + new amount 
+    //  if delete => old balance + old amount - new amount 
+    if(isSuccessfulUpdateMemberAcct){
+        transactionInfoLookUpTable(oldTransactionId).then(function (result) {
+            if (result != null) {
+                var remainingBalanceForUpdatedTransaction=0;
+                if(result['type'] == 'addCredit'){
+                    remainingBalanceForUpdatedTransaction = Number(result['remainingBalance']) - Number(result['amount']) + Number(UpdatedTransactionInfoDetail['amount']);
+                } else if(result['type'] == 'spendCredit'){
+                    remainingBalanceForUpdatedTransaction = Number(result['remainingBalance']) + Number(result['amount']) - Number(UpdatedTransactionInfoDetail['amount']);
+                }
+                UpdatedTransactionInfoDetail['memberRemainingBalance'] = remainingBalanceForUpdatedTransaction;
+                firebase.database().ref('transactions/').child(oldTransactionId).update(UpdatedTransactionInfoDetail);
+                findTransactionByIdForEditInfo();
+                Swal.fire("成功", "订单已修改");
+            } else{
+                Swal.fire("错误提醒", "交易未发现", "warning");
+            }
+        });     
+    }
 }
 
 function markTransactionAsVoid(transactionId) {
@@ -531,30 +511,29 @@ function markTransactionAsVoid(transactionId) {
 }
 
 function memberAcctModify(transactionType, transactionMemberId, transactionAmount, transactionDiscountRate) {
-    var memberInfo = firebase.database().ref('members/' + transactionMemberId);
     var backward_amount;
-    memberInfo.once('value').then(snapshot => {
+    var memberInfo = firebase.database().ref('members/' + transactionMemberId);
+    return memberInfo.once('value').then(snapshot => {
         var Data = snapshot;
+        var isValidTransaction = false;
         if (snapshot.exists()) {
-            var isValidTransaction = true;
+            isValidTransaction = true;
             var memberBalance = Data.child("memberBalance").val();
             if (transactionType === 'spendCredit') {
-                backward_amount = memberBalance + transactionAmount;
+                backward_amount = Number(memberBalance) + Number(transactionAmount);
                 if (backward_amount < 0) {
                     isValidTransaction = false;
                     Swal.fire("错误提醒", "当前消费余额不足，请确认消费金额！", "warning");
                 }
-
             } else { // add credit or new member
-                backward_amount = memberBalance - transactionAmount;
+                backward_amount = Number(memberBalance) - Number(transactionAmount);
             }
-
             if (isValidTransaction) {
                 memberInfo.update({ 'memberBalance': backward_amount, 'memberDiscountRate': transactionDiscountRate });
                 Swal.fire("成功", "用户：" + transactionMemberId + " 金额 $" + transactionAmount + "已经返还. 用户最新余额为：$" + backward_amount, "success");
             }
-
         }
+        return isValidTransaction;
     });
 
 }

@@ -107,19 +107,22 @@ function readMembershipOverviewTable() {
         var table = document.getElementById('membershipOverviewTable');
 
         // clear up old data to reduce duplication
-        table.innerHTML = '<tr class="header"> <th style="width:25%;">宠物名</th> <th style="width:25%;">电话</th> <th style="width:25%;">会员折扣</th> <th style="width:25%;">余额</th></tr>';
+        table.innerHTML = '<tr class="header"> <th style="width:20%;">宠物名</th><th style="width:20%;">会员号</th><th style="width:20%;">电话</th> <th style="width:20%;">会员折扣</th> <th style="width:20%;">余额</th></tr>';
 
         snapshot.forEach(function (childSnapshot) {
             var table = document.getElementById('membershipOverviewTable');
-            var Data = childSnapshot;
+            var data = childSnapshot;
 
-            var memberPetName = Data.child("memberPetName").val();
-            var memberPhone = Data.child("memberPhone").val();
-            var memberDiscountRate = Data.child("memberDiscountRate").val();
-            var memberBalance = Data.child("memberBalance").val();
+            var memberPetName = data.child("memberPetName").val();
+            var memberPhone = data.child("memberPhone").val();
+            var memberDiscountRate = data.child("memberDiscountRate").val();
+            var memberBalance = data.child("memberBalance").val();
+            var memberId = data.key;
+
 
             var row = '<tr>' +
                 '<td>' + memberPetName + '</td>' +
+                '<td>' + memberId + '</td>' +
                 '<td>' + memberPhone + '</td>' +
                 '<td>' + memberDiscountRate + '</td>' +
                 '<td>$' + memberBalance + '</td>' +
