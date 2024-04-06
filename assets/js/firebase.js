@@ -142,7 +142,6 @@ function sendEmail(message) {
 }
 
 
-
 function memberInfoLookUpTable(memberId) {
     var memberInfo = firebase.database().ref('members/' + memberId);
     return memberInfo.once('value').then(snapshot => {
@@ -156,12 +155,21 @@ function memberInfoLookUpTable(memberId) {
             var memberPhone = snapshot.child("memberPhone").val();
             var memberDiscountRate = snapshot.child("memberDiscountRate").val();
             var memberBalance = snapshot.child("memberBalance").val();
-
+            var employee = snapshot.child("employee").val();
+            var memberJoinDate = snapshot.child("memberJoinDate").val();
+            var memberPetBreed = snapshot.child("memberPetBreed").val();
+            var memberPetGender = snapshot.child("memberPetGender").val();
+            var note = snapshot.child("note").val();
             memberInfoJson = '{ "memberId":"' + memberId + '",'
                 + '"memberName":"' + memberName + '",'
                 + '"memberPetName":"' + memberPetName + '",'
                 + '"memberPhone":"' + memberPhone + '",'
                 + '"memberDiscountRate":"' + memberDiscountRate + '",'
+                + '"employee":"' + employee + '",'
+                + '"memberJoinDate":"' + memberJoinDate + '",'
+                + '"memberPetBreed":"' + memberPetBreed + '",'
+                + '"memberPetGender":"' + memberPetGender + '",'
+                + '"note":"' + note + '",'
                 + '"memberBalance":"' + memberBalance + '"'
                 + '}';
         }

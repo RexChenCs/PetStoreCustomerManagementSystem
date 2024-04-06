@@ -412,7 +412,6 @@ function addNewMember() {
 function saveMemberInfo(memberId, memberInfoDetails) {
 
     firebase.database().ref('members/' + memberId).set(memberInfoDetails);
-
     const transactionId = generateTransactionId();
     var memberBalance = memberInfoDetails.memberBalance;
     var addNewMemberByEmployee = memberInfoDetails.employee;
@@ -448,7 +447,6 @@ function saveTransactionInfo(transactionId, transactionInfoDetail) {
 
 
 function searchMemberByCatagory(sectionType) {
-
     var searchType = document.getElementById('search_member_catagory_for'+sectionType).value.trim();
     var searchValue = document.getElementById('search_member_value_for'+sectionType).value.trim();
     if (searchValue == null || searchValue == "") {
@@ -469,32 +467,29 @@ function searchMemberByCatagory(sectionType) {
 
 function searchMemberByCatagoryMemberId(memberId, sectionType) {
 
-    firebase.database().ref('members/' + memberId).once('value').then(snapshot => {
-        if (!snapshot.exists()) {
-            Swal.fire("错误提醒", "查询的会员账号： " + snapshot.key + " 不存在", "error");
+    memberInfoLookUpTable(memberId).then(function (result) {
+        if (result == null) {
             clearContentBySection(sectionType);
-        } else {
-            buildContentBySection(snapshot, sectionType);
+        } else{
+            buildContentBySection(result, sectionType);
         }
     });
 }
 
-function buildContentBySection(snapshot, sectionType) {
-    document.getElementById('memberIdSearchedFor' + sectionType).value = snapshot.key;
-    document.getElementById('memberNameSearchedFor' + sectionType).value = snapshot.child("memberName").val();
-    document.getElementById('memberPetNameSearchedFor' + sectionType).value = snapshot.child("memberPetName").val();
-    document.getElementById('memberPhoneSearchedFor' + sectionType).value = snapshot.child("memberPhone").val();
-    document.getElementById('memberBalanceSearchedFor' + sectionType).value = snapshot.child("memberBalance").val();
-    document.getElementById('memberDiscountRateSearchedFor' + sectionType).value = snapshot.child("memberDiscountRate").val();
-
+function buildContentBySection(memberInfo, sectionType) {
+    document.getElementById('memberIdSearchedFor' + sectionType).value = memberInfo['memberId'];
+    document.getElementById('memberNameSearchedFor' + sectionType).value = memberInfo['memberName'];
+    document.getElementById('memberPetNameSearchedFor' + sectionType).value = memberInfo['memberPetName'];
+    document.getElementById('memberPhoneSearchedFor' + sectionType).value = memberInfo['memberPhone'];
+    document.getElementById('memberBalanceSearchedFor' + sectionType).value = memberInfo['memberBalance'];
+    document.getElementById('memberDiscountRateSearchedFor' + sectionType).value = memberInfo['memberDiscountRate'];
     if(sectionType == 'Search'){
-        document.getElementById('memberPetBreedSearchedFor' + sectionType).value = snapshot.child("memberPetBreed").val();
-        document.getElementById('memberPetGenderSearchedFor' + sectionType).value = snapshot.child("memberPetGender").val();
-        document.getElementById('memberJoinDateSearchedFor' + sectionType).value = snapshot.child("memberJoinDate").val();
-        document.getElementById('employeeSearchedFor' + sectionType).value = snapshot.child("employee").val();
-        document.getElementById('noteSearchedFor' + sectionType).value = snapshot.child("note").val();
+        document.getElementById('memberPetBreedSearchedFor' + sectionType).value = memberInfo['memberPetBreed'];
+        document.getElementById('memberPetGenderSearchedFor' + sectionType).value = memberInfo['memberPetGender'];
+        document.getElementById('memberJoinDateSearchedFor' + sectionType).value = memberInfo['memberJoinDate'];
+        document.getElementById('employeeSearchedFor' + sectionType).value = memberInfo['employee'];
+        document.getElementById('noteSearchedFor' + sectionType).value = memberInfo['note'];
     }
-
 }
 
 function clearContentBySection(sectionType) {
@@ -532,7 +527,6 @@ function searchMemberByCatagoryPetName(petName,sectionType) {
         if (numberOfSearchedMember === 0) {
             Swal.fire("错误提醒", "查询的宠物名字： " + petName + " 不存在", "error");
             clearContentBySection(sectionType);
-
         }else if (numberOfSearchedMember === 1) {   
             buildContentBySection(firstChild, sectionType);
         }else  {
@@ -562,7 +556,6 @@ function searchMemberByCatagoryPetName(petName,sectionType) {
 function searchMemberByCatagoryPhoneNumber(phoneNumber, sectionType) {
 
     phoneNumber = wrapPhoneNumber(phoneNumber);
-
     firebase.database().ref('members/').orderByChild('memberPhone').equalTo(phoneNumber).once("value").then(snapshot => {
         numberOfSearchedMember = snapshot.numChildren();
         if (numberOfSearchedMember === 0) {
@@ -571,7 +564,6 @@ function searchMemberByCatagoryPhoneNumber(phoneNumber, sectionType) {
             return;
         }
         var htmlContent="<select id='search_member_mutiple_option_for"+sectionType+"' type='text' class='form-control'><option  selected>请选择(会员号-名字)</option>";
-
         snapshot.forEach(function (data) {
             if (data.child('memberPhone').val() == phoneNumber) {
                 if (numberOfSearchedMember === 1) {   
