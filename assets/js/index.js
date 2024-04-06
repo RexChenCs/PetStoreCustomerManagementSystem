@@ -1,8 +1,16 @@
-function showPassword() {
-    var x = document.getElementById("signin_psw");
-    if (x.type === "password") {
-      x.type = "text";
+$(document).ready(function () {
+  const passwordField = document.getElementById("signin_psw");
+  const togglePassword = document.querySelector(".password-toggle-icon i");
+  
+  togglePassword.addEventListener("click", function () {
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+      togglePassword.classList.remove("fa-eye");
+      togglePassword.classList.add("fa-eye-slash");
     } else {
-      x.type = "password";
+      passwordField.type = "password";
+      togglePassword.classList.remove("fa-eye-slash");
+      togglePassword.classList.add("fa-eye");
     }
-  }
+  });
+});

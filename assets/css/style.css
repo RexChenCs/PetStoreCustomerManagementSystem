@@ -845,3 +845,24 @@ textarea::-ms-input-placeholder
     color: red;
     cursor: pointer;
 }
+
+
+.password-toggle-icon {
+    position: absolute;
+    top: 72%;
+    right: 35px;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+  
+  .password-toggle-icon i {
+    font-size: 18px;
+    line-height: 1;
+    color: #333;
+    transition: color 0.3s ease-in-out;
+    margin-bottom: 20px;
+  }
+  
+  .password-toggle-icon i:hover {
+    color: #000;
+  }
