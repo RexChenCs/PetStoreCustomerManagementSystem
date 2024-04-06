@@ -15,7 +15,6 @@ $(document).ready(function () {
     document.getElementById("export_table_transactions_section").style.display = "none";
     setup();
     isAdmin("adminsection");
-
 });
 
 function readExportTable() {

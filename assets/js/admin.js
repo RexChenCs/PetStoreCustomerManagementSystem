@@ -28,7 +28,7 @@ $(document).ready(function () {
             if (isNumeric($(this).val())) {
                 calDiscountRate($(this).val(), 'memberDiscountRateInfo');
                 formatCurrency($(this));
-            }else{
+            }else if(!checkValue($(this).val())){
                 Swal.fire("错误提醒", "请输入正确数额", "warning");
                 $(this).val('');
             }

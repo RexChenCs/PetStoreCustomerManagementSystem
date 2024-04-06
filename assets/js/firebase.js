@@ -1,17 +1,4 @@
-const firebaseConfig = {
-    apiKey: "xxx",
-    authDomain: "xxx",
-    databaseURL: "xxx",
-    projectId: "xxx",
-    storageBucket: "xxx",
-    messagingSenderId: "xxx",
-    appId: "xxx",
-    measurementId: "xxx"
-};
-
-firebase.initializeApp(firebaseConfig);
-let authDomain = "xxx";
-
+let authDomain = firebaseConfig['authDomain'];
 //////////////////////////////////////////////////////////---------LOGIN/REGISTER---------/////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function login() {
@@ -266,12 +253,4 @@ function calDiscountRate(input, elementId) {
             document.getElementById(elementId).value = discountRate;
         }
     });
-}
-
-function convertCurrencyToNumber(currencyStr) {
-    return Number(currencyStr.replace(/[^0-9.-]+/g, ""));
-}
-
-function generateTransactionId() {
-    return 't' + new Date().getTime();
 }

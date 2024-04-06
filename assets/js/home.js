@@ -1,6 +1,5 @@
 "use strict";
 
-
 jQuery(document).ready(function ($) {
 
     $('#navbar-collapse').find('a[href*=#]:not([href=#])').click(function () {
@@ -19,11 +18,8 @@ jQuery(document).ready(function ($) {
         }
     });
 	
-
 	readMembershipOverviewTable();
-	 
 	checkScrolling($('.membershipOverviewTable'));
-
 
 	$(window).on('resize', function(){
 		window.requestAnimationFrame(function(){checkScrolling($('.membershipOverviewTable'))});
@@ -62,18 +58,6 @@ jQuery(document).ready(function ($) {
 
 });
 
-function login_modal(){
-	// Get the modal
-	var login_modal = document.getElementById('login_modal');
-
-	// When the user clicks anywhere outside of the modal, close it
-	window.onclick = function(event) {
-		if (event.target == login_modal) {
-			login_modal.style.display = "none";
-		}
-	}
-}
-
 function membershipOverviewSearch() {
   // Declare variables
   var input, filter, table, tr, td, i, txtValue;
@@ -95,7 +79,6 @@ function membershipOverviewSearch() {
     }
   }
 }
-
 
 
 function readMembershipOverviewTable() {

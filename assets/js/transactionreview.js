@@ -18,10 +18,6 @@ function searchTransactions() {
 }
 
 
-
-
-
-
 function searchTransactionByDate(startDate, endDate) {
 
     var transactionInfo = firebase.database().ref('transactions/');
@@ -54,7 +50,6 @@ function searchTransactionByDate(startDate, endDate) {
     });
 
 }
-
 
 
 function searchTransactionByIdAndDate(memberId, startDate, endDate) {
@@ -160,16 +155,8 @@ jQuery(document).ready(function ($) {
             }
         }
     });
-
     isAdmin("adminsection");
 });
-
-function formatMemberId(input) {
-    var input_val = input.val();
-    var output = 'PH' + (100000 + Number(input_val));
-    input.val(output);
-}
-
 
 function getEmployeeNameById(employeeId) {
     var employeeName;
