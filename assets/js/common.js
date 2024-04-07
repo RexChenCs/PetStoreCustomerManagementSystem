@@ -38,6 +38,7 @@ function formatCurrency(input) {
     let USDollar = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
+        useGrouping: false,
     });
     input.val(USDollar.format(input_val));
 }
@@ -66,3 +67,17 @@ function convertCurrencyToNumber(currencyStr) {
 function generateTransactionId() {
     return 't' + new Date().getTime();
 }
+
+const isValidJSON = str => {
+    try {
+        JSON.parse(str);
+        return true;
+    } catch (e) {
+        return false;
+    }
+};
+
+const isValidConcurrency = numStr => {
+    var regex  = /^\$\d+(?:\.\d{0,2})$/;
+    return regex.test(numStr)
+};

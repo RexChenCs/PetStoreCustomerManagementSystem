@@ -19,9 +19,10 @@ $(document).ready(function () {
       e.preventDefault();
       var $next = $('[tabIndex=' + (+this.tabIndex + 1) + ']');
       if (!$next.length) {
-        $next = $('[tabIndex=1]');
+        login();
       }
       $next.focus().click();
     }
   });
+
 });

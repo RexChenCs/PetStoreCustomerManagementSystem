@@ -10,9 +10,6 @@ $(document).ready(function () {
     });
 
     $("input[id='memberBalance']").on({
-        click: function () {
-            $(this).val('');
-        },
         keyup: function () {
             wrapCurrency($(this));
         },
@@ -20,7 +17,7 @@ $(document).ready(function () {
             if (isNumeric($(this).val())) {
                 calDiscountRate($(this).val(), 'memberDiscountRate');
                 formatCurrency($(this));
-            } else if(!checkValue($(this).val())){
+            } else if (!checkValue($(this).val()) && !isValidConcurrency($(this).val())) {
                 Swal.fire("错误提醒", "请输入正确数额", "warning");
                 $(this).val('');
             }
@@ -28,9 +25,6 @@ $(document).ready(function () {
     });
 
     $("input[id='add_credit_member_balance']").on({
-        click: function () {
-            $(this).val('');
-        },
         keyup: function () {
             wrapCurrency($(this));
         },
@@ -38,7 +32,7 @@ $(document).ready(function () {
             if (isNumeric($(this).val())) {
                 calDiscountRate($(this).val(), 'add_credit_discountRate');
                 formatCurrency($(this));
-            } else if(!checkValue($(this).val())){
+            } else if (!checkValue($(this).val()) && !isValidConcurrency($(this).val())) {
                 Swal.fire("错误提醒", "请输入正确数额", "warning");
                 $(this).val('');
             }
@@ -46,9 +40,6 @@ $(document).ready(function () {
     });
 
     $("input[id='member_spend_credit_balance_original']").on({
-        click: function () {
-            $(this).val('');
-        },
         keyup: function () {
             wrapCurrency($(this));
         },
@@ -63,12 +54,13 @@ $(document).ready(function () {
                         let USDollar = new Intl.NumberFormat('en-US', {
                             style: 'currency',
                             currency: 'USD',
+                            useGrouping: false,
                         });
                         document.getElementById('member_spend_credit_balance').value = USDollar.format((originalAmount * Number(discountRate)));
                     }
                 });
                 formatCurrency($(this));
-            } else if(!checkValue($(this).val())){
+            } else if (!checkValue($(this).val()) && !isValidConcurrency($(this).val())) {
                 Swal.fire("错误提醒", "请输入正确数额", "warning");
                 $(this).val('');
             }
@@ -76,19 +68,17 @@ $(document).ready(function () {
     });
 
     $("input[id='member_spend_credit_balance']").on({
-        click: function () {
-            $(this).val('');
-        },
         keyup: function () {
             wrapCurrency($(this));
         },
         blur: function () {
             if (isNumeric($(this).val())) {
                 formatCurrency($(this));
-            } else if(!checkValue($(this).val())){
+            } else if (!checkValue($(this).val()) && !isValidConcurrency($(this).val())) {
                 Swal.fire("错误提醒", "请输入正确数额", "warning");
                 $(this).val('');
             }
+
         }
     });
 
@@ -112,6 +102,22 @@ $(document).ready(function () {
                 if (isNum) {
                     formatMemberId($(this));
                 }
+            }
+        },
+        keypress: function (event) {
+            if (event.key === "Enter") {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                var searchType = document.getElementById('search_member_catagory_forAdd').value;
+                if (searchType === 'searchByMemberId') {
+                    let isNum = /^\d+$/.test($(this).val());
+                    if (isNum) {
+                        formatMemberId($(this));
+                    }
+                }
+                // Trigger the search button element with a click
+                searchMemberByCatagory('Add');
+
             }
         }
     });
@@ -137,6 +143,21 @@ $(document).ready(function () {
                     formatMemberId($(this));
                 }
             }
+        },
+        keypress: function (event) {
+            if (event.key === "Enter") {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                var searchType = document.getElementById('search_member_catagory_forSpend').value;
+                if (searchType === 'searchByMemberId') {
+                    let isNum = /^\d+$/.test($(this).val());
+                    if (isNum) {
+                        formatMemberId($(this));
+                    }
+                }
+                // Trigger the search button element with a click
+                searchMemberByCatagory('Spend');
+            }
         }
     });
 
@@ -161,6 +182,34 @@ $(document).ready(function () {
                     formatMemberId($(this));
                 }
             }
+        },
+        keypress: function (event) {
+            if (event.key === "Enter") {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                // Trigger the search button element with a click
+                var searchType = document.getElementById('search_member_catagory_forSearch').value;
+                if (searchType === 'searchByMemberId') {
+                    let isNum = /^\d+$/.test($(this).val());
+                    if (isNum) {
+                        formatMemberId($(this));
+                    }
+                }
+                searchMemberByCatagory('Search');
+
+            }
+        }
+    });
+
+
+    $(document).on('keypress', 'input,select', function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            var $next = $('[tabIndex=' + (+this.tabIndex + 1) + ']');
+            if (!$next.length) {
+                $next = $('[tabIndex=1]');
+            }
+            $next.focus().click();
         }
     });
 
@@ -178,17 +227,15 @@ $(document).ready(function () {
 
 
 function searchCatagoryReselect(sectionType) {
-    var catagory = document.getElementById('search_member_catagory_for'+sectionType).value;
-    document.getElementById('search_member_value_for'+sectionType).value = "";
+    var catagory = document.getElementById('search_member_catagory_for' + sectionType).value;
+    document.getElementById('search_member_value_for' + sectionType).value = "";
     if (catagory == "searchByMemberPhone") {
-        document.getElementById('search_member_value_for'+sectionType).placeholder = "Enter Phone Number";
+        document.getElementById('search_member_value_for' + sectionType).placeholder = "Enter Phone Number";
     } else if (catagory == "searchByMemberId") {
-        document.getElementById('search_member_value_for'+sectionType).placeholder = "Enter Member Id";
+        document.getElementById('search_member_value_for' + sectionType).placeholder = "Enter Member Id";
     } else if (catagory == "searchByMemberPetName") {
-        document.getElementById('search_member_value_for'+sectionType).placeholder = "Enter Pet Name";
-    } else if (catagory == "searchByMemberName") {
-        document.getElementById('search_member_valu_for'+sectionType).placeholder = "Enter Member Name";
-    }
+        document.getElementById('search_member_value_for' + sectionType).placeholder = "Enter Pet Name";
+    } 
 }
 
 
@@ -272,7 +319,7 @@ function addCreditForMember() {
                     'status': 'paid',
                     'note': addCreditNote
                 });
-                var message = "操作类型：充值，会员号：" + memberId + ",金额：" + creditAmount + ",余额:"+newBalance+",员工：" + addCreditEmployee + ",日期：" + addCreditDate + ",最新会员折扣： " + newDiscountRate;
+                var message = "操作类型：充值，会员号：" + memberId + ",金额：" + creditAmount + ",余额:" + newBalance + ",员工：" + addCreditEmployee + ",日期：" + addCreditDate + ",最新会员折扣： " + newDiscountRate;
                 sendEmailEnable(message);
                 swalWithBootstrapButtons.fire("充值成功", "会员: " + memberId + " 已充值 $" + creditAmount + ". 请重新查询最新信息", "success").then(() => {
                     location.reload();
@@ -342,7 +389,7 @@ function spendCreditForMember() {
                         'status': 'paid',
                         'note': spendCreditNote
                     });
-                    var message = "操作类型：消费，会员号：" + memberId + ",金额：" + creditAmount +",余额:"+ newBalance+ ",员工：" + spendCreditEmployee + ",日期：" + spendCreditDate;
+                    var message = "操作类型：消费，会员号：" + memberId + ",金额：" + creditAmount + ",余额:" + newBalance + ",员工：" + spendCreditEmployee + ",日期：" + spendCreditDate;
                     sendEmailEnable(message);
                     swalWithBootstrapButtons.fire("消费成功", "会员: " + memberId + " 已消费 $" + creditAmount + ". 请重新查询最新信息", "success").then(() => { location.reload() });
                 }
@@ -447,8 +494,8 @@ function saveTransactionInfo(transactionId, transactionInfoDetail) {
 
 
 function searchMemberByCatagory(sectionType) {
-    var searchType = document.getElementById('search_member_catagory_for'+sectionType).value.trim();
-    var searchValue = document.getElementById('search_member_value_for'+sectionType).value.trim();
+    var searchType = document.getElementById('search_member_catagory_for' + sectionType).value.trim();
+    var searchValue = document.getElementById('search_member_value_for' + sectionType).value.trim();
     if (searchValue == null || searchValue == "") {
         Swal.fire("错误提醒", "查询内容不能为空", "warning");
     } else {
@@ -470,7 +517,7 @@ function searchMemberByCatagoryMemberId(memberId, sectionType) {
     memberInfoLookUpTable(memberId).then(function (result) {
         if (result == null) {
             clearContentBySection(sectionType);
-        } else{
+        } else {
             buildContentBySection(result, sectionType);
         }
     });
@@ -483,9 +530,15 @@ function buildContentBySection(memberInfo, sectionType) {
     document.getElementById('memberPhoneSearchedFor' + sectionType).value = memberInfo['memberPhone'];
     document.getElementById('memberBalanceSearchedFor' + sectionType).value = memberInfo['memberBalance'];
     document.getElementById('memberDiscountRateSearchedFor' + sectionType).value = memberInfo['memberDiscountRate'];
-    if(sectionType == 'Search'){
+    if (sectionType == 'Search') {
         document.getElementById('memberPetBreedSearchedFor' + sectionType).value = memberInfo['memberPetBreed'];
-        document.getElementById('memberPetGenderSearchedFor' + sectionType).value = memberInfo['memberPetGender'];
+        var petGenderChinese='未知';
+        if(memberInfo['memberPetGender']==='m'){
+            petGenderChinese = '男';
+        } else if(memberInfo['memberPetGender']==='f'){
+            petGenderChinese = '女';
+        }
+        document.getElementById('memberPetGenderSearchedFor' + sectionType).value = petGenderChinese;
         document.getElementById('memberJoinDateSearchedFor' + sectionType).value = memberInfo['memberJoinDate'];
         document.getElementById('employeeSearchedFor' + sectionType).value = memberInfo['employee'];
         document.getElementById('noteSearchedFor' + sectionType).value = memberInfo['note'];
@@ -500,7 +553,7 @@ function clearContentBySection(sectionType) {
     document.getElementById('memberBalanceSearchedFor' + sectionType).value = null;
     document.getElementById('memberDiscountRateSearchedFor' + sectionType).value = null;
 
-    if(sectionType == 'Search'){
+    if (sectionType == 'Search') {
         document.getElementById('memberPetBreedSearchedFor' + sectionType).value = null;
         document.getElementById('memberPetGenderSearchedFor' + sectionType).value = null;
         document.getElementById('memberJoinDateSearchedFor' + sectionType).value = null;
@@ -510,27 +563,27 @@ function clearContentBySection(sectionType) {
 
 }
 
-function searchMemberByCatagoryPetName(petName,sectionType) {
+function searchMemberByCatagoryPetName(petName, sectionType) {
 
     firebase.database().ref('members/').once("value").then(snapshot => {
         numberOfSearchedMember = 0;
         var firstChild;
-        var htmlContent="<select id='search_member_mutiple_option_for"+sectionType+"' type='text' class='form-control'><option  selected>请选择(会员号-宠物名字-电话)</option>";
+        var htmlContent = "<select id='search_member_mutiple_option_for" + sectionType + "' type='text' class='form-control'><option  selected>请选择(会员号-宠物名字-电话)</option>";
         snapshot.forEach(function (data) {
             if (String(data.child('memberPetName').val()).toUpperCase().includes(String(petName).toUpperCase())) {
-                firstChild = data;   
-                htmlContent+="<option  value='"+data.key+"'>"+data.key+"-"+data.child('memberPetName').val()+"-"+data.child('memberPhone').val()+"</option>";
-                numberOfSearchedMember+=1;
+                firstChild = memberInfoConvertor(data);
+                htmlContent += "<option  value='" + data.key + "'>" + data.key + "-" + data.child('memberPetName').val() + "-" + data.child('memberPhone').val() + "</option>";
+                numberOfSearchedMember += 1;
             }
         });
 
         if (numberOfSearchedMember === 0) {
             Swal.fire("错误提醒", "查询的宠物名字： " + petName + " 不存在", "error");
             clearContentBySection(sectionType);
-        }else if (numberOfSearchedMember === 1) {   
+        } else if (numberOfSearchedMember === 1) {
             buildContentBySection(firstChild, sectionType);
-        }else  {
-            htmlContent+="</select>";
+        } else {
+            htmlContent += "</select>";
             Swal.fire({
                 title: "<strong>发现多个会员</strong>",
                 icon: "info",
@@ -543,7 +596,7 @@ function searchMemberByCatagoryPetName(petName,sectionType) {
             }).then((result) => {
                 if (result.isConfirmed) {
                     memberIdSearchReselect(sectionType);
-                } else{
+                } else {
                     clearContentBySection(sectionType);
                 }
             });
@@ -563,19 +616,19 @@ function searchMemberByCatagoryPhoneNumber(phoneNumber, sectionType) {
             clearContentBySection(sectionType);
             return;
         }
-        var htmlContent="<select id='search_member_mutiple_option_for"+sectionType+"' type='text' class='form-control'><option  selected>请选择(会员号-名字)</option>";
+        var htmlContent = "<select id='search_member_mutiple_option_for" + sectionType + "' type='text' class='form-control'><option  selected>请选择(会员号-名字)</option>";
         snapshot.forEach(function (data) {
             if (data.child('memberPhone').val() == phoneNumber) {
-                if (numberOfSearchedMember === 1) {   
-                    buildContentBySection(data, sectionType);
+                if (numberOfSearchedMember === 1) {
+                    buildContentBySection(memberInfoConvertor(data), sectionType);
                 } else {
-                    htmlContent+="<option  value='"+data.key+"'>"+data.key+"-"+data.child('memberPetName').val()+"</option>";
+                    htmlContent += "<option  value='" + data.key + "'>" + data.key + "-" + data.child('memberPetName').val() + "</option>";
                 }
             }
         });
 
         if (numberOfSearchedMember > 1) {
-            htmlContent+="</select>";
+            htmlContent += "</select>";
             Swal.fire({
                 title: "<strong>发现多个会员</strong>",
                 icon: "info",

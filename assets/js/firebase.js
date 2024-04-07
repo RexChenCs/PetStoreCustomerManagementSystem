@@ -1,6 +1,17 @@
-let authDomain = firebaseConfig['authDomain'];
 //////////////////////////////////////////////////////////---------LOGIN/REGISTER---------/////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 1000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+    }
+});
+
 function login() {
     var email = document.getElementById("signin_email").value;
     var password = document.getElementById("signin_psw").value;
@@ -10,12 +21,37 @@ function login() {
 
             return firebase.auth().signInWithEmailAndPassword(email, password)
                 .then(function (user) {
-                    window.location.href = authDomain + "/layouts/home.html";
+                    Toast.fire({
+                        icon: "success",
+                        title: "Signed In successfully"
+                    }).then(() => {
+                        Swal.fire({
+                            title: "Sign In",
+                            text: 'You sign in successfully ',
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(function () {
+                            window.location.href = authDomain + "/layouts/home.html";
+                        });
+
+                    });
                 })
                 .catch(function (error) {
                     var errorMessage = error.message;
-                    document.getElementById('login-error').innerHTML = "<Strong>Error: <Strong>" + errorMessage;
-                    document.getElementById('login-error-bar').style.display = "block";
+                    if (isValidJSON(errorMessage)) {
+                        errorMessage = JSON.parse(errorMessage).error.message;
+                        if (errorMessage == 'INVALID_LOGIN_CREDENTIALS') {
+                            errorMessage = 'The password is invalid or the user does not have a password.'
+                        }
+
+                    }
+                    Swal.fire({
+                        icon: "error",
+                        html: '<i class="fas fa-exclamation-circle" style="color:red"></i>Invalid Email or Password',
+                        showConfirmButton: false,
+                        footer: 'Details: ' + errorMessage
+                    });
 
                 });
         })
@@ -27,7 +63,6 @@ function login() {
                 text: errorCode + ":" + errorMessage,
                 icon: "error"
             });
-
         });
 
 }
@@ -36,7 +71,6 @@ function isAdmin(id) {
     var isAdminRole = window.sessionStorage.getItem('isAdminRole');
     var userEmail = window.sessionStorage.getItem('userEmail');
     document.getElementById("userEmail").innerHTML = userEmail;
-
     if (isAdminRole === "true") {
         document.getElementById(id).style.display = "block";
     } else {
@@ -45,18 +79,6 @@ function isAdmin(id) {
 }
 
 function signout() {
-
-    const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 1000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-        }
-    });
     Toast.fire({
         icon: "success",
         title: "Signed out successfully"
@@ -149,31 +171,9 @@ function memberInfoLookUpTable(memberId) {
         if (!snapshot.exists()) {
             Swal.fire("错误提醒", "查询的会员账号不存在", "error");
         } else {
-            var memberId = snapshot.key;
-            var memberName = snapshot.child("memberName").val();
-            var memberPetName = snapshot.child("memberPetName").val();
-            var memberPhone = snapshot.child("memberPhone").val();
-            var memberDiscountRate = snapshot.child("memberDiscountRate").val();
-            var memberBalance = snapshot.child("memberBalance").val();
-            var employee = snapshot.child("employee").val();
-            var memberJoinDate = snapshot.child("memberJoinDate").val();
-            var memberPetBreed = snapshot.child("memberPetBreed").val();
-            var memberPetGender = snapshot.child("memberPetGender").val();
-            var note = snapshot.child("note").val();
-            memberInfoJson = '{ "memberId":"' + memberId + '",'
-                + '"memberName":"' + memberName + '",'
-                + '"memberPetName":"' + memberPetName + '",'
-                + '"memberPhone":"' + memberPhone + '",'
-                + '"memberDiscountRate":"' + memberDiscountRate + '",'
-                + '"employee":"' + employee + '",'
-                + '"memberJoinDate":"' + memberJoinDate + '",'
-                + '"memberPetBreed":"' + memberPetBreed + '",'
-                + '"memberPetGender":"' + memberPetGender + '",'
-                + '"note":"' + note + '",'
-                + '"memberBalance":"' + memberBalance + '"'
-                + '}';
+            memberInfoJson = memberInfoConvertor(snapshot);
         }
-        return JSON.parse(memberInfoJson);
+        return memberInfoJson;
     });
 
 }
@@ -238,7 +238,34 @@ function transactionInfoLookUpTable(transactionId) {
         }
         return JSON.parse(transactionInfoJson);
     });
+}
 
+function memberInfoConvertor(snapshot){
+    var memberId = snapshot.key;
+    var memberName = snapshot.child("memberName").val();
+    var memberPetName = snapshot.child("memberPetName").val();
+    var memberPhone = snapshot.child("memberPhone").val();
+    var memberDiscountRate = snapshot.child("memberDiscountRate").val();
+    var memberBalance = snapshot.child("memberBalance").val();
+    var employee = snapshot.child("employee").val();
+    var memberJoinDate = snapshot.child("memberJoinDate").val();
+    var memberPetBreed = snapshot.child("memberPetBreed").val();
+    var memberPetGender = snapshot.child("memberPetGender").val();
+    var note = snapshot.child("note").val();
+    var memberInfoJson = '{ "memberId":"' + memberId + '",'
+        + '"memberName":"' + memberName + '",'
+        + '"memberPetName":"' + memberPetName + '",'
+        + '"memberPhone":"' + memberPhone + '",'
+        + '"memberDiscountRate":"' + memberDiscountRate + '",'
+        + '"employee":"' + employee + '",'
+        + '"memberJoinDate":"' + memberJoinDate + '",'
+        + '"memberPetBreed":"' + memberPetBreed + '",'
+        + '"memberPetGender":"' + memberPetGender + '",'
+        + '"note":"' + note + '",'
+        + '"memberBalance":"' + memberBalance + '"'
+        + '}';
+
+    return JSON.parse(memberInfoJson);
 }
 
 function calDiscountRate(input, elementId) {

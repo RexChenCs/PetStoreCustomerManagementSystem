@@ -9,18 +9,12 @@ $(document).ready(function () {
     isAdmin("adminsection");
 
     $("input[type='tel']").on({
-        click: function () {
-            $(this).val('');
-        },
         keyup: function () {
             formatPhone($(this));
         }
     });
 
     $("input[id='memberBalanceInfo']").on({
-        click: function () {
-            $(this).val('');
-        },
         keyup: function () {
             wrapCurrency($(this));
         },
@@ -28,7 +22,7 @@ $(document).ready(function () {
             if (isNumeric($(this).val())) {
                 calDiscountRate($(this).val(), 'memberDiscountRateInfo');
                 formatCurrency($(this));
-            }else if(!checkValue($(this).val())){
+            }else if(!checkValue($(this).val()) && ! isValidConcurrency($(this).val())){
                 Swal.fire("错误提醒", "请输入正确数额", "warning");
                 $(this).val('');
             }
@@ -48,16 +42,13 @@ $(document).ready(function () {
     });
 
     $("input[id='transactionAmountInfo']").on({
-        click: function () {
-            $(this).val('');
-        },
         keyup: function () {
             wrapCurrency($(this));
         },
         blur: function () {
             if (isNumeric($(this).val())) {
                 formatCurrency($(this));
-            }else if(!checkValue($(this).val())){
+            }else if(!checkValue($(this).val()) && ! isValidConcurrency($(this).val())){
                 Swal.fire("错误提醒", "请输入正确数额", "warning");
                 $(this).val('');
             }
@@ -75,67 +66,18 @@ $(document).ready(function () {
             }
         }
     });
+
+    $(document).on('keypress', 'input,select', function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            var $next = $('[tabIndex=' + (+this.tabIndex + 1) + ']');
+            if (!$next.length) {
+                $next = $('[tabIndex=1]');
+            }
+            $next.focus().click();
+        }
+    });
 });
-
-function isNumeric(stringValue){
-    return /^[+-]?\d+(\.\d+)?$/.test(stringValue);
-}
-
-
-let USDollar = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-});
-
-function wrapCurrency(input) {
-    var output;
-    output = input.val().replace(/[^0-9,.]/g, '');
-    input.val(output);
-}
-
-function formatCurrency(input) {
-    var input_val = input.val();
-    input.val(USDollar.format(input_val));
-}
-
-function convertCurrencyToNumber(currencyStr) {
-    return Number(currencyStr.replace(/[^0-9.-]+/g, ""));
-}
-
-function formatMemberId(input) {
-    var input_val = input.val();
-    var output = 'PH' + (100000 + Number(input_val));
-    input.val(output);
-}
-
-function formatEmployeeId(input) {
-    var input_val = input.val();
-    var output = 'PHE' + (1000 + Number(input_val));
-    input.val(output);
-}
-
-function formatPhone(input) {
-    var phoneValue = input.val();
-    var output;
-    output = wrapPhoneNumber(phoneValue);
-    input.val(output);
-}
-
-function wrapPhoneNumber(phoneValue) {
-    var output;
-    phoneValue = phoneValue.replace(/[^0-9]/g, '');
-    var area = phoneValue.substr(0, 3);
-    var pre = phoneValue.substr(3, 3);
-    var tel = phoneValue.substr(6, 4);
-    if (area.length < 3) {
-        output = "(" + area;
-    } else if (area.length == 3 && pre.length < 3) {
-        output = "(" + area + ")" + " " + pre;
-    } else if (area.length == 3 && pre.length == 3) {
-        output = "(" + area + ")" + " " + pre + " - " + tel;
-    }
-    return output;
-}
 
 
 function employeeSelectedOptionForAdminManagement() {
@@ -217,7 +159,6 @@ function findMemberByIdForEditInfo() {
 }
 
 function findEmployeeByIdForEditInfo() {
-
     var employeeId = document.getElementById('employeeIdSearchingForEditInfo').value.trim();
     if (employeeId == null || employeeId == "") {
         Swal.fire("错误提醒", "请输入员工账号", "warning");
@@ -760,7 +701,6 @@ function addAcctUser() {
     }
 }
 
-
 function readAcctUserInfoTable(tableId) {
 
     var query = firebase.database().ref('users/').orderByKey();
@@ -781,14 +721,12 @@ function readAcctUserInfoTable(tableId) {
                 '<td>' + isAdminRole + '</td>' +
                 '</tr>';
             table.innerHTML += row;
-
         });
     });
 }
 
 
 function updateEmailNoticeInfo(){
-
     if(updateEmailNoticeInfoValidation()){
         var publicKey = document.getElementById('publicKey').value;
         var serviceId = document.getElementById('serviceId').value;
@@ -804,8 +742,6 @@ function updateEmailNoticeInfo(){
 }
 
 
-
-
 function updateSetting() {
     var emailNotificationOn = document.getElementById('emailNotification').checked;
     var discountRateEditable = document.getElementById('discountRateEditable').checked;
@@ -818,7 +754,6 @@ function updateSetting() {
 
 
 function loadingSetting() {
-
     var settingInfo = firebase.database().ref('setting/');
     settingInfo.on("value", function (snapshot) {
         document.getElementById('emailNotification').checked = snapshot.child('emailNotification').val();
