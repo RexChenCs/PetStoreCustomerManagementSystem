@@ -10,3 +10,4 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+let authDomain = firebaseConfig['authDomain'];
