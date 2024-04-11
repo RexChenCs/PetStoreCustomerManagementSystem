@@ -268,24 +268,30 @@ function memberInfoConvertor(snapshot){
     return JSON.parse(memberInfoJson);
 }
 
-function calDiscountRate(input, elementId) {
-    var discountRate = 1;
-    if (input >= 300 && input < 500) {
-        discountRate = 0.9;
-    } else if (input >= 500 && input < 800) {
-        discountRate = 0.85;
-    } else if (input >= 800 && input < 1500) {
-        discountRate = 0.8;
-    } else if (input >= 1500 && input < 3000) {
-        discountRate = 0.75;
-    } else if (input >= 3000) {
-        discountRate = 0.7;
-    }
-    var settingInfo = firebase.database().ref('setting/');
-    settingInfo.on("value", function (snapshot) {
-        var isEnable = snapshot.child('discountRateAutoApply').val();
-        if (isEnable) {
-            document.getElementById(elementId).value = discountRate;
-        }
+
+function calDiscountRate(loadingAmount, elementId) {
+    discountRateInfoLookUpTable(loadingAmount).then(function(discountRate){
+        var settingInfo = firebase.database().ref('setting/');
+        settingInfo.on("value", function (snapshot) {
+            var isEnable = snapshot.child('discountRateAutoApply').val();
+            if (isEnable) {
+                document.getElementById(elementId).value = discountRate;
+            }
+        });
+    });
+}
+
+
+function discountRateInfoLookUpTable(loadingAmount) {
+    loadingAmount = Number(loadingAmount);
+    var discountInfo = firebase.database().ref('discounts/');
+    return discountInfo.orderByChild('value').equalTo(loadingAmount).once("value").then(snapshot => {
+        var rate = 1;
+        snapshot.forEach(function (data) {
+            if (data.child('value').val() === loadingAmount) {
+                rate = data.child('rate').val();
+            }
+        });
+        return Number(rate);
     });
 }

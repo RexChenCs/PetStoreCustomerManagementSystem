@@ -9,7 +9,7 @@ $(document).ready(function () {
         }
     });
 
-    $("input[id='memberBalance']").on({
+    $("input[id='memberBalance_customize']").on({
         keyup: function () {
             wrapCurrency($(this));
         },
@@ -24,13 +24,31 @@ $(document).ready(function () {
         }
     });
 
-    $("input[id='add_credit_member_balance']").on({
+    $("select[id='memberBalance']").on({
+        keyup: function () {
+            wrapCurrency($(this));
+        },
+        change: function (){
+            if($(this).val()==='others'){
+                document.getElementById('memberBalance_customize_section').style.display='block'
+                document.getElementById('memberDiscountRate').value = null;
+                document.getElementById('memberDiscountRate').readOnly = false;
+            }else{
+                document.getElementById('memberBalance_customize_section').style.display='none';
+                discountRateEnable();
+                calDiscountRate($(this).val(), 'memberDiscountRate');
+            }
+            
+        }
+    });
+
+
+    $("input[id='memberBalance_customize']").on({
         keyup: function () {
             wrapCurrency($(this));
         },
         blur: function () {
             if (isNumeric($(this).val())) {
-                calDiscountRate($(this).val(), 'add_credit_discountRate');
                 formatCurrency($(this));
             } else if (!checkValue($(this).val()) && !isValidConcurrency($(this).val())) {
                 Swal.fire("错误提醒", "请输入正确数额", "warning");
@@ -38,6 +56,81 @@ $(document).ready(function () {
             }
         }
     });
+
+
+    $("input[id='memberDiscountRate']").on({
+        keyup: function () {
+            wrapDiscountRate($(this));
+        },
+        blur: function () {
+            if (!isValidDiscountRate($(this).val()) && !checkValue($(this).val())) {
+                Swal.fire("错误提醒", "请输入正确折扣率(例如:0.90)", "warning");
+                $(this).val('');
+            }
+        }
+    });
+
+
+    $("input[id='add_credit_discountRate']").on({
+        keyup: function () {
+            wrapDiscountRate($(this));
+        },
+        blur: function () {
+            if (!isValidDiscountRate($(this).val()) &&!checkValue($(this).val())) {
+                Swal.fire("错误提醒", "请输入正确折扣率(例如:0.90)", "warning");
+                $(this).val('');
+            }
+        }
+    });
+
+    $("select[id='add_credit_member_balance']").on({
+        keyup: function () {
+            wrapCurrency($(this));
+        },
+        change: function (){
+            if($(this).val()==='others'){
+                document.getElementById('add_credit_member_balance_customize_section').style.display='block'
+                document.getElementById('add_credit_discountRate').value = null;
+                document.getElementById('add_credit_discountRate').readOnly = false;
+
+            }else{
+                document.getElementById('add_credit_member_balance_customize_section').style.display='none';
+                discountRateEnable();
+                calDiscountRate($(this).val(), 'add_credit_discountRate');
+            }
+            
+        }
+    });
+
+
+    $("input[id='add_credit_member_balance_customize']").on({
+        keyup: function () {
+            wrapCurrency($(this));
+        },
+        blur: function () {
+            if (isNumeric($(this).val())) {
+                formatCurrency($(this));
+            } else if (!checkValue($(this).val()) && !isValidConcurrency($(this).val())) {
+                Swal.fire("错误提醒", "请输入正确数额", "warning");
+                $(this).val('');
+            }
+        }
+    });
+
+    $("input[id='memberBalance']").on({
+        keyup: function () {
+            wrapCurrency($(this));
+        },
+        blur: function () {
+            if (isNumeric($(this).val())) {
+                formatCurrency($(this));
+            } else if (!checkValue($(this).val()) && !isValidConcurrency($(this).val())) {
+                Swal.fire("错误提醒", "请输入正确数额", "warning");
+                $(this).val('');
+            }
+        }
+    });
+
 
     $("input[id='member_spend_credit_balance_original']").on({
         keyup: function () {
@@ -220,6 +313,7 @@ $(document).ready(function () {
     document.getElementById('spend_credit_date').valueAsDate = new Date(nyDate);
     generateNewMemberId();
     employeeSelectedOptionForMemberManagement();
+    loadingValueSelectedOptionForMemberManagement();
     discountRateEnable();
     isAdmin("adminsection");
 });
@@ -269,7 +363,12 @@ function findMemberByIdForVIPManagement(searchCategoryType) {
 function addCreditForMember() {
 
     var memberId = document.getElementById('memberIdSearchedForAdd').value.trim();
-    var creditAmount = convertCurrencyToNumber(document.getElementById('add_credit_member_balance').value.trim());
+    var creditAmount = document.getElementById('add_credit_member_balance').value.trim();
+    if(creditAmount==='others'){
+        creditAmount = convertCurrencyToNumber(document.getElementById('add_credit_member_balance_customize').value.trim())
+    } else{
+        creditAmount = Number(creditAmount);
+    }
     var originalDiscountRate = Number(document.getElementById('memberDiscountRateSearchedForAdd').value.trim());
 
     if (memberId == null || memberId == "") {
@@ -299,20 +398,22 @@ function addCreditForMember() {
                 var addCreditEmployee = document.getElementById('add_credit_employeeName').value.trim();
                 var newDiscountRate = Number(document.getElementById('add_credit_discountRate').value.trim());
 
-                var addCreditNote = document.getElementById('add_credit_note').value;
+                var addCreditNote = document.getElementById('add_credit_note').value;                  
+                addCreditNote= textAreaLineControl(addCreditNote, 40);
+                
                 var newBalance = Number(memberBalance) + Number(creditAmount);
                 var memberInfo = firebase.database().ref('members/' + memberId);
                 memberInfo.update({
-                    'memberBalance': newBalance,
+                    'memberBalance': Number(newBalance).toFixed(2),
                     'memberDiscountRate': newDiscountRate
                 });
                 const transactionId = generateTransactionId();
                 var transactionInfo = firebase.database().ref('transactions/' + transactionId);
                 transactionInfo.set({
                     'memberId': memberId,
-                    'amount': creditAmount,
+                    'amount': Number(creditAmount).toFixed(2),
                     'discountRate': originalDiscountRate,
-                    'memberRemainingBalance': newBalance,
+                    'memberRemainingBalance': Number(newBalance).toFixed(2),
                     'type': 'addCredit',
                     'date': addCreditDate,
                     'employeeId': addCreditEmployee,
@@ -369,23 +470,24 @@ function spendCreditForMember() {
                 } else {
                     var memberInfo = firebase.database().ref('members/' + memberId);
                     memberInfo.update({
-                        memberBalance: newBalance,
+                        memberBalance: Number(newBalance).toFixed(2),
                     })
 
                     var spendCreditDate = document.getElementById('spend_credit_date').value.trim();
                     var spendCreditEmployee = document.getElementById('spend_credit_employeeName').value.trim();
                     var spendCreditNote = document.getElementById('spend_credit_note').value;
+                    spendCreditNote = textAreaLineControl(spendCreditNote,40);
 
                     const transactionId = generateTransactionId();
                     var transactionInfo = firebase.database().ref('transactions/' + transactionId);
                     transactionInfo.set({
                         'memberId': memberId,
-                        'amount': creditAmount,
+                        'amount': Number(creditAmount).toFixed(2),
                         'type': 'spendCredit',
                         'date': spendCreditDate,
                         'employeeId': spendCreditEmployee,
                         'discountRate': memberDiscountRate,
-                        'memberRemainingBalance': newBalance,
+                        'memberRemainingBalance': Number(newBalance).toFixed(2),
                         'status': 'paid',
                         'note': spendCreditNote
                     });
@@ -412,10 +514,19 @@ function addNewMember() {
     var memberPetGender = document.getElementById('memberPetGender').value.trim();
     var memberJoinDate = document.getElementById('memberJoinDate').value.trim();
     var memberPhone = document.getElementById('memberPhone').value.trim();
-    var memberBalance = convertCurrencyToNumber(document.getElementById('memberBalance').value.trim());
+    var memberBalance = document.getElementById('memberBalance').value.trim();
+    var memberBalance_customize = document.getElementById('memberBalance_customize').value.trim();
+
+    if(memberBalance==='others'){
+        memberBalance = convertCurrencyToNumber(memberBalance_customize);
+    } else{
+        memberBalance = Number(memberBalance);
+    }
+
     var memberDiscountRate = Number(document.getElementById('memberDiscountRate').value.trim());
     var addNewMemberByEmployee = document.getElementById('addNewMemberByEmployee').value.trim();
     var addNewMemberNote = document.getElementById('addNewMemberNote').value.trim();
+    addNewMemberNote= textAreaLineControl(addNewMemberNote,40);
 
     var memberInfoDetails = { 'memberName': memberName, 'memberPetName': memberPetName, 'memberPetBreed': memberPetBreed, 'memberPetGender': memberPetGender, 'memberJoinDate': memberJoinDate, 'memberPhone': memberPhone, 'memberBalance': memberBalance, 'memberDiscountRate': memberDiscountRate, 'employee': addNewMemberByEmployee, 'note': addNewMemberNote };
 
@@ -468,8 +579,8 @@ function saveMemberInfo(memberId, memberInfoDetails) {
 
     var transactionInfoDetail = {
         'memberId': memberId,
-        'amount': memberBalance,
-        'memberRemainingBalance': memberBalance,
+        'amount': Number(memberBalance).toFixed(2),
+        'memberRemainingBalance': Number(memberBalance).toFixed(2),
         'type': 'newMember',
         'date': memberJoinDate,
         'employeeId': addNewMemberByEmployee,
@@ -685,6 +796,8 @@ function discountRateEnable() {
     settingInfo.on("value", function (snapshot) {
         var isEnable = snapshot.child('discountRateEditable').val();
         document.getElementById('memberDiscountRate').readOnly = !isEnable;
+        document.getElementById('add_credit_discountRate').readOnly = !isEnable;
+
     });
 }
 
@@ -705,4 +818,33 @@ function duplicatedPhoneCheckEnable() {
         isDuplicatedPhoneCheckEnable = snapshot.child('duplicatedPhoneCheck').val();
     });
     return isDuplicatedPhoneCheckEnable;
+}
+
+function loadingValueSelectedOptionForMemberManagement() {
+    var discountInfo = firebase.database().ref('discounts/').orderByKey();
+    discountInfo.on("value", function (snapshot) {
+        var newMemberValueSelectAttr = document.getElementById('memberBalance');
+        var loadingValueSelectAttr = document.getElementById('add_credit_member_balance');
+        snapshot.forEach(function (childSnapshot) {
+            var loadingValue = childSnapshot.child('value').val();
+            const opt = document.createElement("option");
+            opt.value = loadingValue;
+            opt.text = formatCurrencyForNumber(loadingValue);
+            loadingValueSelectAttr.add(opt, null);
+
+            const opt1 = document.createElement("option");
+            opt1.value = loadingValue;
+            opt1.text = formatCurrencyForNumber(loadingValue);
+            newMemberValueSelectAttr.add(opt1, null);
+        });
+        const opt = document.createElement("option");
+        opt.value = 'others';
+        opt.text = '自定义面值';
+        loadingValueSelectAttr.add(opt, null);
+
+        const opt1 = document.createElement("option");
+        opt1.value = 'others';
+        opt1.text = '自定义面值';
+        newMemberValueSelectAttr.add(opt1, null);
+    });
 }

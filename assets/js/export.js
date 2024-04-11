@@ -1,25 +1,94 @@
 $(document).ready(function () {
-
     $('#export_table_members').DataTable({
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
+        fixedColumns: {
+            start: 1
+        },
+        scrollCollapse: true,
+        scrollX: true,
+        scrollY: 400,
+        // responsive: {
+        //     breakpoints: [
+        //         { name: 'note', width: 20 }
+        //     ]
+        // },
+        layout: {
+            top1Start:
+            {
+                buttons: [
+                    {
+                        text: '会员信息',
+                        action: function () {
+                            readExportTable('members_table');
+                        }
+                    },
+                    {
+                        text: '交易信息',
+                        action: function () {
+                            readExportTable('transactions_table');
+                        }
+                    },
+                ]
+            },
+            topStart: {
+                buttons: [
+                    'colvis', 'copy', 'excel', 'print'
+                ]
+            },
+            topEnd: {
+                search: {
+                    placeholder: 'Type search here'
+                }
+            },
+        }
     });
     $('#export_table_transactions').DataTable({
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
+        fixedColumns: {
+            start: 1
+        },
+        scrollCollapse: true,
+        scrollX: true,
+        scrollY: 400,
+        // responsive: {
+        //     breakpoints: [
+        //         { name: 'note', width: 20 }
+        //     ]
+        // },
+        layout: {
+            top1Start:
+            {
+                buttons: [
+                    {
+                        text: '会员信息',
+                        action: function () {
+                            readExportTable('members_table');
+                        }
+                    },
+                    {
+                        text: '交易信息',
+                        action: function () {
+                            readExportTable('transactions_table');
+                        }
+                    },
+                ]
+            },
+            topStart: {
+                buttons: [
+                    'colvis', 'copy', 'excel', 'print'
+                ]
+            },
+            topEnd: {
+                search: {
+                    placeholder: 'Type search here'
+                }
+            },
+        }
     });
-    document.getElementById("export_table_transactions_section").style.display = "none";
+    readExportTable('members_table');
     setup();
     isAdmin("adminsection");
 });
 
-function readExportTable() {
-
-    var export_table_name = document.getElementById('search_table').value;
+function readExportTable(export_table_name) {
 
     if (export_table_name === "members_table") {
 
@@ -27,7 +96,6 @@ function readExportTable() {
         document.getElementById("export_table_transactions_section").style.display = "none";
         var table = $('#export_table_members').DataTable();
         var members = firebase.database().ref('members/').orderByKey();
-
         members.on("value", function (snapshot) {
             table.clear().draw();
             snapshot.forEach(function (childSnapshot) {
@@ -44,7 +112,6 @@ function readExportTable() {
                 var employeeId = data.child('employee').val();
                 var note = data.child('note').val();
 
-
                 if (petGender === "m") {
                     petGender = "男";
                 } else if (petGender === "f") {
@@ -53,11 +120,10 @@ function readExportTable() {
                     petGender = "未知";
                 }
 
-                firebase.database().ref('employees/'+employeeId).once("value", function (snapshot) {     
+                firebase.database().ref('employees/' + employeeId).once("value", function (snapshot) {
                     var employeeName = snapshot.child('employeeName').val();
                     table.row.add([memberId, name, petName, petBreed, petGender, memberPhone, memberJoinedDate, memberDis, "$" + balance, employeeName, note]).draw();
                 });
-
 
             });
         });
@@ -67,10 +133,8 @@ function readExportTable() {
 
         document.getElementById("export_table_members_section").style.display = "none";
         document.getElementById("export_table_transactions_section").style.display = "block";
-
         var table = $('#export_table_transactions').DataTable();
         var transactions = firebase.database().ref('transactions/').orderByKey();
-
         transactions.on("value", function (snapshot) {
             table.clear().draw();
             snapshot.forEach(function (data) {
@@ -92,9 +156,9 @@ function readExportTable() {
                     type = "开户";
                 }
 
-                firebase.database().ref('employees/'+employeeId).once("value", function (snapshot) {     
+                firebase.database().ref('employees/' + employeeId).once("value", function (snapshot) {
                     var employeeName = snapshot.child('employeeName').val();
-                    table.row.add([memberId, transactionId, employeeName, date, type, "$" + amount, "$" + remainingBalace, status, note]).draw();
+                    table.row.add([transactionId, memberId, employeeName, date, type, "$" + amount, "$" + remainingBalace, status, note]).draw();
                 });
 
             });

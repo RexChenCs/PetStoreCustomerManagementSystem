@@ -37,11 +37,12 @@
     <!--Theme Responsive css-->
     <link rel="stylesheet" href="../assets/css/responsive.css" />
     <!--export -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css">
-
-
-
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/5.0.0/css/fixedColumns.dataTables.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.1/css/responsive.dataTables.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/2.3.0/css/searchPanes.dataTables.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/2.0.0/css/select.dataTables.css">
 </head>
 <body>
 <!--[if lt IE 8]>
@@ -105,31 +106,8 @@
 
         <div class="container">
 
-
-            <div class="row">
-
-                <div class="col-sm-2 form-group">
-                    <input name="tableTypeLabel" type="text" class="form-control" value="查询数据类型" readonly/>
-                </div>
-
-                <div class="col-sm-2 form-group">
-                    <select id="search_table" type="text" class="form-control">
-                        <option value = "members_table" selected>会员信息</option>
-                        <option value = "transactions_table">消费记录</option>
-                    </select>
-                </div>
-
-                <div class="col-sm-6 form-group">
-                </div>
-
-                <div class="col-sm-2 form-group">
-                    <button id="search_action" class="form-control" type="button" onclick="readExportTable()">Search</button>
-                </div>
-
-            </div>
-
             <div id="export_table_members_section">
-                <table id="export_table_members" class="display nowrap"   display="none" cellspacing="0" width="100%">
+                <table id="export_table_members" class="display nowrap" cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <th>会员号</th>
@@ -150,11 +128,11 @@
             </div>
 
             <div  id="export_table_transactions_section" >
-                <table id="export_table_transactions" class="display nowrap" cellspacing="0" width="100%">
+                <table id="export_table_transactions" class="display nowrap" display="none" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th>会员号</th>
                             <th>交易号</th>
+                            <th>会员号</th>
                             <th>交易员</th>
                             <th>日期</th>
                             <th>类型</th>
@@ -191,19 +169,30 @@
         </div>
     </div>
 </footer>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="../assets/js/common.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="../assets/js/vendor/jquery-1.11.2.min.js"></script>
 <script src="../assets/js/vendor/bootstrap.min.js"></script>
+
+<script src="https:////cdn.datatables.net/2.0.3/js/dataTables.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/select.dataTables.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/dataTables.fixedColumns.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/fixedColumns.dataTables.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.colVis.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/3.0.1/js/dataTables.responsive.js"></script>
+<script src="https://cdn.datatables.net/responsive/3.0.1/js/responsive.dataTables.js"></script>
+
+<script src="https://cdn.datatables.net/searchpanes/2.3.0/js/dataTables.searchPanes.js"></script>
+<script src="https://cdn.datatables.net/searchpanes/2.3.0/js/searchPanes.dataTables.js"></script>
+
+
 <script src="../assets/js/config.js"></script>
 <script src="../assets/js/firebase.js"></script>
 <script src="../assets/js/export.js"></script>

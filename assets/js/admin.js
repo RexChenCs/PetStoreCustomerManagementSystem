@@ -258,6 +258,8 @@ function updateMemberInfo() {
         memberDiscountRate = document.getElementById('memberDiscountRateInfo').value;
         addNewMemberByEmployee = document.getElementById('addNewMemberByEmployeeInfo').value;
         addNewMemberNote = document.getElementById('addNewMemberNoteInfo').value;
+        addNewMemberNote = textAreaLineControl(addNewMemberNote, 40);
+
         var memberInfo = firebase.database().ref('members/' + memberId);
 
         if (current_employee_for_new_member != addNewMemberByEmployee) {
@@ -285,6 +287,7 @@ function updateEmployeeInfo() {
         var employeePhone = document.getElementById('employeePhoneInfo').value;
         var employeePosition = document.getElementById('employeePositionInfo').value;
         var employeeNote = document.getElementById('employeeNoteInfo').value;
+        employeeNote = textAreaLineControl(employeeNote, 40);
         var employeeInfo = firebase.database().ref('employees/' + employeeId);
         employeeInfo.update({ 'employeeName': employeeName, 'employeePhone': employeePhone, 'employeePosition': employeePosition, 'employeeNote': employeeNote });
         Swal.fire("成功", "员工信息已保存", "success").then(() => {
@@ -341,6 +344,7 @@ function updateTransactionInfo() {
     var transactionDiscountRate = Number(document.getElementById('transactionDiscountRateInfo').value);
     var transactionByEmployee = document.getElementById('transactionByEmployeeInfo').value;
     var transactionNote = document.getElementById('transactionNoteInfo').value;
+    transactionNote = textAreaLineControl(transactionNote, 40);
     var transactionRemainingBalance = document.getElementById('transactionRemainingBalanceInfo').value;
 
     if(Number(transactionAmount)==0){
@@ -431,7 +435,7 @@ function memberAcctHandlerForUpdateTransaction(oldTransactionId, UpdatedTransact
                 } else if(result['type'] == 'spendCredit'){
                     remainingBalanceForUpdatedTransaction = Number(result['remainingBalance']) + Number(result['amount']) - Number(UpdatedTransactionInfoDetail['amount']);
                 }
-                UpdatedTransactionInfoDetail['memberRemainingBalance'] = remainingBalanceForUpdatedTransaction;
+                UpdatedTransactionInfoDetail['memberRemainingBalance'] = Number(remainingBalanceForUpdatedTransaction).toFixed(2);
                 firebase.database().ref('transactions/').child(oldTransactionId).update(UpdatedTransactionInfoDetail);
                 findTransactionByIdForEditInfo();
                 Swal.fire("成功", "订单已修改");
@@ -470,7 +474,7 @@ function memberAcctModify(transactionType, transactionMemberId, transactionAmoun
                 backward_amount = Number(memberBalance) - Number(transactionAmount);
             }
             if (isValidTransaction) {
-                memberInfo.update({ 'memberBalance': backward_amount, 'memberDiscountRate': transactionDiscountRate });
+                memberInfo.update({ 'memberBalance': Number(backward_amount).toFixed(2), 'memberDiscountRate': transactionDiscountRate });
                 Swal.fire("成功", "用户：" + transactionMemberId + " 金额 $" + transactionAmount + "已经返还. 用户最新余额为：$" + backward_amount, "success");
             }
         }
