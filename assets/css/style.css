@@ -821,6 +821,10 @@ textarea::-ms-input-placeholder
     color: red;
 }
 
+.nonRequired:after {
+    content:" #";
+    color: white;
+}
 
 #search_action{
     background-color: #adadad;

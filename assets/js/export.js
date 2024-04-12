@@ -6,11 +6,6 @@ $(document).ready(function () {
         scrollCollapse: true,
         scrollX: true,
         scrollY: 400,
-        // responsive: {
-        //     breakpoints: [
-        //         { name: 'note', width: 20 }
-        //     ]
-        // },
         layout: {
             top1Start:
             {
@@ -48,11 +43,6 @@ $(document).ready(function () {
         scrollCollapse: true,
         scrollX: true,
         scrollY: 400,
-        // responsive: {
-        //     breakpoints: [
-        //         { name: 'note', width: 20 }
-        //     ]
-        // },
         layout: {
             top1Start:
             {

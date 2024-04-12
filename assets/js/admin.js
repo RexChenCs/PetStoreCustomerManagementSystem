@@ -1,12 +1,51 @@
 $(document).ready(function () {
-
-    generateNewEmployeeId();
     employeeSelectedOptionForAdminManagement();
-    readEmployeeInfoTable();
     readAcctUserInfoTable('acctUserInfo_table');
     readAcctUserInfoTable('acctUserInfo_table_copy');
     readEmailNoticeInfo();
     isAdmin("adminsection");
+
+    $('#employeeTable').DataTable({
+        layout: {
+            topStart: {
+                buttons: [
+                    {
+                        text: 'create',
+                        action: function () {
+                            createEmployeePanel();
+                        }
+                    },
+                    {
+                        text: 'edit',
+                        action: function () {
+                            editEmployeePanel();
+                        }
+                    }
+                ]
+            },
+            topEnd: {
+                search: {
+                    placeholder: 'Type search here'
+                }
+            }
+        }
+    });
+
+    const table = new DataTable('#employeeTable');
+    table.on('click', 'tbody tr', (e) => {
+        let classList = e.currentTarget.classList;
+
+        if (classList.contains('selected')) {
+            classList.remove('selected');
+        }
+        else {
+            table.rows('.selected').nodes().each((row) => row.classList.remove('selected'));
+            classList.add('selected');
+        }
+    });
+
+
+    readEmployeeInfoTable();
 
     $("input[type='tel']").on({
         keyup: function () {
@@ -22,7 +61,7 @@ $(document).ready(function () {
             if (isNumeric($(this).val())) {
                 calDiscountRate($(this).val(), 'memberDiscountRateInfo');
                 formatCurrency($(this));
-            }else if(!checkValue($(this).val()) && ! isValidConcurrency($(this).val())){
+            } else if (!checkValue($(this).val()) && !isValidConcurrency($(this).val())) {
                 Swal.fire("错误提醒", "请输入正确数额", "warning");
                 $(this).val('');
             }
@@ -48,7 +87,7 @@ $(document).ready(function () {
         blur: function () {
             if (isNumeric($(this).val())) {
                 formatCurrency($(this));
-            }else if(!checkValue($(this).val()) && ! isValidConcurrency($(this).val())){
+            } else if (!checkValue($(this).val()) && !isValidConcurrency($(this).val())) {
                 Swal.fire("错误提醒", "请输入正确数额", "warning");
                 $(this).val('');
             }
@@ -79,13 +118,86 @@ $(document).ready(function () {
     });
 });
 
+function createEmployeePanel() {
+    Swal.fire({
+        title: "New Employee",
+        confirmButtonText: "Save",
+        showCancelButton: true,
+        html: `
+            <label for="employeeNameForAdding" class="required">姓名</label><input id="employeeNameForAdding" class="swal2-input">
+            <br>
+            <label for="employeePositionForAdding" class="nonRequired">职位</label><input id="employeePositionForAdding" class="swal2-input">
+            <br>
+            <label for="employeePhoneForAdding" class="nonRequired">电话</label><input id="employeePhoneForAdding" type="tel" class="swal2-input">
+        `
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var employeeName = document.getElementById('employeeNameForAdding').value.trim();
+            if (employeeName == null || employeeName == "") {
+                Swal.fire("错误提醒", "请输入员工名字", "warning");
+            } else {
+                var employeePosition = document.getElementById('employeePositionForAdding').value;
+                var employeePhone = document.getElementById('employeePhoneForAdding').value;
+                generateNewEmployeeId().then(function (newEmployeeId) {
+                    var employeeInfo = firebase.database().ref('employees/' + newEmployeeId);
+                    employeeInfo.set({ 'employeeName': employeeName, 'employeePosition': employeePosition, 'employeePhone': employeePhone });
+                    Swal.fire("成功", "会员信息已保存: " + newEmployeeId, "success");
+                });
+            }
+        }
+    });
+}
+
+
+function editEmployeePanel() {
+
+    const table = new DataTable('#employeeTable');
+    employeeData = table.row('.selected').data();
+    if (employeeData === undefined || employeeData === null) {
+        Swal.fire("错误提醒", "请点击修改的员工", "warning");
+    }
+
+    Swal.fire({
+        title: "Edit Employee",
+        confirmButtonText: "Save",
+        showCancelButton: true,
+        html: `
+            <label for="employeeIdForEdit" class="required">工号</label><input id="employeeIdForEdit" style='background:#efefef;' value="${employeeData[0]}"  class="swal2-input" readonly>
+            <br>
+            <label for="employeeNameForEdit" class="required">姓名</label><input id="employeeNameForEdit" value="${employeeData[1]}" class="swal2-input">
+            <br>
+            <label for="employeePositionForEdit" class="nonRequired">职位</label><input id="employeePositionForEdit" value="${employeeData[2]}" class="swal2-input"> 
+            <br>
+            <label for="employeePhoneForEdit" class="nonRequired">电话</label><input id="employeePhoneForEdit" type="tel" value="${employeeData[3]}" class="swal2-input"> 
+        `
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var employeeId = document.getElementById('employeeIdForEdit').value.trim();
+            var employeeName = document.getElementById('employeeNameForEdit').value.trim();
+            if (employeeName == null || employeeName == "") {
+                Swal.fire("错误提醒", "请输入员工名字", "warning");
+            } else {
+                var employeePosition = document.getElementById('employeePositionForEdit').value;
+                var employeePhone = document.getElementById('employeePhoneForEdit').value;
+
+                var employeeInfo = firebase.database().ref('employees/' + employeeId);
+                employeeInfo.update({ 'employeeName': employeeName, 'employeePosition': employeePosition, 'employeePhone': employeePhone });
+                Swal.fire("成功", "会员信息已保存", "success");
+
+            }
+        }
+    });
+}
 
 function employeeSelectedOptionForAdminManagement() {
     var employeeInfo = firebase.database().ref('employees/').orderByKey();
+    var employeeSelectAttr = document.getElementById('addNewMemberByEmployeeInfo');
+    var employeeSelectAttr1 = document.getElementById('search_employeeId_selection');
+    var employeeSelectAttr2 = document.getElementById('transactionByEmployeeInfo');
     employeeInfo.on("value", function (snapshot) {
-        var employeeSelectAttr = document.getElementById('addNewMemberByEmployeeInfo');
-        var employeeSelectAttr1 = document.getElementById('search_employeeId_selection');
-        var employeeSelectAttr2 = document.getElementById('transactionByEmployeeInfo');
+        ClearOptionsFastAlt('addNewMemberByEmployeeInfo');
+        ClearOptionsFastAlt('search_employeeId_selection');
+        ClearOptionsFastAlt('transactionByEmployeeInfo');
         snapshot.forEach(function (childSnapshot) {
             var employeeId = childSnapshot.key;
             var employeeName = childSnapshot.child("employeeName").val();
@@ -243,9 +355,9 @@ function updateMemberInfo() {
     var memberId = document.getElementById('memberIdInfo').value.trim();
     if (memberId == null || memberId == "") {
         Swal.fire("错误提醒", "请输入会员账号", "warning");
-    } else if(!updateMemberInfoValidation()){
+    } else if (!updateMemberInfoValidation()) {
         return;
-    } else{
+    } else {
 
         memberName = document.getElementById('memberNameInfo').value;
         memberPetName = document.getElementById('memberPetNameInfo').value;
@@ -275,27 +387,27 @@ function updateMemberInfo() {
 }
 
 
-function updateEmployeeInfo() {
+// function updateEmployeeInfo() {
 
-    var employeeId = document.getElementById('employeeIdInfo').value.trim();
-    var employeeName = document.getElementById('employeeNameInfo').value;
-    if (employeeId == null || employeeId == "") {
-        Swal.fire("错误提醒", "请输入员工账号", "warning");
-    } else if(employeeName == null || employeeName == ""){
-        Swal.fire("错误提醒", "请输入员工名字", "warning");
-    } else{
-        var employeePhone = document.getElementById('employeePhoneInfo').value;
-        var employeePosition = document.getElementById('employeePositionInfo').value;
-        var employeeNote = document.getElementById('employeeNoteInfo').value;
-        employeeNote = textAreaLineControl(employeeNote, 40);
-        var employeeInfo = firebase.database().ref('employees/' + employeeId);
-        employeeInfo.update({ 'employeeName': employeeName, 'employeePhone': employeePhone, 'employeePosition': employeePosition, 'employeeNote': employeeNote });
-        Swal.fire("成功", "员工信息已保存", "success").then(() => {
-            location.reload();
-        });
-    }
+//     var employeeId = document.getElementById('employeeIdInfo').value.trim();
+//     var employeeName = document.getElementById('employeeNameInfo').value;
+//     if (employeeId == null || employeeId == "") {
+//         Swal.fire("错误提醒", "请输入员工账号", "warning");
+//     } else if (employeeName == null || employeeName == "") {
+//         Swal.fire("错误提醒", "请输入员工名字", "warning");
+//     } else {
+//         var employeePhone = document.getElementById('employeePhoneInfo').value;
+//         var employeePosition = document.getElementById('employeePositionInfo').value;
+//         var employeeNote = document.getElementById('employeeNoteInfo').value;
+//         employeeNote = textAreaLineControl(employeeNote, 40);
+//         var employeeInfo = firebase.database().ref('employees/' + employeeId);
+//         employeeInfo.update({ 'employeeName': employeeName, 'employeePhone': employeePhone, 'employeePosition': employeePosition, 'employeeNote': employeeNote });
+//         Swal.fire("成功", "员工信息已保存", "success").then(() => {
+//             location.reload();
+//         });
+//     }
 
-}
+// }
 
 
 function voidTransactionInfo() {
@@ -347,9 +459,9 @@ function updateTransactionInfo() {
     transactionNote = textAreaLineControl(transactionNote, 40);
     var transactionRemainingBalance = document.getElementById('transactionRemainingBalanceInfo').value;
 
-    if(Number(transactionAmount)==0){
+    if (Number(transactionAmount) == 0) {
         voidTransactionInfo();
-    } else{
+    } else {
         var UpdatedTransactionInfoDetail = {
             'memberId': transactionMemberId,
             'amount': transactionAmount,
@@ -361,12 +473,12 @@ function updateTransactionInfo() {
             'status': 'paid',
             'note': transactionNote
         };
-    
+
         if (transactionId == null || transactionId == "") {
             Swal.fire("错误提醒", "请输入交易查询号", "warning");
-        } else if(!updateTransactionValidation()){
+        } else if (!updateTransactionValidation()) {
             return;
-        }else if (status === 'void') {
+        } else if (status === 'void') {
             Swal.fire("错误提醒", "订单已经被消除，不可以修改", "warning");
         } else {
             const swalWithBootstrapButtons = Swal.mixin({
@@ -413,7 +525,7 @@ function memberAcctHandlerForUpdateTransaction(oldTransactionId, UpdatedTransact
 
     var transactionInfo = firebase.database().ref('transactions/' + oldTransactionId);
     //Modify user acct back to original amount
-    var isSuccessfulUpdateMemberAcct= transactionInfo.once('value').then(snapshot => {
+    var isSuccessfulUpdateMemberAcct = transactionInfo.once('value').then(snapshot => {
         if (snapshot.exists()) {
             var transactionAmount = snapshot.child("amount").val();
             var transactionType = snapshot.child("type").val();
@@ -426,23 +538,23 @@ function memberAcctHandlerForUpdateTransaction(oldTransactionId, UpdatedTransact
 
     //  if add => old balance - old amount + new amount 
     //  if delete => old balance + old amount - new amount 
-    if(isSuccessfulUpdateMemberAcct){
+    if (isSuccessfulUpdateMemberAcct) {
         transactionInfoLookUpTable(oldTransactionId).then(function (result) {
             if (result != null) {
-                var remainingBalanceForUpdatedTransaction=0;
-                if(result['type'] == 'addCredit'){
+                var remainingBalanceForUpdatedTransaction = 0;
+                if (result['type'] == 'addCredit') {
                     remainingBalanceForUpdatedTransaction = Number(result['remainingBalance']) - Number(result['amount']) + Number(UpdatedTransactionInfoDetail['amount']);
-                } else if(result['type'] == 'spendCredit'){
+                } else if (result['type'] == 'spendCredit') {
                     remainingBalanceForUpdatedTransaction = Number(result['remainingBalance']) + Number(result['amount']) - Number(UpdatedTransactionInfoDetail['amount']);
                 }
                 UpdatedTransactionInfoDetail['memberRemainingBalance'] = Number(remainingBalanceForUpdatedTransaction).toFixed(2);
                 firebase.database().ref('transactions/').child(oldTransactionId).update(UpdatedTransactionInfoDetail);
                 findTransactionByIdForEditInfo();
                 Swal.fire("成功", "订单已修改");
-            } else{
+            } else {
                 Swal.fire("错误提醒", "交易未发现", "warning");
             }
-        });     
+        });
     }
 }
 
@@ -628,42 +740,26 @@ function updateAdminRole() {
 
 
 function generateNewEmployeeId() {
-    firebase.database().ref('employees/').on("value", function (snapshot) {
+    return firebase.database().ref('employees/').once("value").then(snapshot => {
         var employeeBasedId = 1000;
         var employeePrefix = 'PHE';
         var newEmployeeBasedId = employeeBasedId + snapshot.numChildren() + 1;
         var newEmployeeId = employeePrefix + newEmployeeBasedId;
-        document.getElementById('employeeIdForAdding').value = newEmployeeId;
+        return newEmployeeId;
     })
 }
 
 function readEmployeeInfoTable() {
-
     var query = firebase.database().ref('employees/').orderByKey();
-
+    var table = $('#employeeTable').DataTable();
     query.on("value", function (snapshot) {
-
-        var table = document.getElementById('employeeInfo_table');
-
-        // clear up old data to reduce duplication
-        table.innerHTML = null;
-
+        table.clear().draw();
         snapshot.forEach(function (childSnapshot) {
-            var table = document.getElementById('employeeInfo_table');
             var employeeId = childSnapshot.key;
             var employeeName = childSnapshot.child("employeeName").val();
             var employeePhone = childSnapshot.child("employeePhone").val();
             var employeePosition = childSnapshot.child("employeePosition").val();
-
-
-            var row = '<tr>' +
-                '<td>' + employeeId + '</td>' +
-                '<td>' + employeeName + '</td>' +
-                '<td>' + employeePhone + '</td>' +
-                '<td>' + employeePosition + '</td>' +
-                '</tr>';
-            table.innerHTML += row;
-
+            table.row.add([employeeId, employeeName, employeePosition, employeePhone]).draw();
         });
     });
 }
@@ -730,8 +826,8 @@ function readAcctUserInfoTable(tableId) {
 }
 
 
-function updateEmailNoticeInfo(){
-    if(updateEmailNoticeInfoValidation()){
+function updateEmailNoticeInfo() {
+    if (updateEmailNoticeInfoValidation()) {
         var publicKey = document.getElementById('publicKey').value;
         var serviceId = document.getElementById('serviceId').value;
         var templateId = document.getElementById('templateId').value;
@@ -740,7 +836,7 @@ function updateEmailNoticeInfo(){
         var replyTo = document.getElementById('replyTo').value;
 
         var emailNoticeConfig = firebase.database().ref('emailNoticeConfig/');
-        emailNoticeConfig.set({ 'publicKey': publicKey, 'serviceId': serviceId, 'templateId': templateId, 'fromName': fromName, 'toName': toName,'replyTo': replyTo});
+        emailNoticeConfig.set({ 'publicKey': publicKey, 'serviceId': serviceId, 'templateId': templateId, 'fromName': fromName, 'toName': toName, 'replyTo': replyTo });
         Swal.fire("成功", "设置已更改", "success");
     }
 }

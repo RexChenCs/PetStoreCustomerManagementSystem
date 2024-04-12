@@ -767,11 +767,13 @@ function memberIdSearchReselect(sectionType) {
 
 
 function employeeSelectedOptionForMemberManagement() {
-
+    var addNewMemberSelectAttr = document.getElementById('addNewMemberByEmployee');
+    var addCreditEmployeeSelectAttr = document.getElementById('add_credit_employeeName');
+    var spendCreditEmployeeSelectAttr = document.getElementById('spend_credit_employeeName');
     firebase.database().ref('employees/').orderByKey().on("value", function (snapshot) {
-        var addNewMemberSelectAttr = document.getElementById('addNewMemberByEmployee');
-        var addCreditEmployeeSelectAttr = document.getElementById('add_credit_employeeName');
-        var spendCreditEmployeeSelectAttr = document.getElementById('spend_credit_employeeName');
+        ClearOptionsFastAlt('addNewMemberByEmployee');
+        ClearOptionsFastAlt('add_credit_employeeName');
+        ClearOptionsFastAlt('spend_credit_employeeName');
         snapshot.forEach(function (childSnapshot) {
             var employeeId = childSnapshot.key;
             var employeeName = childSnapshot.child("employeeName").val();

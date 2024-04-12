@@ -113,3 +113,9 @@ function textAreaLineControl(text, maxLength){
     }
     return words.join(" ");
 }
+
+
+function ClearOptionsFastAlt(id)
+{
+	document.getElementById(id).innerHTML = "";
+}
