@@ -115,7 +115,6 @@ function textAreaLineControl(text, maxLength){
 }
 
 
-function ClearOptionsFastAlt(id)
-{
+function ClearOptionsFastAlt(id){
 	document.getElementById(id).innerHTML = "";
 }

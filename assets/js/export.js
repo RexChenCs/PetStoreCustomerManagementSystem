@@ -86,7 +86,7 @@ function readExportTable(export_table_name) {
         document.getElementById("export_table_transactions_section").style.display = "none";
         var table = $('#export_table_members').DataTable();
         var members = firebase.database().ref('members/').orderByKey();
-        members.on("value", function (snapshot) {
+        members.once("value", function (snapshot) {
             table.clear().draw();
             snapshot.forEach(function (childSnapshot) {
                 var memberId = childSnapshot.key;
@@ -125,7 +125,7 @@ function readExportTable(export_table_name) {
         document.getElementById("export_table_transactions_section").style.display = "block";
         var table = $('#export_table_transactions').DataTable();
         var transactions = firebase.database().ref('transactions/').orderByKey();
-        transactions.on("value", function (snapshot) {
+        transactions.once("value", function (snapshot) {
             table.clear().draw();
             snapshot.forEach(function (data) {
                 var memberId = data.child('memberId').val();

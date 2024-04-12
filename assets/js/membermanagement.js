@@ -823,10 +823,12 @@ function duplicatedPhoneCheckEnable() {
 }
 
 function loadingValueSelectedOptionForMemberManagement() {
+    var newMemberValueSelectAttr = document.getElementById('memberBalance');
+    var loadingValueSelectAttr = document.getElementById('add_credit_member_balance');
     var discountInfo = firebase.database().ref('discounts/').orderByKey();
     discountInfo.on("value", function (snapshot) {
-        var newMemberValueSelectAttr = document.getElementById('memberBalance');
-        var loadingValueSelectAttr = document.getElementById('add_credit_member_balance');
+        ClearOptionsFastAlt('memberBalance');
+        ClearOptionsFastAlt('add_credit_member_balance');
         snapshot.forEach(function (childSnapshot) {
             var loadingValue = childSnapshot.child('value').val();
             const opt = document.createElement("option");
