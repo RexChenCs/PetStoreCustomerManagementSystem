@@ -370,7 +370,7 @@ function updateMemberInfo() {
         memberDiscountRate = document.getElementById('memberDiscountRateInfo').value;
         addNewMemberByEmployee = document.getElementById('addNewMemberByEmployeeInfo').value;
         addNewMemberNote = document.getElementById('addNewMemberNoteInfo').value;
-        addNewMemberNote = textAreaLineControl(addNewMemberNote, 40);
+        addNewMemberNote = textAreaLineControl(addNewMemberNote, 20);
 
         var memberInfo = firebase.database().ref('members/' + memberId);
 
@@ -385,30 +385,6 @@ function updateMemberInfo() {
         });
     }
 }
-
-
-// function updateEmployeeInfo() {
-
-//     var employeeId = document.getElementById('employeeIdInfo').value.trim();
-//     var employeeName = document.getElementById('employeeNameInfo').value;
-//     if (employeeId == null || employeeId == "") {
-//         Swal.fire("错误提醒", "请输入员工账号", "warning");
-//     } else if (employeeName == null || employeeName == "") {
-//         Swal.fire("错误提醒", "请输入员工名字", "warning");
-//     } else {
-//         var employeePhone = document.getElementById('employeePhoneInfo').value;
-//         var employeePosition = document.getElementById('employeePositionInfo').value;
-//         var employeeNote = document.getElementById('employeeNoteInfo').value;
-//         employeeNote = textAreaLineControl(employeeNote, 40);
-//         var employeeInfo = firebase.database().ref('employees/' + employeeId);
-//         employeeInfo.update({ 'employeeName': employeeName, 'employeePhone': employeePhone, 'employeePosition': employeePosition, 'employeeNote': employeeNote });
-//         Swal.fire("成功", "员工信息已保存", "success").then(() => {
-//             location.reload();
-//         });
-//     }
-
-// }
-
 
 function voidTransactionInfo() {
 
@@ -456,7 +432,7 @@ function updateTransactionInfo() {
     var transactionDiscountRate = Number(document.getElementById('transactionDiscountRateInfo').value);
     var transactionByEmployee = document.getElementById('transactionByEmployeeInfo').value;
     var transactionNote = document.getElementById('transactionNoteInfo').value;
-    transactionNote = textAreaLineControl(transactionNote, 40);
+    transactionNote = textAreaLineControl(transactionNote, 20);
     var transactionRemainingBalance = document.getElementById('transactionRemainingBalanceInfo').value;
 
     if (Number(transactionAmount) == 0) {

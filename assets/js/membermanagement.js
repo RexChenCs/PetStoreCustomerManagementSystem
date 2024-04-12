@@ -399,7 +399,7 @@ function addCreditForMember() {
                 var newDiscountRate = Number(document.getElementById('add_credit_discountRate').value.trim());
 
                 var addCreditNote = document.getElementById('add_credit_note').value;                  
-                addCreditNote= textAreaLineControl(addCreditNote, 40);
+                addCreditNote= textAreaLineControl(addCreditNote, 20);
                 
                 var newBalance = Number(memberBalance) + Number(creditAmount);
                 var memberInfo = firebase.database().ref('members/' + memberId);
@@ -476,7 +476,7 @@ function spendCreditForMember() {
                     var spendCreditDate = document.getElementById('spend_credit_date').value.trim();
                     var spendCreditEmployee = document.getElementById('spend_credit_employeeName').value.trim();
                     var spendCreditNote = document.getElementById('spend_credit_note').value;
-                    spendCreditNote = textAreaLineControl(spendCreditNote,40);
+                    spendCreditNote = textAreaLineControl(spendCreditNote,20);
 
                     const transactionId = generateTransactionId();
                     var transactionInfo = firebase.database().ref('transactions/' + transactionId);
@@ -526,7 +526,7 @@ function addNewMember() {
     var memberDiscountRate = Number(document.getElementById('memberDiscountRate').value.trim());
     var addNewMemberByEmployee = document.getElementById('addNewMemberByEmployee').value.trim();
     var addNewMemberNote = document.getElementById('addNewMemberNote').value.trim();
-    addNewMemberNote= textAreaLineControl(addNewMemberNote,40);
+    addNewMemberNote= textAreaLineControl(addNewMemberNote,20);
 
     var memberInfoDetails = { 'memberName': memberName, 'memberPetName': memberPetName, 'memberPetBreed': memberPetBreed, 'memberPetGender': memberPetGender, 'memberJoinDate': memberJoinDate, 'memberPhone': memberPhone, 'memberBalance': memberBalance, 'memberDiscountRate': memberDiscountRate, 'employee': addNewMemberByEmployee, 'note': addNewMemberNote };
 
