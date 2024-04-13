@@ -81,40 +81,80 @@ const isValidJSON = str => {
 };
 
 const isValidConcurrency = numStr => {
-    var regex  = /^\$\d+(?:\.\d{0,2})$/;
+    var regex = /^\$\d+(?:\.\d{0,2})$/;
     return regex.test(numStr)
 };
 
 
 const isValidDiscountRate = numStr => {
-    var regex  = /(0\.\d{0,2})$/;
+    var regex = /(0\.\d{0,2})$/;
     return regex.test(numStr) || Number(numStr) === 1;
 };
 
 function wrapDiscountRate(input) {
     var output;
     output = input.val().replace(/[^0-9,.]/g, '');
-    if(output.length>4){
+    if (output.length > 4) {
         output = output.substr(0, 3);
     }
     input.val(output);
 }
 
-function textAreaLineControl(text, maxLength){
-    text = text.replace("\n", " ").trim();
-    var words = text.split(" "); 
-    var pointer = words[0].length;
-    for(var i = 1; i<words.length;i++){
-        pointer += words[i].length + 1;
-        if(pointer>maxLength){
-            words[i-1] += '<br>';
-            pointer = words[i].length + 1;
-        } 
+function textAreaLineControl(text, charlimit) {
+    var lines = text.split('\n');
+    for (var i = 0; i < lines.length; i++) {
+        if (lines[i].length <= charlimit) continue;
+        var j = 0; space = charlimit;
+        while (j++ <= charlimit) {
+            if (lines[i].charAt(j) === ' ') space = j;
+        }
+        lines[i + 1] = lines[i].substring(space + 1) + (lines[i + 1] || "");
+        lines[i] = lines[i].substring(0, space);
     }
-    return words.join(" ");
+    return lines.slice(0, 10).join('\n');
 }
 
 
-function ClearOptionsFastAlt(id){
-	document.getElementById(id).innerHTML = "";
+function ClearOptionsFastAlt(id) {
+    document.getElementById(id).innerHTML = "";
+}
+
+
+function getCurrentNYDate() {
+    var currentTZ = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York' });
+    var nyDate = currentTZ.format(new Date());
+    return new Date(nyDate);
+}
+
+function setup() {
+    this.addEventListener("mousemove", resetTimer, false);
+    this.addEventListener("mousedown", resetTimer, false);
+    this.addEventListener("keypress", resetTimer, false);
+    this.addEventListener("DOMMouseScroll", resetTimer, false);
+    this.addEventListener("mousewheel", resetTimer, false);
+    this.addEventListener("touchmove", resetTimer, false);
+    this.addEventListener("MSPointerMove", resetTimer, false);
+    startTimer();
+}
+
+
+function startTimer() {
+    // wait 15 minus before calling goInactive
+    timeoutID = window.setTimeout(goInactive, 900000);
+}
+
+function resetTimer(e) {
+    window.clearTimeout(timeoutID);
+    goActive();
+}
+
+function goInactive() {
+    if (firebase.auth().currentUser != null) {
+        alert("Time out: your are no active within 15 minus!");
+        signout();
+    }
+}
+
+function goActive() {
+    startTimer();
 }

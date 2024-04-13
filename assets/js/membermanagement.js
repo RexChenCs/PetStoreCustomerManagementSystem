@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+    setup();
+
     $("input[type='tel']").on({
         click: function () {
             $(this).val('');
@@ -38,7 +40,6 @@ $(document).ready(function () {
                 discountRateEnable();
                 calDiscountRate($(this).val(), 'memberDiscountRate');
             }
-            
         }
     });
 
@@ -306,11 +307,9 @@ $(document).ready(function () {
         }
     });
 
-    var currentTZ = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York' });
-    var nyDate = currentTZ.format(new Date());
-    document.getElementById('memberJoinDate').valueAsDate = new Date(nyDate);
-    document.getElementById('add_credit_date').valueAsDate = new Date(nyDate);
-    document.getElementById('spend_credit_date').valueAsDate = new Date(nyDate);
+    document.getElementById('memberJoinDate').valueAsDate = getCurrentNYDate();
+    document.getElementById('add_credit_date').valueAsDate = getCurrentNYDate();
+    document.getElementById('spend_credit_date').valueAsDate = getCurrentNYDate();
     generateNewMemberId();
     employeeSelectedOptionForMemberManagement();
     loadingValueSelectedOptionForMemberManagement();
@@ -346,14 +345,14 @@ function findMemberByIdForVIPManagement(searchCategoryType) {
     if (memberId == null || memberId == "") {
         Swal.fire("错误提醒", "请输入会员账号", "warning");
     } else {
-        memberInfoLookUpTable(memberId).then(function (result) {
-            if (result != null) {
-                document.getElementById('memberIdSearchedFor' + searchCategoryType).value = memberId;
-                document.getElementById('memberNameSearchedFor' + searchCategoryType).value = result['memberName'];
-                document.getElementById('memberPetNameSearchedFor' + searchCategoryType).value = result['memberPetName'];
-                document.getElementById('memberPhoneSearchedFor' + searchCategoryType).value = result['memberPhone'];
-                document.getElementById('memberBalanceSearchedFor' + searchCategoryType).value = result['memberBalance'];
-                document.getElementById('memberDiscountRateSearchedFor' + searchCategoryType).value = result['memberDiscountRate'];
+        memberInfoLookUpTable(memberId).then(function (snapshot) {
+            if (snapshot.exists()) {
+                document.getElementById('memberIdSearchedFor' + searchCategoryType).value = snapshot.key;
+                document.getElementById('memberNameSearchedFor' + searchCategoryType).value = snapshot.child('memberName').val();
+                document.getElementById('memberPetNameSearchedFor' + searchCategoryType).value = snapshot.child('memberPetName').val();
+                document.getElementById('memberPhoneSearchedFor' + searchCategoryType).value = snapshot.child('memberPhone').val();
+                document.getElementById('memberBalanceSearchedFor' + searchCategoryType).value = snapshot.child('memberBalance').val();
+                document.getElementById('memberDiscountRateSearchedFor' + searchCategoryType).value = snapshot.child('memberDiscountRate').val();
             }
         });
     }
@@ -370,7 +369,6 @@ function addCreditForMember() {
         creditAmount = Number(creditAmount);
     }
     var originalDiscountRate = Number(document.getElementById('memberDiscountRateSearchedForAdd').value.trim());
-
     if (memberId == null || memberId == "") {
         Swal.fire("错误提醒", "请先查询用户信息，确保充值用户正确", "warning");
     } else if (!addCreditValidation()) {
@@ -397,7 +395,6 @@ function addCreditForMember() {
                 var addCreditDate = document.getElementById('add_credit_date').value.trim();
                 var addCreditEmployee = document.getElementById('add_credit_employeeName').value.trim();
                 var newDiscountRate = Number(document.getElementById('add_credit_discountRate').value.trim());
-
                 var addCreditNote = document.getElementById('add_credit_note').value;                  
                 addCreditNote= textAreaLineControl(addCreditNote, 20);
                 
@@ -431,8 +428,6 @@ function addCreditForMember() {
         });
     }
 }
-
-
 
 function spendCreditForMember() {
 
@@ -472,7 +467,6 @@ function spendCreditForMember() {
                     memberInfo.update({
                         memberBalance: Number(newBalance).toFixed(2),
                     })
-
                     var spendCreditDate = document.getElementById('spend_credit_date').value.trim();
                     var spendCreditEmployee = document.getElementById('spend_credit_employeeName').value.trim();
                     var spendCreditNote = document.getElementById('spend_credit_note').value;
@@ -491,7 +485,7 @@ function spendCreditForMember() {
                         'status': 'paid',
                         'note': spendCreditNote
                     });
-                    var message = "操作类型：消费，会员号：" + memberId + ",金额：" + creditAmount + ",余额:" + newBalance + ",员工：" + spendCreditEmployee + ",日期：" + spendCreditDate;
+                    var message = "操作类型:消费，会员号：" + memberId + ",金额：" + creditAmount + ",余额:" + newBalance + ",员工：" + spendCreditEmployee + ",日期：" + spendCreditDate;
                     sendEmailEnable(message);
                     swalWithBootstrapButtons.fire("消费成功", "会员: " + memberId + " 已消费 $" + creditAmount + ". 请重新查询最新信息", "success").then(() => { location.reload() });
                 }
@@ -590,7 +584,7 @@ function saveMemberInfo(memberId, memberInfoDetails) {
     };
 
     saveTransactionInfo(transactionId, transactionInfoDetail);
-    var message = "操作类型：开户，会员号：" + memberId + ",金额：" + memberBalance + ",员工：" + addNewMemberByEmployee + ",日期：" + memberJoinDate + ", 折扣：" + memberDiscountRate;
+    var message = "操作类型:开户，会员号：" + memberId + ",金额：" + memberBalance + ",员工：" + addNewMemberByEmployee + ",日期：" + memberJoinDate + ", 折扣：" + memberDiscountRate;
     sendEmailEnable(message);
     Swal.fire("办理成功", "新会员已经加入: " + memberId, "success").then(() => {
         location.reload()
@@ -625,34 +619,34 @@ function searchMemberByCatagory(sectionType) {
 
 function searchMemberByCatagoryMemberId(memberId, sectionType) {
 
-    memberInfoLookUpTable(memberId).then(function (result) {
-        if (result == null) {
+    memberInfoLookUpTable(memberId).then(function (snapshot) {
+        if (!snapshot.exists()) {
             clearContentBySection(sectionType);
         } else {
-            buildContentBySection(result, sectionType);
+            buildContentBySection(snapshot, sectionType);
         }
     });
 }
 
 function buildContentBySection(memberInfo, sectionType) {
-    document.getElementById('memberIdSearchedFor' + sectionType).value = memberInfo['memberId'];
-    document.getElementById('memberNameSearchedFor' + sectionType).value = memberInfo['memberName'];
-    document.getElementById('memberPetNameSearchedFor' + sectionType).value = memberInfo['memberPetName'];
-    document.getElementById('memberPhoneSearchedFor' + sectionType).value = memberInfo['memberPhone'];
-    document.getElementById('memberBalanceSearchedFor' + sectionType).value = memberInfo['memberBalance'];
-    document.getElementById('memberDiscountRateSearchedFor' + sectionType).value = memberInfo['memberDiscountRate'];
-    if (sectionType == 'Search') {
-        document.getElementById('memberPetBreedSearchedFor' + sectionType).value = memberInfo['memberPetBreed'];
+    document.getElementById('memberIdSearchedFor' + sectionType).value = memberInfo.key;
+    document.getElementById('memberNameSearchedFor' + sectionType).value = memberInfo.child('memberName').val();
+    document.getElementById('memberPetNameSearchedFor' + sectionType).value = memberInfo.child('memberPetName').val();
+    document.getElementById('memberPhoneSearchedFor' + sectionType).value = memberInfo.child('memberPhone').val();
+    document.getElementById('memberBalanceSearchedFor' + sectionType).value = memberInfo.child('memberBalance').val();
+    document.getElementById('memberDiscountRateSearchedFor' + sectionType).value = memberInfo.child('memberDiscountRate').val();
+    if (sectionType === 'Search') {
+        document.getElementById('memberPetBreedSearchedFor' + sectionType).value = memberInfo.child('memberPetBreed').val();
         var petGenderChinese='未知';
-        if(memberInfo['memberPetGender']==='m'){
+        if(memberInfo.child('memberPetGender').val()==='m'){
             petGenderChinese = '男';
-        } else if(memberInfo['memberPetGender']==='f'){
+        } else if(memberInfo.child('memberPetGender').val()==='f'){
             petGenderChinese = '女';
         }
         document.getElementById('memberPetGenderSearchedFor' + sectionType).value = petGenderChinese;
-        document.getElementById('memberJoinDateSearchedFor' + sectionType).value = memberInfo['memberJoinDate'];
-        document.getElementById('employeeSearchedFor' + sectionType).value = memberInfo['employee'];
-        document.getElementById('noteSearchedFor' + sectionType).value = memberInfo['note'];
+        document.getElementById('memberJoinDateSearchedFor' + sectionType).value = memberInfo.child('memberJoinDate').val();
+        document.getElementById('employeeSearchedFor' + sectionType).value = memberInfo.child('employee').val();
+        document.getElementById('noteSearchedFor' + sectionType).value = memberInfo.child('note').val();
     }
 }
 
@@ -663,7 +657,6 @@ function clearContentBySection(sectionType) {
     document.getElementById('memberPhoneSearchedFor' + sectionType).value = null;
     document.getElementById('memberBalanceSearchedFor' + sectionType).value = null;
     document.getElementById('memberDiscountRateSearchedFor' + sectionType).value = null;
-
     if (sectionType == 'Search') {
         document.getElementById('memberPetBreedSearchedFor' + sectionType).value = null;
         document.getElementById('memberPetGenderSearchedFor' + sectionType).value = null;
@@ -671,7 +664,6 @@ function clearContentBySection(sectionType) {
         document.getElementById('employeeSearchedFor' + sectionType).value = null;
         document.getElementById('noteSearchedFor' + sectionType).value = null;
     }
-
 }
 
 function searchMemberByCatagoryPetName(petName, sectionType) {
@@ -682,7 +674,7 @@ function searchMemberByCatagoryPetName(petName, sectionType) {
         var htmlContent = "<select id='search_member_mutiple_option_for" + sectionType + "' type='text' class='form-control'><option  selected>请选择(会员号-宠物名字-电话)</option>";
         snapshot.forEach(function (data) {
             if (String(data.child('memberPetName').val()).toUpperCase().includes(String(petName).toUpperCase())) {
-                firstChild = memberInfoConvertor(data);
+                firstChild = data;
                 htmlContent += "<option  value='" + data.key + "'>" + data.key + "-" + data.child('memberPetName').val() + "-" + data.child('memberPhone').val() + "</option>";
                 numberOfSearchedMember += 1;
             }
@@ -731,7 +723,7 @@ function searchMemberByCatagoryPhoneNumber(phoneNumber, sectionType) {
         snapshot.forEach(function (data) {
             if (data.child('memberPhone').val() == phoneNumber) {
                 if (numberOfSearchedMember === 1) {
-                    buildContentBySection(memberInfoConvertor(data), sectionType);
+                    buildContentBySection(data, sectionType);
                 } else {
                     htmlContent += "<option  value='" + data.key + "'>" + data.key + "-" + data.child('memberPetName').val() + "</option>";
                 }
@@ -829,9 +821,20 @@ function loadingValueSelectedOptionForMemberManagement() {
     discountInfo.on("value", function (snapshot) {
         ClearOptionsFastAlt('memberBalance');
         ClearOptionsFastAlt('add_credit_member_balance');
+        const optDefault = document.createElement("option");
+        const optDefault1 = document.createElement("option");
+        optDefault.value = 0;
+        optDefault.text = '请选择充值金额';
+        optDefault1.value = 0;
+        optDefault1.text = '请选择充值金额';
+        newMemberValueSelectAttr.add(optDefault, null);
+        loadingValueSelectAttr.add(optDefault1, null);
+
+
         snapshot.forEach(function (childSnapshot) {
             var loadingValue = childSnapshot.child('value').val();
             const opt = document.createElement("option");
+
             opt.value = loadingValue;
             opt.text = formatCurrencyForNumber(loadingValue);
             loadingValueSelectAttr.add(opt, null);

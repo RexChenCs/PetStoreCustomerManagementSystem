@@ -120,7 +120,7 @@ function generateTransactionTable(data) {
     }
 
 
-    memberInfoLookUpTable(memberId).then(function (result) {
+    memberInfoLookUpTable(memberId).then(function (memberInfo) {
 
         if (transactionNote === null || transactionNote === '') {
             transactionNote = '未备注';
@@ -129,7 +129,7 @@ function generateTransactionTable(data) {
         var row = '<tr>' +
             '<td>' + transactionId + '</td>' +
             '<td>' + memberId + '</td>' +
-            '<td>' + result['memberPetName'] + '</td>' +
+            '<td>' + memberInfo.child('memberPetName').val() + '</td>' +
             '<td>' + transactionDate + '</td>' +
             '<td>' + transactionTypeConv + '</td>' +
             '<td>$' + transactionAmount + '</td>' +
@@ -156,6 +156,7 @@ jQuery(document).ready(function ($) {
         }
     });
     isAdmin("adminsection");
+    setup();
 });
 
 function getEmployeeNameById(employeeId) {

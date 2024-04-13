@@ -4,6 +4,7 @@ $(document).ready(function () {
     readAcctUserInfoTable('acctUserInfo_table_copy');
     readEmailNoticeInfo();
     isAdmin("adminsection");
+    setup();
 
     $('#employeeTable').DataTable({
         layout: {
@@ -44,9 +45,7 @@ $(document).ready(function () {
         }
     });
 
-
     readEmployeeInfoTable();
-
     $("input[type='tel']").on({
         keyup: function () {
             formatPhone($(this));
@@ -239,7 +238,7 @@ function findMemberByIdForEditInfo() {
                 document.getElementById('memberPhoneInfo').value = null;
                 document.getElementById('memberBalanceInfo').value = null;
                 document.getElementById('memberDiscountRateInfo').value = null;
-                document.getElementById('addNewMemberByEmployee').value = null;
+                document.getElementById('addNewMemberByEmployeeInfo').value = null;
                 document.getElementById('addNewMemberNoteInfo').value = null;
             } else {
                 var memberId = Data.key;
@@ -728,7 +727,7 @@ function generateNewEmployeeId() {
 function readEmployeeInfoTable() {
     var query = firebase.database().ref('employees/').orderByKey();
     var table = $('#employeeTable').DataTable();
-    query.on("value", function (snapshot) {
+    query.once("value", function (snapshot) {
         table.clear().draw();
         snapshot.forEach(function (childSnapshot) {
             var employeeId = childSnapshot.key;
@@ -742,23 +741,19 @@ function readEmployeeInfoTable() {
 
 
 function readEmailNoticeInfo() {
-
-    firebase.database().ref('emailNoticeConfig/').on("value", function (snapshot) {
-
+    firebase.database().ref('emailNoticeConfig/').once("value", function (snapshot) {
         var publicKey = snapshot.child("publicKey").val();
         var serviceId = snapshot.child("serviceId").val();
         var templateId = snapshot.child("templateId").val();
         var fromName = snapshot.child("fromName").val();
         var toName = snapshot.child("toName").val();
         var replyTo = snapshot.child("replyTo").val();
-
         document.getElementById('publicKey').value = publicKey;
         document.getElementById('serviceId').value = serviceId;
         document.getElementById('templateId').value = templateId;
         document.getElementById('fromName').value = fromName;
         document.getElementById('toName').value = toName;
         document.getElementById('replyTo').value = replyTo;
-
     });
 }
 
@@ -781,7 +776,7 @@ function readAcctUserInfoTable(tableId) {
 
     var query = firebase.database().ref('users/').orderByKey();
 
-    query.on("value", function (snapshot) {
+    query.once("value", function (snapshot) {
 
         var table = document.getElementById(tableId);
 
@@ -831,7 +826,7 @@ function updateSetting() {
 
 function loadingSetting() {
     var settingInfo = firebase.database().ref('setting/');
-    settingInfo.on("value", function (snapshot) {
+    settingInfo.once("value", function (snapshot) {
         document.getElementById('emailNotification').checked = snapshot.child('emailNotification').val();
         document.getElementById('discountRateEditable').checked = snapshot.child('discountRateEditable').val();
         document.getElementById('discountRateAutoApply').checked = snapshot.child('discountRateAutoApply').val();

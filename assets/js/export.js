@@ -73,7 +73,7 @@ $(document).ready(function () {
             },
         }
     });
-    readExportTable('members_table');
+    // readExportTable('members_table');
     setup();
     isAdmin("adminsection");
 });
