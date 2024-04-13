@@ -39,6 +39,7 @@
     <link rel="stylesheet" href="./assets/css/roboto-webfont.css" />
     <!--Theme custom css -->
     <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/button.css">
     <!--Theme Responsive css-->
     <link rel="stylesheet" href="./assets/css/responsive.css" />
     <script src="./assets/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
@@ -137,9 +138,14 @@
                 </dev>
 
                 <div class="clearfix">
-                    <button type="button" onclick="document.getElementById('login_modal').style.display='none'"
+                    <!-- <button type="button" onclick="document.getElementById('login_modal').style.display='none'"
                         class="cancelbtn">Cancel</button>
-                    <button type="submit" class="signupbtn" onclick="login()">Login</button>
+                    <button type="submit" class="signupbtn" onclick="login()">Login</button> -->
+
+
+                    <div class="wrap">
+                        <button class="button" onclick="login()"">Login</button>
+                      </div>
                 </div>
             </div>
         </div>
@@ -171,7 +177,7 @@
                                         <div class="face__wrapper">
                                             <div class="eye"></div>
                                             <span class="text"
-                                                onclick="document.getElementById('login_modal').style.display='block'">LOGIN</span>
+                                                onclick="document.getElementById('login_modal').style.display='block'">ENTRY</span>
                                         </div>
                                     </div>
                                 </a>
