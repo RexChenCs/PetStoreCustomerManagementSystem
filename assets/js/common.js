@@ -101,17 +101,6 @@ function wrapDiscountRate(input) {
 }
 
 function textAreaLineControl(text, charlimit) {
-    // var lines = text.split('\n');
-    // for (var i = 0; i < lines.length; i++) {
-    //     if (lines[i].length <= charlimit) continue;
-    //     var j = 0; space = charlimit;
-    //     while (j++ <= charlimit) {
-    //         if (lines[i].charAt(j) === ' ') space = j;
-    //     }
-    //     lines[i + 1] = lines[i].substring(space + 1) + (lines[i + 1] || "");
-    //     lines[i] = lines[i].substring(0, space);
-    // }
-    // return lines.slice(0, 10).join('<br>');
     return text.replace('\n','<br>');
 }
 

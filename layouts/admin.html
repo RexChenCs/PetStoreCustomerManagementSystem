@@ -155,6 +155,17 @@
                         </div>
                     </div>
 
+
+                    <div class="col-md-3 col-sm-6 col-xs-12"
+                        onclick="document.getElementById('edit_discountRate_modal').style.display='block'">
+                        <div class="community-edition">
+                            <i class="fas fa-tags	"></i>
+                            <div class="separator"></div>
+                            <h4>修改充值折扣</h4>
+                            <p>Edit Discount Rate</p>
+                        </div>
+                    </div>
+
                     <div class="col-md-3 col-sm-6 col-xs-12"
                         onclick="document.getElementById('employee_search_modal').style.display='block'">
                         <div class="community-edition">
@@ -162,16 +173,6 @@
                             <div class="separator"></div>
                             <h4>员工提成</h4>
                             <p>Employee Commission</p>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="document.getElementById('edit_setting_modal').style.display='block'; loadingSetting()">
-                        <div class="community-edition">
-                            <i class="fa fa-gears"></i>
-                            <div class="separator"></div>
-                            <h4>设置</h4>
-                            <p>Edit Setting</p>
                         </div>
                     </div>
 
@@ -192,6 +193,16 @@
                         </div>
                     </div>
 
+                    <div class="col-md-3 col-sm-6 col-xs-12"
+                        onclick="document.getElementById('edit_setting_modal').style.display='block'; loadingSetting()">
+                        <div class="community-edition">
+                            <i class="fa fa-gears"></i>
+                            <div class="separator"></div>
+                            <h4>设置</h4>
+                            <p>Edit Setting</p>
+                        </div>
+                    </div>
+
                     <div class="portfolio-wrapper text-center">
 
                         <div class="col-md-3 col-sm-6 col-xs-12"
@@ -203,6 +214,7 @@
                                 <p>Edit Email Notice Configration</p>
                             </div>
                         </div>
+
                     </div>
 
 
@@ -216,6 +228,13 @@
                         </div>
                     </div>
 
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="portfolio-wrapper text-center">
+
                     <div class="col-md-3 col-sm-6 col-xs-12"
                         onclick="document.getElementById('edit_admin_role_modal').style.display='block'">
                         <div class="community-edition">
@@ -225,26 +244,8 @@
                             <p>Edit admin role to user</p>
                         </div>
                     </div>
-
-
                 </div>
-
             </div>
-
-            <!-- <div class="row">
-                <div class="portfolio-wrapper text-center">
-
-                    <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="document.getElementById('edit_email_notice_modal').style.display='block'">
-                        <div class="community-edition">
-                            <i class="fa-solid fa-bell"></i>
-                            <div class="separator"></div>
-                            <h4>修改提醒邮件设置</h4>
-                            <p>Edit Email Notice Configration</p>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
     </section>
 
 
@@ -512,12 +513,11 @@
                 </div>
 
             </div>
-    </div>
-    </section>
+        </section>
     </div>
 
 
-    <!-- 员工提成查询-->
+    <!--员工提成查询-->
     <div id="employee_search_modal" class="modal">
 
         <span onclick="document.getElementById('employee_search_modal').style.display='none'" class="close"
@@ -604,6 +604,40 @@
 
     </div>
 
+    <!--修改会员折扣-->
+    <div id="edit_discountRate_modal" class="modal">
+        <span onclick="document.getElementById('edit_discountRate_modal').style.display='none'" class="close"
+            title="Close Modal">&times;</span>
+
+        <section class="price sections">
+
+            <div class="contain">
+
+                <div class="tab-content">
+
+                    <div class="head_title text-center">
+                        <h1>修改会员折扣</h1>
+                    </div>
+
+                    <div class="form_container">
+                        <div>
+                            <table id='discountRateTable' class="display nowrap" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>会员等级</th>
+                                        <th>充值金额</th>
+                                        <th>折扣率</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="discountRateTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+        </section>
+    </div>
+
     <!--更改设置-->
     <div id="edit_setting_modal" class="modal">
 
@@ -654,7 +688,7 @@
         </section>
     </div>
 
-    <!--添加员工-->
+    <!--员工主页-->
     <div id="add_employee_modal" class="modal">
         <span onclick="document.getElementById('add_employee_modal').style.display='none'" class="close"
             title="Close Modal">&times;</span>
@@ -836,12 +870,9 @@
         <section class="price sections">
             <div class="contain">
                 <div class="tab-content">
-
                     <div class="head_title text-center">
                         <h1>邮箱提醒设置修改</h1>
                     </div>
-
-
                     <div class="form_container">
 
                         <div class="row">
@@ -907,9 +938,127 @@
                 </div>
             </div>
         </section>
-
     </div>
-    </section>
+
+
+    <!--添加员工-->
+    <div id="add_new_employee_modal" class="modal">
+        <span onclick="document.getElementById('add_new_employee_modal').style.display='none'" class="close"
+            title="Close Modal">&times;</span>
+        <section class="price sections">
+            <div class="contain">
+                <div class="tab-content">
+                    <div class="head_title text-center">
+                        <h1>添加新员工</h1>
+                    </div>
+                    <div class="form_container">
+                        <div class="row">
+
+                            <div class="col-sm-4 form-group">
+                                <label for="newEmployeeName" class="required">姓名</label>
+                                <input type="text" class="form-control" id="newEmployeeName">
+                            </div>
+
+                            <div class="col-sm-4 form-group">
+                                <label for="newEmployeePosition">职位</label>
+                                <input type="text" class="form-control" id="newEmployeePosition">
+                            </div>
+
+                            <div class="col-sm-4 form-group">
+                                <label for="newEmployeePhoneNumber">电话</label>
+                                <input type="tel" class="form-control" id="newEmployeePhoneNumber">
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 form-group">
+                                <div class="buttoncontainer">
+                                    <a class="button button--hoo" onclick="createNewEmployee()">
+                                        <div class="button__wrapper">
+                                            <span class="button__text">保存</span>
+                                        </div>
+                                        <div class="characterBox">
+                                            <div class="character wakeup">
+                                                <div class="character__face"></div>
+                                            </div>
+                                            <div class="character wakeup">
+                                                <div class="character__face"></div>
+                                            </div>
+                                            <div class="character">
+                                                <div class="character__face"></div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <!--修改员工信息-->
+    <div id="edit_employee_modal" class="modal">
+        <span onclick="document.getElementById('edit_employee_modal').style.display='none'" class="close"
+            title="Close Modal">&times;</span>
+        <section class="price sections">
+            <div class="contain">
+                <div class="tab-content">
+                    <div class="head_title text-center">
+                        <h1>修改员工信息</h1>
+                    </div>
+                    <div class="form_container">
+                        <div class="row">
+
+                            <div class="col-sm-6 form-group">
+                                <label for="employeeIdForEdit" class="required">工号</label>
+                                <input type="text" class="form-control" id="employeeIdForEdit" readonly>
+                            </div>
+
+                            <div class="col-sm-6 form-group">
+                                <label for="employeeNameForEdit" class="required">姓名</label>
+                                <input type="text" class="form-control" id="employeeNameForEdit">
+                            </div>
+
+                            <div class="col-sm-6 form-group">
+                                <label for="employeePositionForEdit">职位</label>
+                                <input type="text" class="form-control" id="employeePositionForEdit">
+                            </div>
+
+                            <div class="col-sm-6 form-group">
+                                <label for="employeePhoneForEdit">电话</label>
+                                <input type="tel" class="form-control" id="employeePhoneForEdit">
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 form-group">
+                                <div class="buttoncontainer">
+                                    <a class="button button--hoo" onclick="updateEmployee()">
+                                        <div class="button__wrapper">
+                                            <span class="button__text">保存</span>
+                                        </div>
+                                        <div class="characterBox">
+                                            <div class="character wakeup">
+                                                <div class="character__face"></div>
+                                            </div>
+                                            <div class="character wakeup">
+                                                <div class="character__face"></div>
+                                            </div>
+                                            <div class="character">
+                                                <div class="character__face"></div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
 

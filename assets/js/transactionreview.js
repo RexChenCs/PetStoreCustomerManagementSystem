@@ -124,6 +124,8 @@ function generateTransactionTable(data) {
 
         if (transactionNote === null || transactionNote === '') {
             transactionNote = '未备注';
+        } else {
+            transactionNote = '<i class="fa fa-search" onclick=checkTransactionNoteDetail("'+transactionId+'")>查看备注</i>'
         }
 
         var row = '<tr>' +
@@ -135,11 +137,17 @@ function generateTransactionTable(data) {
             '<td>$' + transactionAmount + '</td>' +
             '<td>$' + memberRemainingBalance + '</td>' +
             '<td>' + transactionStatusConv + '</td>' +
-            '<td><i class="fa fa-search" onclick="Swal.fire(' + "'备注详情'," + "'" + transactionNote + "'" + ')">查看备注</i></td>' +
+            '<td>'+transactionNote+'</td>' +
             '</tr>';
         table.innerHTML += row;
     });
 
+}
+
+function checkTransactionNoteDetail(transactionId){
+    firebase.database().ref("transactions/"+transactionId).once("value", function (snapshot) {
+        Swal.fire('备注详情', snapshot.child('note').val());
+    });
 }
 
 jQuery(document).ready(function ($) {
@@ -162,7 +170,6 @@ jQuery(document).ready(function ($) {
 function getEmployeeNameById(employeeId) {
     var employeeName;
     var query = firebase.database().ref('employees/' + employeeId);
-
     employeeName = query.on("value", function (snapshot) {
         employeeName = snapshot.child('employeeName').val();
     });

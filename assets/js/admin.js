@@ -13,13 +13,23 @@ $(document).ready(function () {
                     {
                         text: 'create',
                         action: function () {
-                            createEmployeePanel();
+                            document.getElementById('add_new_employee_modal').style.display = 'block';
                         }
                     },
                     {
                         text: 'edit',
                         action: function () {
-                            editEmployeePanel();
+                            const table = new DataTable('#employeeTable');
+                            employeeData = table.row('.selected').data();
+                            if (employeeData === undefined || employeeData === null) {
+                                Swal.fire("错误提醒", "请点击修改的员工", "warning");
+                            } else {
+                                document.getElementById('edit_employee_modal').style.display = 'block';
+                                document.getElementById('employeeIdForEdit').value = employeeData[0];
+                                document.getElementById('employeeNameForEdit').value = employeeData[1];
+                                document.getElementById('employeePositionForEdit').value = employeeData[2];
+                                document.getElementById('employeePhoneForEdit').value = employeeData[3];
+                            }
                         }
                     }
                 ]
@@ -32,20 +42,64 @@ $(document).ready(function () {
         }
     });
 
-    const table = new DataTable('#employeeTable');
-    table.on('click', 'tbody tr', (e) => {
+
+    $('#discountRateTable').DataTable({
+        layout: {
+            topStart: {
+                buttons: [
+                    {
+                        text: 'create',
+                        action: function () {
+                            createDiscountRatePanel();
+                        },
+                    },
+                    {
+                        text: 'edit',
+                        action: function () {
+                            editDiscountRatePanel();
+                        }
+                    }
+                ]
+            },
+            topEnd: {
+                search: {
+                    placeholder: 'Type search here'
+                }
+            }
+        }
+    });
+
+    const employeeTable = new DataTable('#employeeTable');
+    employeeTable.on('click', 'tbody tr', (e) => {
         let classList = e.currentTarget.classList;
 
         if (classList.contains('selected')) {
             classList.remove('selected');
         }
         else {
-            table.rows('.selected').nodes().each((row) => row.classList.remove('selected'));
+            employeeTable.rows('.selected').nodes().each((row) => row.classList.remove('selected'));
+            classList.add('selected');
+        }
+    });
+    readEmployeeInfoTable();
+
+    const discountRateTable = new DataTable('#discountRateTable');
+    discountRateTable.on('click', 'tbody tr', (e) => {
+        let classList = e.currentTarget.classList;
+
+        if (classList.contains('selected')) {
+            classList.remove('selected');
+        }
+        else {
+            discountRateTable.rows('.selected').nodes().each((row) => row.classList.remove('selected'));
             classList.add('selected');
         }
     });
 
-    readEmployeeInfoTable();
+    readDiscountRateInfoTable();
+
+
+
     $("input[type='tel']").on({
         keyup: function () {
             formatPhone($(this));
@@ -117,71 +171,103 @@ $(document).ready(function () {
     });
 });
 
-function createEmployeePanel() {
+
+function createNewEmployee() {
+    var employeeName = document.getElementById('newEmployeeName').value.trim();
+    if (employeeName == null || employeeName == "") {
+        Swal.fire("错误提醒", "请输入员工名字", "warning");
+    } else {
+        var employeePosition = document.getElementById('newEmployeePosition').value;
+        var employeePhone = document.getElementById('newEmployeePhoneNumber').value;
+        generateNewEmployeeId().then(function (newEmployeeId) {
+            var employeeInfo = firebase.database().ref('employees/' + newEmployeeId);
+            employeeInfo.set({ 'employeeName': employeeName, 'employeePosition': employeePosition, 'employeePhone': employeePhone });
+            Swal.fire("成功", "会员信息已保存: " + newEmployeeId, "success").then(() => {
+                readEmployeeInfoTable();
+                document.getElementById('add_new_employee_modal').style.display = 'none';
+            });
+        });
+    }
+}
+
+function updateEmployee() {
+    var employeeId = document.getElementById('employeeIdForEdit').value.trim();
+    var employeeName = document.getElementById('employeeNameForEdit').value.trim();
+    if (employeeName == null || employeeName == "") {
+        Swal.fire("错误提醒", "请输入员工名字", "warning");
+    } else {
+        var employeePosition = document.getElementById('employeePositionForEdit').value;
+        var employeePhone = document.getElementById('employeePhoneForEdit').value;
+        var employeeInfo = firebase.database().ref('employees/' + employeeId);
+        employeeInfo.update({ 'employeeName': employeeName, 'employeePosition': employeePosition, 'employeePhone': employeePhone });
+        Swal.fire("成功", "会员信息已保存", "success").then(() => {
+            readEmployeeInfoTable();
+            document.getElementById('edit_employee_modal').style.display = 'none';
+        });;
+    }
+}
+
+
+
+function createDiscountRatePanel() {
     Swal.fire({
-        title: "New Employee",
+        title: "New Discount Rate",
         confirmButtonText: "Save",
         showCancelButton: true,
         html: `
-            <label for="employeeNameForAdding" class="required">姓名</label><input id="employeeNameForAdding" class="swal2-input">
+            <label for="loadingValueForAdding" class="required">充值金额</label><input id="loadingValueForAdding" class="swal2-input">
             <br>
-            <label for="employeePositionForAdding" class="nonRequired">职位</label><input id="employeePositionForAdding" class="swal2-input">
-            <br>
-            <label for="employeePhoneForAdding" class="nonRequired">电话</label><input id="employeePhoneForAdding" type="tel" class="swal2-input">
+            <label for="discountRateForAdding" class="required">折扣率</label><input id="discountRateForAdding" class="swal2-input">
         `
     }).then((result) => {
         if (result.isConfirmed) {
-            var employeeName = document.getElementById('employeeNameForAdding').value.trim();
-            if (employeeName == null || employeeName == "") {
-                Swal.fire("错误提醒", "请输入员工名字", "warning");
+            var loadingValue = document.getElementById('loadingValueForAdding').value.trim();
+            var discountRate = document.getElementById('discountRateForAdding').value.trim();
+            if (checkValue(loadingValue) || checkValue(discountRate)) {
+                Swal.fire("错误提醒", "充值金额或者折扣率不能为空白", "warning");
             } else {
-                var employeePosition = document.getElementById('employeePositionForAdding').value;
-                var employeePhone = document.getElementById('employeePhoneForAdding').value;
-                generateNewEmployeeId().then(function (newEmployeeId) {
-                    var employeeInfo = firebase.database().ref('employees/' + newEmployeeId);
-                    employeeInfo.set({ 'employeeName': employeeName, 'employeePosition': employeePosition, 'employeePhone': employeePhone });
-                    Swal.fire("成功", "会员信息已保存: " + newEmployeeId, "success");
-                });
+                // generateNewEmployeeId().then(function (newEmployeeId) {
+                //     var employeeInfo = firebase.database().ref('employees/' + newEmployeeId);
+                //     employeeInfo.set({ 'employeeName': employeeName, 'employeePosition': employeePosition, 'employeePhone': employeePhone });
+                //     Swal.fire("成功", "会员信息已保存: " + newEmployeeId, "success");
+                // });
             }
         }
     });
 }
 
 
-function editEmployeePanel() {
+function editDiscountRatePanel() {
 
-    const table = new DataTable('#employeeTable');
-    employeeData = table.row('.selected').data();
-    if (employeeData === undefined || employeeData === null) {
-        Swal.fire("错误提醒", "请点击修改的员工", "warning");
+    const table = new DataTable('#discountRateTable');
+    discountRateData = table.row('.selected').data();
+    if (discountRateData === undefined || discountRateData === null) {
+        Swal.fire("错误提醒", "请点击修改的数据", "warning");
     }
-
     Swal.fire({
-        title: "Edit Employee",
+        title: "Edit Discount Info",
         confirmButtonText: "Save",
         showCancelButton: true,
         html: `
-            <label for="employeeIdForEdit" class="required">工号</label><input id="employeeIdForEdit" style='background:#efefef;' value="${employeeData[0]}"  class="swal2-input" readonly>
+            <label for="discountLevelIdForEdit" class="required">会员等级</label><input id="discountLevelIdForEdit" style='background:#efefef;' value="${discountRateData[0]}"  class="swal2-input" readonly>
             <br>
-            <label for="employeeNameForEdit" class="required">姓名</label><input id="employeeNameForEdit" value="${employeeData[1]}" class="swal2-input">
+            <label for="loadingValueForEdit"    class="required">充值金额</label><input id="loadingValueForEdit" value="${discountRateData[1]}" class="swal2-input">
             <br>
-            <label for="employeePositionForEdit" class="nonRequired">职位</label><input id="employeePositionForEdit" value="${employeeData[2]}" class="swal2-input"> 
-            <br>
-            <label for="employeePhoneForEdit" class="nonRequired">电话</label><input id="employeePhoneForEdit" type="tel" value="${employeeData[3]}" class="swal2-input"> 
+            <label for="discountRateForEdit" class="required">会员折扣</label><input id="discountRateForEdit" value="${discountRateData[2]}" class="swal2-input"> 
         `
     }).then((result) => {
         if (result.isConfirmed) {
-            var employeeId = document.getElementById('employeeIdForEdit').value.trim();
-            var employeeName = document.getElementById('employeeNameForEdit').value.trim();
-            if (employeeName == null || employeeName == "") {
-                Swal.fire("错误提醒", "请输入员工名字", "warning");
-            } else {
-                var employeePosition = document.getElementById('employeePositionForEdit').value;
-                var employeePhone = document.getElementById('employeePhoneForEdit').value;
+            var discountLevel = document.getElementById('discountLevelIdForEdit').value.trim();
+            var loadingValueForEdit = document.getElementById('loadingValueForEdit').value.trim();
+            var discountRateForEdit = document.getElementById('discountRateForEdit').value.trim();
 
-                var employeeInfo = firebase.database().ref('employees/' + employeeId);
-                employeeInfo.update({ 'employeeName': employeeName, 'employeePosition': employeePosition, 'employeePhone': employeePhone });
-                Swal.fire("成功", "会员信息已保存", "success");
+            if (checkValue(discountLevel) || checkValue(loadingValueForEdit) || checkValue(discountRateForEdit)) {
+                Swal.fire("错误提醒", "充值金额或者折扣不能为空白", "warning");
+            } else {
+
+                var discountRateInfo = firebase.database().ref('discounts/' + discountLevel);
+                discountRateInfo.update({ 'value': Number(loadingValueForEdit), 'rate': Number(discountRateForEdit) });
+                Swal.fire("成功", "会员折扣信息已保存", "success");
 
             }
         }
@@ -675,25 +761,6 @@ function searchTransactionByemployeeIdAndTime(employeeId, startDate, endDate) {
 }
 
 
-function addEmployee() {
-    var employeeName = document.getElementById('employeeNameForAdding').value.trim();
-    if (employeeName == null || employeeName == "") {
-        Swal.fire("错误提醒", "请输入员工名字", "warning");
-    } else {
-        var employeeId = document.getElementById('employeeIdForAdding').value;
-        var employeeName = document.getElementById('employeeNameForAdding').value;
-        var employeePosition = document.getElementById('employeePositionForAdding').value;
-        var employeePhone = document.getElementById('employeePhoneForAdding').value;
-        var employeeInfo = firebase.database().ref('employees/' + employeeId);
-        employeeInfo.set({ 'employeeName': employeeName, 'employeePosition': employeePosition, 'employeePhone': employeePhone });
-        Swal.fire("成功", "会员信息已保存", "success");
-        // location.reload();
-    }
-
-}
-
-
-
 function updateAdminRole() {
     var email = document.getElementById('adminRoleEmailForUpdate').value.trim().toLowerCase();
     if (email == null || email == "") {
@@ -738,6 +805,22 @@ function readEmployeeInfoTable() {
         });
     });
 }
+
+
+function readDiscountRateInfoTable() {
+    var query = firebase.database().ref('discounts/').orderByKey();
+    var table = $('#discountRateTable').DataTable();
+    query.once("value", function (snapshot) {
+        table.clear().draw();
+        snapshot.forEach(function (childSnapshot) {
+            var levelId = childSnapshot.key;
+            var value = childSnapshot.child("value").val();
+            var rate = childSnapshot.child("rate").val();
+            table.row.add([levelId, value, rate]).draw();
+        });
+    });
+}
+
 
 
 function readEmailNoticeInfo() {
