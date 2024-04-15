@@ -43,7 +43,6 @@ $(document).ready(function () {
         }
     });
 
-
     $("input[id='memberBalance_customize']").on({
         keyup: function () {
             wrapCurrency($(this));
@@ -58,7 +57,6 @@ $(document).ready(function () {
         }
     });
 
-
     $("input[id='memberDiscountRate']").on({
         keyup: function () {
             wrapDiscountRate($(this));
@@ -70,7 +68,6 @@ $(document).ready(function () {
             }
         }
     });
-
 
     $("input[id='add_credit_discountRate']").on({
         keyup: function () {
@@ -401,16 +398,16 @@ function addCreditForMember() {
                 var newBalance = Number(memberBalance) + Number(creditAmount);
                 var memberInfo = firebase.database().ref('members/' + memberId);
                 memberInfo.update({
-                    'memberBalance': Number(newBalance).toFixed(2),
-                    'memberDiscountRate': newDiscountRate
+                    'memberBalance': Number(Number(newBalance).toFixed(2)),
+                    'memberDiscountRate': Number(Number(newDiscountRate).toFixed(2))
                 });
                 const transactionId = generateTransactionId();
                 var transactionInfo = firebase.database().ref('transactions/' + transactionId);
                 transactionInfo.set({
                     'memberId': memberId,
-                    'amount': Number(creditAmount).toFixed(2),
-                    'discountRate': originalDiscountRate,
-                    'memberRemainingBalance': Number(newBalance).toFixed(2),
+                    'amount': Number(Number(creditAmount).toFixed(2)),
+                    'discountRate': Number(Number(originalDiscountRate).toFixed(2)),
+                    'memberRemainingBalance': Number(Number(newBalance).toFixed(2)),
                     'type': 'addCredit',
                     'date': addCreditDate,
                     'employeeId': addCreditEmployee,
@@ -465,7 +462,7 @@ function spendCreditForMember() {
                 } else {
                     var memberInfo = firebase.database().ref('members/' + memberId);
                     memberInfo.update({
-                        memberBalance: Number(newBalance).toFixed(2),
+                        memberBalance: Number(Number(newBalance).toFixed(2)),
                     })
                     var spendCreditDate = document.getElementById('spend_credit_date').value.trim();
                     var spendCreditEmployee = document.getElementById('spend_credit_employeeName').value.trim();
@@ -476,12 +473,12 @@ function spendCreditForMember() {
                     var transactionInfo = firebase.database().ref('transactions/' + transactionId);
                     transactionInfo.set({
                         'memberId': memberId,
-                        'amount': Number(creditAmount).toFixed(2),
+                        'amount': Number(Number(creditAmount).toFixed(2)),
                         'type': 'spendCredit',
                         'date': spendCreditDate,
                         'employeeId': spendCreditEmployee,
-                        'discountRate': memberDiscountRate,
-                        'memberRemainingBalance': Number(newBalance).toFixed(2),
+                        'discountRate': Number(Number(memberDiscountRate).toFixed(2)),
+                        'memberRemainingBalance': Number(Number(newBalance).toFixed(2)),
                         'status': 'paid',
                         'note': spendCreditNote
                     });
@@ -573,8 +570,8 @@ function saveMemberInfo(memberId, memberInfoDetails) {
 
     var transactionInfoDetail = {
         'memberId': memberId,
-        'amount': Number(memberBalance).toFixed(2),
-        'memberRemainingBalance': Number(memberBalance).toFixed(2),
+        'amount': Number(Number(memberBalance).toFixed(2)),
+        'memberRemainingBalance': Number(Number(memberBalance).toFixed(2)),
         'type': 'newMember',
         'date': memberJoinDate,
         'employeeId': addNewMemberByEmployee,

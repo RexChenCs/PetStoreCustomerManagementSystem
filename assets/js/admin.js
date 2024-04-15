@@ -42,7 +42,6 @@ $(document).ready(function () {
         }
     });
 
-
     $('#discountRateTable').DataTable({
         layout: {
             topStart: {
@@ -50,13 +49,23 @@ $(document).ready(function () {
                     {
                         text: 'create',
                         action: function () {
-                            createDiscountRatePanel();
+                            document.getElementById('add_new_discount_rate_modal').style.display = 'block';
+
                         },
                     },
                     {
                         text: 'edit',
                         action: function () {
-                            editDiscountRatePanel();
+                            const discountTable = new DataTable('#discountRateTable');
+                            discountData = discountTable.row('.selected').data();
+                            if (discountData === undefined || discountData === null) {
+                                Swal.fire("错误提醒", "请点击修改的折扣", "warning");
+                            } else {
+                                document.getElementById('edit_discount_rate_modal').style.display = 'block';
+                                document.getElementById('discountLevelIdForEdit').value = discountData[0];
+                                document.getElementById('discountValueForEdit').value = discountData[1];
+                                document.getElementById('discountRateForEdit').value = discountData[2];
+                            }     
                         }
                     }
                 ]
@@ -82,7 +91,6 @@ $(document).ready(function () {
         }
     });
     readEmployeeInfoTable();
-
     const discountRateTable = new DataTable('#discountRateTable');
     discountRateTable.on('click', 'tbody tr', (e) => {
         let classList = e.currentTarget.classList;
@@ -95,10 +103,7 @@ $(document).ready(function () {
             classList.add('selected');
         }
     });
-
     readDiscountRateInfoTable();
-
-
 
     $("input[type='tel']").on({
         keyup: function () {
@@ -169,6 +174,60 @@ $(document).ready(function () {
             $next.focus().click();
         }
     });
+
+
+    $("input[id='newDiscountValue']").on({
+        keyup: function () {
+            wrapCurrency($(this));
+        },
+        blur: function () {
+            if (isNumeric($(this).val())) {
+                formatCurrency($(this));
+            } else if (!checkValue($(this).val()) && !isValidConcurrency($(this).val())) {
+                Swal.fire("错误提醒", "请输入正确数额", "warning");
+                $(this).val('');
+            }
+        }
+    });
+
+    $("input[id='newDiscountRate']").on({
+        keyup: function () {
+            wrapDiscountRate($(this));
+        },
+        blur: function () {
+            if (!isValidDiscountRate($(this).val()) && !checkValue($(this).val())) {
+                Swal.fire("错误提醒", "请输入正确折扣率(例如:0.90)", "warning");
+                $(this).val('');
+            }
+        }
+    });
+
+    $("input[id='discountValueForEdit']").on({
+        keyup: function () {
+            wrapCurrency($(this));
+        },
+        blur: function () {
+            if (isNumeric($(this).val())) {
+                formatCurrency($(this));
+            } else if (!checkValue($(this).val()) && !isValidConcurrency($(this).val())) {
+                Swal.fire("错误提醒", "请输入正确数额", "warning");
+                $(this).val('');
+            }
+        }
+    });
+
+    $("input[id='discountRateForEdit']").on({
+        keyup: function () {
+            wrapDiscountRate($(this));
+        },
+        blur: function () {
+            if (!isValidDiscountRate($(this).val()) && !checkValue($(this).val())) {
+                Swal.fire("错误提醒", "请输入正确折扣率(例如:0.90)", "warning");
+                $(this).val('');
+            }
+        }
+    });
+
 });
 
 
@@ -190,6 +249,25 @@ function createNewEmployee() {
     }
 }
 
+
+function createNewDiscount() {
+    var loadingValue = document.getElementById('newDiscountValue').value.trim();
+    var discountRate = document.getElementById('newDiscountRate').value.trim();
+    if (checkValue(loadingValue) || checkValue(discountRate)) {
+        Swal.fire("错误提醒", "充值金额或者折扣率不能为空白", "warning");
+    } else {
+        loadingValue = convertCurrencyToNumber(loadingValue);
+        generateNewDiscountLevel().then(function (levelId) {
+            var discountInfo = firebase.database().ref('discounts/' + levelId);
+            discountInfo.set({ 'value': Number(Number(loadingValue).toFixed(2)), 'rate': Number(Number(discountRate).toFixed(2)) });
+            Swal.fire("成功", "新折扣已保存: " + levelId, "success").then(() => {
+                readDiscountRateInfoTable();
+                document.getElementById('add_new_discount_rate_modal').style.display = 'none';
+            });
+        });
+    }
+}
+
 function updateEmployee() {
     var employeeId = document.getElementById('employeeIdForEdit').value.trim();
     var employeeName = document.getElementById('employeeNameForEdit').value.trim();
@@ -203,76 +281,27 @@ function updateEmployee() {
         Swal.fire("成功", "会员信息已保存", "success").then(() => {
             readEmployeeInfoTable();
             document.getElementById('edit_employee_modal').style.display = 'none';
-        });;
+        });
     }
 }
 
-
-
-function createDiscountRatePanel() {
-    Swal.fire({
-        title: "New Discount Rate",
-        confirmButtonText: "Save",
-        showCancelButton: true,
-        html: `
-            <label for="loadingValueForAdding" class="required">充值金额</label><input id="loadingValueForAdding" class="swal2-input">
-            <br>
-            <label for="discountRateForAdding" class="required">折扣率</label><input id="discountRateForAdding" class="swal2-input">
-        `
-    }).then((result) => {
-        if (result.isConfirmed) {
-            var loadingValue = document.getElementById('loadingValueForAdding').value.trim();
-            var discountRate = document.getElementById('discountRateForAdding').value.trim();
-            if (checkValue(loadingValue) || checkValue(discountRate)) {
-                Swal.fire("错误提醒", "充值金额或者折扣率不能为空白", "warning");
-            } else {
-                // generateNewEmployeeId().then(function (newEmployeeId) {
-                //     var employeeInfo = firebase.database().ref('employees/' + newEmployeeId);
-                //     employeeInfo.set({ 'employeeName': employeeName, 'employeePosition': employeePosition, 'employeePhone': employeePhone });
-                //     Swal.fire("成功", "会员信息已保存: " + newEmployeeId, "success");
-                // });
-            }
-        }
-    });
-}
-
-
-function editDiscountRatePanel() {
-
-    const table = new DataTable('#discountRateTable');
-    discountRateData = table.row('.selected').data();
-    if (discountRateData === undefined || discountRateData === null) {
-        Swal.fire("错误提醒", "请点击修改的数据", "warning");
+function updateDiscountRate() {
+    var levelId = document.getElementById('discountLevelIdForEdit').value.trim();
+    var loadingValue = document.getElementById('discountValueForEdit').value.trim();
+    var discountRate = document.getElementById('discountRateForEdit').value.trim();
+    if (checkValue(loadingValue) || checkValue(discountRate)) {
+        Swal.fire("错误提醒", "充值金额或者折扣率不能为空白", "warning");
+    } else {
+        loadingValue = convertCurrencyToNumber(loadingValue);
+        var discountRateInfo = firebase.database().ref('discounts/' + levelId);
+        discountRateInfo.update({ 'value': Number(Number(loadingValue).toFixed(2)), 'rate': Number(Number(discountRate).toFixed(2))});
+        Swal.fire("成功", "折扣信息已保存", "success").then(() => {
+            readDiscountRateInfoTable();
+            document.getElementById('edit_discount_rate_modal').style.display = 'none';
+        });
     }
-    Swal.fire({
-        title: "Edit Discount Info",
-        confirmButtonText: "Save",
-        showCancelButton: true,
-        html: `
-            <label for="discountLevelIdForEdit" class="required">会员等级</label><input id="discountLevelIdForEdit" style='background:#efefef;' value="${discountRateData[0]}"  class="swal2-input" readonly>
-            <br>
-            <label for="loadingValueForEdit"    class="required">充值金额</label><input id="loadingValueForEdit" value="${discountRateData[1]}" class="swal2-input">
-            <br>
-            <label for="discountRateForEdit" class="required">会员折扣</label><input id="discountRateForEdit" value="${discountRateData[2]}" class="swal2-input"> 
-        `
-    }).then((result) => {
-        if (result.isConfirmed) {
-            var discountLevel = document.getElementById('discountLevelIdForEdit').value.trim();
-            var loadingValueForEdit = document.getElementById('loadingValueForEdit').value.trim();
-            var discountRateForEdit = document.getElementById('discountRateForEdit').value.trim();
-
-            if (checkValue(discountLevel) || checkValue(loadingValueForEdit) || checkValue(discountRateForEdit)) {
-                Swal.fire("错误提醒", "充值金额或者折扣不能为空白", "warning");
-            } else {
-
-                var discountRateInfo = firebase.database().ref('discounts/' + discountLevel);
-                discountRateInfo.update({ 'value': Number(loadingValueForEdit), 'rate': Number(discountRateForEdit) });
-                Swal.fire("成功", "会员折扣信息已保存", "success");
-
-            }
-        }
-    });
 }
+
 
 function employeeSelectedOptionForAdminManagement() {
     var employeeInfo = firebase.database().ref('employees/').orderByKey();
@@ -600,15 +629,15 @@ function memberAcctHandlerForUpdateTransaction(oldTransactionId, UpdatedTransact
     //  if add => old balance - old amount + new amount 
     //  if delete => old balance + old amount - new amount 
     if (isSuccessfulUpdateMemberAcct) {
-        transactionInfoLookUpTable(oldTransactionId).then(function (result) {
-            if (result != null) {
+        transactionInfoLookUpTable(oldTransactionId).then(function (snapshot) {
+            if (snapshot.exists()) {
                 var remainingBalanceForUpdatedTransaction = 0;
-                if (result['type'] == 'addCredit') {
-                    remainingBalanceForUpdatedTransaction = Number(result['remainingBalance']) - Number(result['amount']) + Number(UpdatedTransactionInfoDetail['amount']);
-                } else if (result['type'] == 'spendCredit') {
-                    remainingBalanceForUpdatedTransaction = Number(result['remainingBalance']) + Number(result['amount']) - Number(UpdatedTransactionInfoDetail['amount']);
+                if (snapshot.child('type').val() === 'addCredit') {
+                    remainingBalanceForUpdatedTransaction = Number(snapshot.child('memberRemainingBalance').val()) - Number(snapshot.child('amount').val()) + Number(UpdatedTransactionInfoDetail['amount']);
+                } else if (snapshot.child('type').val() === 'spendCredit') {
+                    remainingBalanceForUpdatedTransaction = Number(snapshot.child('memberRemainingBalance').val()) + Number(snapshot.child('amount').val()) - Number(UpdatedTransactionInfoDetail['amount']);
                 }
-                UpdatedTransactionInfoDetail['memberRemainingBalance'] = Number(remainingBalanceForUpdatedTransaction).toFixed(2);
+                UpdatedTransactionInfoDetail['memberRemainingBalance'] = Number(Number(remainingBalanceForUpdatedTransaction).toFixed(2));
                 firebase.database().ref('transactions/').child(oldTransactionId).update(UpdatedTransactionInfoDetail);
                 findTransactionByIdForEditInfo();
                 Swal.fire("成功", "订单已修改");
@@ -647,7 +676,7 @@ function memberAcctModify(transactionType, transactionMemberId, transactionAmoun
                 backward_amount = Number(memberBalance) - Number(transactionAmount);
             }
             if (isValidTransaction) {
-                memberInfo.update({ 'memberBalance': Number(backward_amount).toFixed(2), 'memberDiscountRate': transactionDiscountRate });
+                memberInfo.update({ 'memberBalance': Number(Number(backward_amount).toFixed(2)), 'memberDiscountRate': Number(Number(transactionDiscountRate).toFixed(2)) });
                 Swal.fire("成功", "用户：" + transactionMemberId + " 金额 $" + transactionAmount + "已经返还. 用户最新余额为：$" + backward_amount, "success");
             }
         }
@@ -788,6 +817,12 @@ function generateNewEmployeeId() {
         var newEmployeeBasedId = employeeBasedId + snapshot.numChildren() + 1;
         var newEmployeeId = employeePrefix + newEmployeeBasedId;
         return newEmployeeId;
+    })
+}
+
+function generateNewDiscountLevel() {
+    return firebase.database().ref('discounts/').once("value").then(snapshot => {
+        return snapshot.numChildren() + 1;
     })
 }
 

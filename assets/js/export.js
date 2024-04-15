@@ -1,5 +1,10 @@
 $(document).ready(function () {
     $('#export_table_members').DataTable({
+        "language": {
+            'loadingRecords': 'Processing...',
+        },
+        "processing": true,
+        "retrieve": true,
         fixedColumns: {
             start: 1
         },
@@ -114,8 +119,7 @@ function readExportTable(export_table_name) {
                     var employeeName = snapshot.child('employeeName').val();
                     table.row.add([memberId, name, petName, petBreed, petGender, memberPhone, memberJoinedDate, memberDis, "$" + balance, employeeName, note]).draw();
                 });
-
-            });
+            })            
         });
 
 

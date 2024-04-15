@@ -208,30 +208,6 @@ function transactionInfoLookUpTable(transactionId) {
         if (!snapshot.exists()) {
             Swal.fire("错误提醒", "查询的交易号不存在", "error");
         } 
-        // else {
-            // var transactionId = snapshot.key;
-            // var transactionAmount = snapshot.child("amount").val();
-            // var transactionDate = snapshot.child("date").val();
-            // var transactionDiscountRate = snapshot.child("discountRate").val();
-            // var transactionEmployeeId = snapshot.child("employeeId").val();
-            // var transactionMemberId = snapshot.child("memberId").val();
-            // var transactionNote = snapshot.child("note").val();
-            // var transactionStatus = snapshot.child("status").val();
-            // var transactionType = snapshot.child("type").val();
-            // var transactioRemainingBalance = snapshot.child("memberRemainingBalance").val();
-
-            // transactionInfoJson = '{ "id":"' + transactionId + '",'
-            //     + '"amount":"' + transactionAmount + '",'
-            //     + '"date":"' + transactionDate + '",'
-            //     + '"discountRate":"' + transactionDiscountRate + '",'
-            //     + '"employeeId":"' + transactionEmployeeId + '",'
-            //     + '"memberId":"' + transactionMemberId + '",'
-            //     + '"note":"' + transactionNote + '",'
-            //     + '"status":"' + transactionStatus + '",'
-            //     + '"type":"' + transactionType + '",'
-            //     + '"remainingBalance":"' + transactioRemainingBalance + '"'
-            //     + '}';
-        // }
         return snapshot;
     });
 }

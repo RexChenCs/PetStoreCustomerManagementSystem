@@ -1062,6 +1062,118 @@
     </div>
 
 
+
+
+    <!--添加折扣-->
+    <div id="add_new_discount_rate_modal" class="modal">
+        <span onclick="document.getElementById('add_new_discount_rate_modal').style.display='none'" class="close"
+            title="Close Modal">&times;</span>
+        <section class="price sections">
+            <div class="contain">
+                <div class="tab-content">
+                    <div class="head_title text-center">
+                        <h1>添加新折扣</h1>
+                    </div>
+                    <div class="form_container">
+                        <div class="row">
+
+                            <div class="col-sm-6 form-group">
+                                <label for="newDiscountValue" class="required">充值金额</label>
+                                <input type="text" class="form-control" id="newDiscountValue">
+                            </div>
+
+                            <div class="col-sm-6 form-group">
+                                <label for="newDiscountRate" class="required">折扣</label>
+                                <input type="text" class="form-control" id="newDiscountRate">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 form-group">
+                                <div class="buttoncontainer">
+                                    <a class="button button--hoo" onclick="createNewDiscount()">
+                                        <div class="button__wrapper">
+                                            <span class="button__text">保存</span>
+                                        </div>
+                                        <div class="characterBox">
+                                            <div class="character wakeup">
+                                                <div class="character__face"></div>
+                                            </div>
+                                            <div class="character wakeup">
+                                                <div class="character__face"></div>
+                                            </div>
+                                            <div class="character">
+                                                <div class="character__face"></div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <!--修改折扣信息-->
+    <div id="edit_discount_rate_modal" class="modal">
+        <span onclick="document.getElementById('edit_discount_rate_modal').style.display='none'" class="close"
+            title="Close Modal">&times;</span>
+        <section class="price sections">
+            <div class="contain">
+                <div class="tab-content">
+                    <div class="head_title text-center">
+                        <h1>修改折扣信息</h1>
+                    </div>
+                    <div class="form_container">
+                        <div class="row">
+
+                            <div class="col-sm-4 form-group">
+                                <label for="discountLevelIdForEdit" class="required">等级</label>
+                                <input type="text" class="form-control" id="discountLevelIdForEdit" readonly>
+                            </div>
+
+                            <div class="col-sm-4 form-group">
+                                <label for="discountValueForEdit" class="required">充值金额</label>
+                                <input type="text" class="form-control" id="discountValueForEdit">
+                            </div>
+
+                            <div class="col-sm-4 form-group">
+                                <label for="discountRateForEdit" class="required">折扣</label>
+                                <input type="text" class="form-control" id="discountRateForEdit">
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 form-group">
+                                <div class="buttoncontainer">
+                                    <a class="button button--hoo" onclick="updateDiscountRate()">
+                                        <div class="button__wrapper">
+                                            <span class="button__text">保存</span>
+                                        </div>
+                                        <div class="characterBox">
+                                            <div class="character wakeup">
+                                                <div class="character__face"></div>
+                                            </div>
+                                            <div class="character wakeup">
+                                                <div class="character__face"></div>
+                                            </div>
+                                            <div class="character">
+                                                <div class="character__face"></div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
     <!--Footer-->
     <footer id="footer" class="footer">
         <div class="container">
