@@ -81,7 +81,6 @@ $(document).ready(function () {
     const employeeTable = new DataTable('#employeeTable');
     employeeTable.on('click', 'tbody tr', (e) => {
         let classList = e.currentTarget.classList;
-
         if (classList.contains('selected')) {
             classList.remove('selected');
         }
@@ -94,7 +93,6 @@ $(document).ready(function () {
     const discountRateTable = new DataTable('#discountRateTable');
     discountRateTable.on('click', 'tbody tr', (e) => {
         let classList = e.currentTarget.classList;
-
         if (classList.contains('selected')) {
             classList.remove('selected');
         }
@@ -104,7 +102,6 @@ $(document).ready(function () {
         }
     });
     readDiscountRateInfoTable();
-
     $("input[type='tel']").on({
         keyup: function () {
             formatPhone($(this));

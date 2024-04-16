@@ -231,7 +231,6 @@ Section
 }
 
 .footer {
-    /*    padding-bottom: 80px;*/
     position: fixed;
     left: 0;
     bottom: 0;
@@ -674,17 +673,16 @@ textarea::-ms-input-placeholder {
 }
 
 .head_title {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
-.head_title p {
+.head_title h3 {
     max-width: 55%;
     margin: 10px auto;
     padding-bottom: 20px;
 }
 
 /* features  section */
-
 .single_features_left img {
     height: 460px;
 }
@@ -882,7 +880,7 @@ textarea::-ms-input-placeholder {
 }
 
 .footer-wrapper {
-    padding: 20px 0px;
+    padding: 1px 0px;
     display: block;
 }
 
@@ -893,7 +891,7 @@ textarea::-ms-input-placeholder {
 .copyright p {
     font-size: 1.125rem;
     margin-bottom: 1px;
-    padding: 20px 0px;
+    padding: 10px 0px;
 }
 
 .copyright p i {
@@ -995,82 +993,12 @@ textarea::-ms-input-placeholder {
     color: #000;
 }
 
-
-
-/* Login button */
-.wrap {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.infoBox {
+    border-style: inset;
 }
 
-.button {
-    min-width: 300px;
-    min-height: 60px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 22px;
-    text-transform: uppercase;
-    letter-spacing: 1.3px;
-    font-weight: 700;
-    color: #313133;
-    background: #54f51e;
-    background: linear-gradient(90deg, rgb(93, 227, 21) 0%, rgb(153, 240, 14) 100%);
-    border: none;
-    border-radius: 1000px;
-    box-shadow: 12px 12px 24px rgba(135, 242, 6, 0.64);
-    transition: all 0.3s ease-in-out 0s;
-    cursor: pointer;
-    outline: none;
-    position: relative;
-    padding: 10px;
+.officeUseBox {
+    border-style: inset;
+    border-color: #ff0000;
 }
 
-button::before {
-    content: '';
-    border-radius: 1000px;
-    min-width: calc(300px + 12px);
-    min-height: calc(60px + 12px);
-    border: 6px solid #4ae90b;
-    box-shadow: 0 0 60px rgba(119, 241, 12, 0.64);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    transition: all .3s ease-in-out 0s;
-}
-
-.button:hover,
-.button:focus {
-    color: #313133;
-    transform: translateY(-6px);
-}
-
-button:hover::after,
-button:focus::after {
-    animation: none;
-    display: none;
-}
-
-
-.loader {
-    border: 16px solid #f3f3f3;
-    /* Light grey */
-    border-top: 16px solid #3498db;
-    /* Blue */
-    border-radius: 50%;
-    width: 120px;
-    height: 120px;
-    animation: spin 2s linear infinite;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}

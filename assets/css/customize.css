@@ -73,7 +73,7 @@
 /*form sytle*/
 .form_container
 {
-    margin-top:50px;
+    /* margin-top:50px; */
     background-color: transparent;
     color: #0f0f0f;
 }

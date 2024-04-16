@@ -117,7 +117,7 @@
                      <i class="fa fa-user"></i>
                      <div class="separator"></div>
                      <h4>办理会员</h4>
-                     <p>Add new member</p>
+                     <p>Add VIP Member</p>
                   </div>
                </div>
 
@@ -127,7 +127,7 @@
                      <i class="fa fa-dollar"></i>
                      <div class="separator"></div>
                      <h4>会员充值</h4>
-                     <p>Add value to member balance</p>
+                     <p>Reload Balance</p>
                   </div>
                </div>
 
@@ -137,7 +137,7 @@
                      <i class="fa fa-paypal"></i>
                      <div class="separator"></div>
                      <h4>会员消费</h4>
-                     <p>Member consumption</p>
+                     <p>Member Consumption</p>
                   </div>
                </div>
 
@@ -159,24 +159,18 @@
 
    <!--新会员办理-->
    <div id="new_member_modal" class="modal">
-
       <span onclick="document.getElementById('new_member_modal').style.display='none'" class="close"
          title="Close Modal">&times;</span>
-
       <section class="price sections">
-
          <div class="head_title text-center">
-            <h1>新会员办理</h1>
-            <p>Add new member</p>
+            <h3>新会员办理</h3>
          </div>
-
          <div class="contain">
-
-            <div class="form_container">
-               <div class="row">
+            <div class="infoBox">
+               <div class="row" style="margin: 3%;">
                   <div class="col-sm-4 form-group">
                      <label for="memberId">会员账号</label>
-                     <input type="text" class="form-control" id="memberId" value="PH123" readonly>
+                     <input type="text" class="form-control" id="memberId" value="PH100000" readonly>
                   </div>
 
                   <div class="col-sm-4 form-group">
@@ -224,8 +218,7 @@
 
                   <div class="col-sm-4 form-group" style="display:none;" id="memberBalance_customize_section">
                      <label for="memberBalance_customize" class="required">自定义金额</label>
-                     <input type="text" class="form-control" id="memberBalance_customize"
-                        placeholder="请输入充值金额">
+                     <input type="text" class="form-control" id="memberBalance_customize" placeholder="请输入充值金额">
                   </div>
 
                   <div class="col-sm-4 form-group">
@@ -244,31 +237,14 @@
                   </div>
 
                </div>
-
-               <div class="row">
-                  <div class="col-sm-12 form-group">
-                     <div class="buttoncontainer">
-                        <a class="button button--piyo" onclick="addNewMember()">
-                           <div class="button__wrapper">
-                              <span class="button__text">登记</span>
-                           </div>
-                           <div class="characterBox">
-                              <div class="character wakeup">
-                                 <div class="character__face"></div>
-                              </div>
-                              <div class="character wakeup">
-                                 <div class="character__face"></div>
-                              </div>
-                              <div class="character">
-                                 <div class="character__face"></div>
-                              </div>
-                           </div>
-                        </a>
-                     </div>
+            </div>
+            <div class="row">
+               <div class="buttonAdjust">
+                  <div class="wrap pull-right">
+                     <button class="button" onclick="addNewMember()">登记</button>
                   </div>
                </div>
             </div>
-
          </div>
 
       </section>
@@ -282,13 +258,10 @@
       <section class="price sections">
          <div class="contain">
             <div class="tab-content">
-
                <div class="head_title text-center">
-                  <h1>会员充值服务</h1>
+                  <h3>会员充值服务</h3>
                </div>
-
                <div class="form_container" class="col-sm-6 form-group">
-
                   <div class="row">
                      <div class="col-sm-3 form-group">
                         <select id="search_member_catagory_forAdd" onchange="searchCatagoryReselect('Add')" type="text"
@@ -301,7 +274,7 @@
 
                      <div class="col-sm-3 form-group">
                         <input id="search_member_value_forAdd" type="text" class="form-control"
-                           placeholder="PH123"></input>
+                           placeholder="PH100000"></input>
                      </div>
                      <div class="col-sm-3 form-group"></div>
                      <div class="col-sm-3 form-group">
@@ -315,115 +288,102 @@
                <div class="form_container">
                   <div class="row">
                      <div class="col-sm-6 form-group">
-                        <h3>会员信息</h3>
+                        <h5>会员信息</h5>
                      </div>
                   </div>
 
-                  <div class="row">
-                     <div class="col-sm-4 form-group">
-                        <label for="memberIdSearchedForAdd">会员账号</label>
-                        <input type="text" class="form-control" id="memberIdSearchedForAdd" readonly>
-                     </div>
+                  <div class="infoBox">
+                     <div class="row" style="margin: 3%;">
+                        <div class="col-sm-4 form-group">
+                           <label for="memberIdSearchedForAdd">会员账号</label>
+                           <input type="text" class="form-control" id="memberIdSearchedForAdd" readonly>
+                        </div>
 
-                     <div class="col-sm-4 form-group">
-                        <label for="memberNameSearchedForAdd">会员姓名</label>
-                        <input type="text" class="form-control" id="memberNameSearchedForAdd" readonly>
-                     </div>
+                        <div class="col-sm-4 form-group">
+                           <label for="memberNameSearchedForAdd">会员姓名</label>
+                           <input type="text" class="form-control" id="memberNameSearchedForAdd" readonly>
+                        </div>
 
-                     <div class="col-sm-4 form-group">
-                        <label for="memberPetNameSearchedForAdd">宠物姓名</label>
-                        <input type="text" class="form-control" id="memberPetNameSearchedForAdd" readonly>
-                     </div>
+                        <div class="col-sm-4 form-group">
+                           <label for="memberPetNameSearchedForAdd">宠物姓名</label>
+                           <input type="text" class="form-control" id="memberPetNameSearchedForAdd" readonly>
+                        </div>
 
-                     <div class="col-sm-4 form-group">
-                        <label for="memberPhoneSearchedForAdd">电话</label>
-                        <input type="text" data-type="tel" class="form-control" id="memberPhoneSearchedForAdd" readonly>
-                     </div>
+                        <div class="col-sm-4 form-group">
+                           <label for="memberPhoneSearchedForAdd">电话</label>
+                           <input type="text" data-type="tel" class="form-control" id="memberPhoneSearchedForAdd"
+                              readonly>
+                        </div>
 
-                     <div class="col-sm-4 form-group">
-                        <label for="memberBalanceSearchedForAdd">剩余金额</label>
-                        <input id="memberBalanceSearchedForAdd" class="form-control" type="text" readonly></input>
-                     </div>
+                        <div class="col-sm-4 form-group">
+                           <label for="memberBalanceSearchedForAdd">剩余金额</label>
+                           <input id="memberBalanceSearchedForAdd" class="form-control" type="text" readonly></input>
+                        </div>
 
-                     <div class="col-sm-4 form-group">
-                        <label for="memberDiscountRateSearchedForAdd">会员折扣</label>
-                        <input id="memberDiscountRateSearchedForAdd" type="number" class="form-control" value=1
-                           readonly></input>
+                        <div class="col-sm-4 form-group">
+                           <label for="memberDiscountRateSearchedForAdd">会员折扣</label>
+                           <input id="memberDiscountRateSearchedForAdd" type="number" class="form-control" value=1
+                              readonly></input>
+                        </div>
                      </div>
                   </div>
-
                   <div class="form_container">
                      <div class="row">
                         <div class="col-sm-6 form-group">
-                           <h3>充值信息</h3>
+                           <h5>充值信息</h5>
                         </div>
                      </div>
 
-                     <div class="row">
-                        <div class="col-sm-3 form-group">
-                           <label for="add_credit_member_balance" class="required">充值金额</label>
-                           <select type="text" class="form-control" id="add_credit_member_balance" tabIndex="11">
-                              <option value=0 selected>请选择充值金额</option>
-                           </select>
-                        </div>
+                     <div class="officeUseBox">
 
-                        <div class="col-sm-3 form-group" style="display:none;" id="add_credit_member_balance_customize_section">
-                           <label for="add_credit_member_balance_customize" class="required">自定义金额</label>
-                           <input type="text" class="form-control" id="add_credit_member_balance_customize"
-                              placeholder="请输入充值金额">
-                        </div>
-
-                        <div class="col-sm-3 form-group">
-                           <label for="add_credit_discountRate" class="required"">更新折扣</label>
-                           <input type="text" class="form-control" id="add_credit_discountRate" value="1"
-                              tabIndex="12">
-                        </div>
-
-                        <div class="col-sm-3 form-group">
-                           <label for="add_credit_employeeName">营业员</label>
-                           <select type="text" class="form-control" id="add_credit_employeeName" tabIndex="13"></select>
-                        </div>
-
-                        <div class="col-sm-3 form-group">
-                           <label for="add_credit_date" class="required">充值日期</label>
-                           <input type="date" class="form-control" id="add_credit_date" tabIndex="14">
-                        </div>
-
-
-                     </div>
-
-
-                     <div class="row">
-                        <div class="col-sm-3 form-group">
-                           <label for="add_credit_note">备注</label>
-                           <textarea rows="4" class="form-control" id="add_credit_note" tabIndex="15"></textarea>
-                        </div>
-                     </div>
-
-
-
-
-                     <div class="row">
-                        <div class="col-sm-12 form-group">
-                           <div class="buttoncontainer">
-                              <a class="button button--piyo" onclick="addCreditForMember()">
-                                 <div class="button__wrapper">
-                                    <span class="button__text">充值</span>
-                                 </div>
-                                 <div class="characterBox">
-                                    <div class="character wakeup">
-                                       <div class="character__face"></div>
-                                    </div>
-                                    <div class="character wakeup">
-                                       <div class="character__face"></div>
-                                    </div>
-                                    <div class="character">
-                                       <div class="character__face"></div>
-                                    </div>
-                                 </div>
-                              </a>
+                        <div class="row" style="margin: 3%;">
+                           <div class="col-sm-3 form-group">
+                              <label for="add_credit_member_balance" class="required">充值金额</label>
+                              <select type="text" class="form-control" id="add_credit_member_balance" tabIndex="11">
+                                 <option value=0 selected>请选择充值金额</option>
+                              </select>
                            </div>
 
+                           <div class="col-sm-3 form-group" style="display:none;"
+                              id="add_credit_member_balance_customize_section">
+                              <label for="add_credit_member_balance_customize" class="required">自定义金额</label>
+                              <input type="text" class="form-control" id="add_credit_member_balance_customize"
+                                 placeholder="请输入充值金额">
+                           </div>
+
+                           <div class="col-sm-3 form-group">
+                              <label for="add_credit_discountRate" class="required"">更新折扣</label>
+                                 <input type=" text" class="form-control" id="add_credit_discountRate" value="1"
+                                 tabIndex="12">
+                           </div>
+
+                           <div class="col-sm-3 form-group">
+                              <label for="add_credit_employeeName">营业员</label>
+                              <select type="text" class="form-control" id="add_credit_employeeName"
+                                 tabIndex="13"></select>
+                           </div>
+
+                           <div class="col-sm-3 form-group">
+                              <label for="add_credit_date" class="required">充值日期</label>
+                              <input type="date" class="form-control" id="add_credit_date" tabIndex="14">
+                           </div>
+
+
+                        </div>
+
+                        <div class="row" style="margin: 3%;">
+                           <div class="col-sm-6 form-group">
+                              <label for="add_credit_note">备注</label>
+                              <textarea rows="4" class="form-control" id="add_credit_note" tabIndex="15"></textarea>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="row">
+                        <div class="buttonAdjust">
+                           <div class="wrap pull-right">
+                              <button class="button" onclick="addCreditForMember()">充值</button>
+                           </div>
                         </div>
                      </div>
                   </div>
@@ -445,7 +405,7 @@
 
             <div class="tab-content">
                <div class="head_title text-center">
-                  <h1>会员消费服务</h1>
+                  <h3>会员消费服务</h3>
                </div>
 
                <div class="form_container" class="col-sm-6 form-group">
@@ -461,7 +421,7 @@
 
                      <div class="col-sm-3 form-group">
                         <input id="search_member_value_forSpend" type="text" class="form-control"
-                           placeholder="PH123"></input>
+                           placeholder="PH100000"></input>
                      </div>
                      <div class="col-sm-3 form-group"></div>
                      <div class="col-sm-3 form-group">
@@ -476,99 +436,91 @@
 
                   <div class="row">
                      <div class="col-sm-6 form-group">
-                        <h3>会员信息</h3>
+                        <h5>会员信息</h5>
                      </div>
                   </div>
 
-                  <div class="row">
-                     <div class="col-sm-4 form-group">
-                        <label for="memberIdSearchedForSpend">会员账号</label>
-                        <input type="text" class="form-control" id="memberIdSearchedForSpend" readonly>
+                  <div class="infoBox">
+
+                     <div class="row" style="margin: 3%;">
+                        <div class="col-sm-4 form-group">
+                           <label for="memberIdSearchedForSpend">会员账号</label>
+                           <input type="text" class="form-control" id="memberIdSearchedForSpend" readonly>
+                        </div>
+
+                        <div class="col-sm-4 form-group">
+                           <label for="memberNameSearchedForSpend">会员姓名</label>
+                           <input type="text" class="form-control" id="memberNameSearchedForSpend" readonly>
+                        </div>
+
+                        <div class="col-sm-4 form-group">
+                           <label for="memberPetNameSearchedForSpend">宠物姓名</label>
+                           <input type="text" class="form-control" id="memberPetNameSearchedForSpend" readonly>
+                        </div>
+
+                        <div class="col-sm-4 form-group">
+                           <label for="memberPhoneSearchedForSpend">电话</label>
+                           <input type="text" data-type="tel" class="form-control" id="memberPhoneSearchedForSpend"
+                              readonly>
+                        </div>
+
+                        <div class="col-sm-4 form-group">
+                           <label for="memberBalanceSearchedForSpend">剩余金额</label>
+                           <input id="memberBalanceSearchedForSpend" class="form-control" type="text" readonly></input>
+                        </div>
+
+                        <div class="col-sm-4 form-group">
+                           <label for="memberDiscountRateSearchedForSpend">会员折扣</label>
+                           <input id="memberDiscountRateSearchedForSpend" type="number" class="form-control" value="1"
+                              readonly></input>
+                        </div>
                      </div>
 
-                     <div class="col-sm-4 form-group">
-                        <label for="memberNameSearchedForSpend">会员姓名</label>
-                        <input type="text" class="form-control" id="memberNameSearchedForSpend" readonly>
-                     </div>
-
-                     <div class="col-sm-4 form-group">
-                        <label for="memberPetNameSearchedForSpend">宠物姓名</label>
-                        <input type="text" class="form-control" id="memberPetNameSearchedForSpend" readonly>
-                     </div>
-
-                     <div class="col-sm-4 form-group">
-                        <label for="memberPhoneSearchedForSpend">电话</label>
-                        <input type="text" data-type="tel" class="form-control" id="memberPhoneSearchedForSpend"
-                           readonly>
-                     </div>
-
-                     <div class="col-sm-4 form-group">
-                        <label for="memberBalanceSearchedForSpend">剩余金额</label>
-                        <input id="memberBalanceSearchedForSpend" class="form-control" type="text" readonly></input>
-                     </div>
-
-                     <div class="col-sm-4 form-group">
-                        <label for="memberDiscountRateSearchedForSpend">会员折扣</label>
-                        <input id="memberDiscountRateSearchedForSpend" type="number" class="form-control" value="1"
-                           readonly></input>
-                     </div>
                   </div>
 
                   <div class="form_container">
                      <div class="row">
                         <div class="col-sm-6 form-group">
-                           <h3>消费信息</h3>
+                           <h5>消费信息</h5>
                         </div>
                      </div>
 
-                     <div class="row">
-                        <div class="col-sm-3 form-group">
-                           <label for="member_spend_credit_balance_original">原消费金额</label>
-                           <input type="text" class="form-control" id="member_spend_credit_balance_original"
-                              tabIndex="16">
-                        </div>
+                     <div class="officeUseBox">
 
-                        <div class="col-sm-3 form-group">
-                           <label for="member_spend_credit_balance" class="required">会员折后金额</label>
-                           <input type="text" class="form-control" id="member_spend_credit_balance" tabIndex="17">
-                        </div>
+                        <div class="row" style="margin: 3%;">
+                           <div class="col-sm-3 form-group">
+                              <label for="member_spend_credit_balance_original">原消费金额</label>
+                              <input type="text" class="form-control" id="member_spend_credit_balance_original"
+                                 tabIndex="16">
+                           </div>
 
-                        <div class="col-sm-3 form-group">
-                           <label for="spend_credit_employeeName">营业员</label>
-                           <select type="text" class="form-control" id="spend_credit_employeeName"
-                              tabIndex="18"></select>
-                        </div>
+                           <div class="col-sm-3 form-group">
+                              <label for="member_spend_credit_balance" class="required">会员折后金额</label>
+                              <input type="text" class="form-control" id="member_spend_credit_balance" tabIndex="17">
+                           </div>
 
-                        <div class="col-sm-3 form-group">
-                           <label for="spend_credit_date" class="required">消费日期</label>
-                           <input type="date" class="form-control" id="spend_credit_date" tabIndex="19">
-                        </div>
+                           <div class="col-sm-3 form-group">
+                              <label for="spend_credit_employeeName">营业员</label>
+                              <select type="text" class="form-control" id="spend_credit_employeeName"
+                                 tabIndex="18"></select>
+                           </div>
 
-                        <div class="col-sm-6 form-group">
-                           <label for="spend_credit_note">备注</label>
-                           <textarea rows="4" maxlength="60" class="form-control" id="spend_credit_note" tabIndex="20"></textarea>
+                           <div class="col-sm-3 form-group">
+                              <label for="spend_credit_date" class="required">消费日期</label>
+                              <input type="date" class="form-control" id="spend_credit_date" tabIndex="19">
+                           </div>
+
+                           <div class="col-sm-6 form-group">
+                              <label for="spend_credit_note">备注</label>
+                              <textarea rows="4" maxlength="60" class="form-control" id="spend_credit_note"
+                                 tabIndex="20"></textarea>
+                           </div>
                         </div>
                      </div>
-
                      <div class="row">
-                        <div class="col-sm-12 form-group">
-                           <div class="buttoncontainer">
-                              <a class="button button--piyo" onclick="spendCreditForMember()">
-                                 <div class="button__wrapper">
-                                    <span class="button__text">消费</span>
-                                 </div>
-                                 <div class="characterBox">
-                                    <div class="character wakeup">
-                                       <div class="character__face"></div>
-                                    </div>
-                                    <div class="character wakeup">
-                                       <div class="character__face"></div>
-                                    </div>
-                                    <div class="character">
-                                       <div class="character__face"></div>
-                                    </div>
-                                 </div>
-                              </a>
+                        <div class="buttonAdjust">
+                           <div class="wrap pull-right">
+                              <button class="button" onclick="spendCreditForMember()">消费</button>
                            </div>
                         </div>
                      </div>
@@ -589,11 +541,10 @@
       <section class="price sections">
          <div class="container">
             <div class="head_title text-center">
-               <h1>会员查找</h1>
+               <h3>会员查找</h3>
             </div>
             <div class="container">
                <div class="row">
-
                   <div class="col-sm-3 form-group">
                      <select id="search_member_catagory_forSearch" onchange="searchCatagoryReselect('Search')"
                         type="text" class="form-control">
@@ -605,7 +556,7 @@
 
                   <div class="col-sm-3 form-group">
                      <input id="search_member_value_forSearch" type="text" class="form-control"
-                        placeholder="PH123"></input>
+                        placeholder="PH100000"></input>
                   </div>
                   <div class="col-sm-3 form-group"></div>
                   <div class="col-sm-3 form-group">
@@ -614,64 +565,68 @@
                   </div>
                </div>
 
-
                <div class="form_container">
-                  <div class="row">
-                     <div class="col-sm-4 form-group">
-                        <label for="memberIdSearchedForSearch">会员账号</label>
-                        <input type="text" class="form-control" id="memberIdSearchedForSearch" value="PH123" readonly>
-                     </div>
+                  <div class="infoBox">
+                     <div class="row" style="margin: 3%;">
+                        <div class="col-sm-4 form-group">
+                           <label for="memberIdSearchedForSearch">会员账号</label>
+                           <input type="text" class="form-control" id="memberIdSearchedForSearch" value="PH100000"
+                              readonly>
+                        </div>
 
-                     <div class="col-sm-4 form-group">
-                        <label for="memberNameSearchedForSearch">会员姓名</label>
-                        <input type="text" class="form-control" id="memberNameSearchedForSearch" readonly>
-                     </div>
+                        <div class="col-sm-4 form-group">
+                           <label for="memberNameSearchedForSearch">会员姓名</label>
+                           <input type="text" class="form-control" id="memberNameSearchedForSearch" readonly>
+                        </div>
 
-                     <div class="col-sm-4 form-group">
-                        <label for="memberPetNameSearchedForSearch" class="required">宠物姓名</label>
-                        <input type="text" class="form-control" id="memberPetNameSearchedForSearch" readonly>
-                     </div>
+                        <div class="col-sm-4 form-group">
+                           <label for="memberPetNameSearchedForSearch" class="required">宠物姓名</label>
+                           <input type="text" class="form-control" id="memberPetNameSearchedForSearch" readonly>
+                        </div>
 
-                     <div class="col-sm-4 form-group">
-                        <label for="memberPetBreedSearchedForSearch">宠物品种</label>
-                        <input type="text" class="form-control" id="memberPetBreedSearchedForSearch" readonly>
-                     </div>
+                        <div class="col-sm-4 form-group">
+                           <label for="memberPetBreedSearchedForSearch">宠物品种</label>
+                           <input type="text" class="form-control" id="memberPetBreedSearchedForSearch" readonly>
+                        </div>
 
-                     <div class="col-sm-4 form-group">
-                        <label for="memberPetGenderSearchedForSearch">宠物性别</label>
-                        <input class="form-control" id="memberPetGenderSearchedForSearch" type="text" readonly></input>
-                     </div>
+                        <div class="col-sm-4 form-group">
+                           <label for="memberPetGenderSearchedForSearch">宠物性别</label>
+                           <input class="form-control" id="memberPetGenderSearchedForSearch" type="text"
+                              readonly></input>
+                        </div>
 
-                     <div class="col-sm-4 form-group">
-                        <label for="memberJoinDateSearchedForSearch" class="required">办理日期</label>
-                        <input id="memberJoinDateSearchedForSearch" type="date" class="form-control" readonly></input>
-                     </div>
+                        <div class="col-sm-4 form-group">
+                           <label for="memberJoinDateSearchedForSearch" class="required">办理日期</label>
+                           <input id="memberJoinDateSearchedForSearch" type="date" class="form-control"
+                              readonly></input>
+                        </div>
 
-                     <div class="col-sm-4 form-group">
-                        <label for="memberPhoneSearchedForSearch" class="required">电话</label>
-                        <input class="form-control" type="text" id="memberPhoneSearchedForSearch" readonly>
-                     </div>
+                        <div class="col-sm-4 form-group">
+                           <label for="memberPhoneSearchedForSearch" class="required">电话</label>
+                           <input class="form-control" type="text" id="memberPhoneSearchedForSearch" readonly>
+                        </div>
 
-                     <div class="col-sm-4 form-group">
-                        <label for="memberBalanceSearchedForSearch" class="required">充值金额</label>
-                        <input id="memberBalanceSearchedForSearch" class="form-control" type="text"
-                           placeholder="$1000.00" readonly></input>
-                     </div>
+                        <div class="col-sm-4 form-group">
+                           <label for="memberBalanceSearchedForSearch" class="required">充值金额</label>
+                           <input id="memberBalanceSearchedForSearch" class="form-control" type="text"
+                              placeholder="$1000.00" readonly></input>
+                        </div>
 
-                     <div class="col-sm-4 form-group">
-                        <label for="memberDiscountRateSearchedForSearch" class="required">会员折扣</label>
-                        <input id="memberDiscountRateSearchedForSearch" type="number" class="form-control" value=1
-                           readonly></input>
-                     </div>
+                        <div class="col-sm-4 form-group">
+                           <label for="memberDiscountRateSearchedForSearch" class="required">会员折扣</label>
+                           <input id="memberDiscountRateSearchedForSearch" type="number" class="form-control" value=1
+                              readonly></input>
+                        </div>
 
-                     <div class="col-sm-4 form-group">
-                        <label for="employeeSearchedForSearch">办理员工</label>
-                        <input id="employeeSearchedForSearch" class="form-control" type="text" readonly></input>
-                     </div>
+                        <div class="col-sm-4 form-group">
+                           <label for="employeeSearchedForSearch">办理员工</label>
+                           <input id="employeeSearchedForSearch" class="form-control" type="text" readonly></input>
+                        </div>
 
-                     <div class="col-sm-4 form-group">
-                        <label for="noteSearchedForSearch">备注</label>
-                        <textarea id="noteSearchedForSearch" class="form-control" rows="4" readonly></textarea>
+                        <div class="col-sm-4 form-group">
+                           <label for="noteSearchedForSearch">备注</label>
+                           <textarea id="noteSearchedForSearch" class="form-control" rows="4" readonly></textarea>
+                        </div>
                      </div>
                   </div>
                </div>
