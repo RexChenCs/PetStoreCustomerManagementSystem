@@ -201,6 +201,16 @@ $(document).ready(function () {
         }
     });
 
+    $("input[id='transactionIdSearchingForEditInfo']").on({
+        keypress: function (event) {
+            if (event.key === "Enter") {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                // Trigger the search button element with a click
+                findTransactionByIdForEditInfo()
+            }
+        }
+    });
 
     $(document).on('keypress', 'input,select', function (e) {
         if (e.which == 13) {
