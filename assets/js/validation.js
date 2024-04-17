@@ -45,11 +45,11 @@ function spendCreditValidation(){
 }
 
 function updateMemberInfoValidation(){
-    var memberPetName = document.getElementById("memberPetNameInfo").value;
-    var memberJoinDate = document.getElementById("memberJoinDateInfo").value;
-    var memberPhone = document.getElementById("memberPhoneInfo").value;
-    var memberDiscountRate = document.getElementById("memberDiscountRateInfo").value;
-    var memberBalance = document.getElementById("memberBalanceInfo").value;
+    var memberPetName = document.getElementById("memberIdSearchedForEdit").value;
+    var memberJoinDate = document.getElementById("memberJoinDateSearchedForEdit").value;
+    var memberPhone = document.getElementById("memberPhoneSearchedForEdit").value;
+    var memberDiscountRate = document.getElementById("memberDiscountRateSearchedForEdit").value;
+    var memberBalance = document.getElementById("memberBalanceSearchedForEdit").value;
 
     if(checkValue(memberPetName) || checkValue(memberJoinDate) || checkValue(memberPhone) || checkValue(memberDiscountRate) || checkValue(memberBalance)){
         Swal.fire("错误提醒", "必要内容不能为空", "warning");

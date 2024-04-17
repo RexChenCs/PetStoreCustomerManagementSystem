@@ -591,8 +591,11 @@
 
                         <div class="col-sm-4 form-group">
                            <label for="memberPetGenderSearchedForSearch">宠物性别</label>
-                           <input class="form-control" id="memberPetGenderSearchedForSearch" type="text"
-                              readonly></input>
+                           <select class="form-control" id="memberPetGenderSearchedForSearch" type="text" disabled>
+                              <option value="unknown" selected>未知</option>
+                              <option value="m">男</option>
+                              <option value="f">女</option>
+                           </select>
                         </div>
 
                         <div class="col-sm-4 form-group">

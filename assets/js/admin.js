@@ -161,6 +161,47 @@ $(document).ready(function () {
         }
     });
 
+    $("input[id='search_member_value_forEdit']").on({
+        keyup: function () {
+            var searchType = document.getElementById('search_member_catagory_forEdit').value;
+            if (searchType === 'searchByMemberPhone') {
+                formatPhone($(this));
+            }
+        },
+        click: function () {
+            var searchType = document.getElementById('search_member_catagory_forEdit').value;
+            if (searchType === 'searchByMemberId' || searchType === 'searchByMemberPhone') {
+                $(this).val('');
+            }
+        },
+        blur: function () {
+            var searchType = document.getElementById('search_member_catagory_forEdit').value;
+            if (searchType === 'searchByMemberId') {
+                let isNum = /^\d+$/.test($(this).val());
+                if (isNum) {
+                    formatMemberId($(this));
+                }
+            }
+        },
+        keypress: function (event) {
+            if (event.key === "Enter") {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                var searchType = document.getElementById('search_member_catagory_forEdit').value;
+                if (searchType === 'searchByMemberId') {
+                    let isNum = /^\d+$/.test($(this).val());
+                    if (isNum) {
+                        formatMemberId($(this));
+                    }
+                }
+                // Trigger the search button element with a click
+                searchMemberByCatagory('Edit');
+
+            }
+        }
+    });
+
+
     $(document).on('keypress', 'input,select', function (e) {
         if (e.which == 13) {
             e.preventDefault();
@@ -302,11 +343,11 @@ function updateDiscountRate() {
 
 function employeeSelectedOptionForAdminManagement() {
     var employeeInfo = firebase.database().ref('employees/').orderByKey();
-    var employeeSelectAttr = document.getElementById('addNewMemberByEmployeeInfo');
+    var employeeSelectAttr = document.getElementById('employeeSearchedForEdit');
     var employeeSelectAttr1 = document.getElementById('search_employeeId_selection');
     var employeeSelectAttr2 = document.getElementById('transactionByEmployeeInfo');
     employeeInfo.on("value", function (snapshot) {
-        ClearOptionsFastAlt('addNewMemberByEmployeeInfo');
+        ClearOptionsFastAlt('employeeSearchedForEdit');
         ClearOptionsFastAlt('search_employeeId_selection');
         ClearOptionsFastAlt('transactionByEmployeeInfo');
         snapshot.forEach(function (childSnapshot) {
@@ -329,57 +370,56 @@ function employeeSelectedOptionForAdminManagement() {
 }
 
 var current_employee_for_new_member;
-function findMemberByIdForEditInfo() {
+// function findMemberByIdForEditInfo() {
+//     var memberId = document.getElementById('memberIdSearchingForEditInfo').value.trim();
+//     if (memberId == null || memberId == "") {
+//         Swal.fire("错误提醒", "请输入会员账号", "warning");
+//     } else {
 
-    var memberId = document.getElementById('memberIdSearchingForEditInfo').value.trim();
-    if (memberId == null || memberId == "") {
-        Swal.fire("错误提醒", "请输入会员账号", "warning");
-    } else {
-
-        var memberInfo = firebase.database().ref('members/' + memberId);
-        memberInfo.once('value').then(snapshot => {
-            var Data = snapshot;
-            if (!snapshot.exists()) {
-                Swal.fire("错误提醒", "查询的会员账号： " + snapshot.key + " 不存在", "error");
-                document.getElementById('memberIdInfo').value = null;
-                document.getElementById('memberNameInfo').value = null;
-                document.getElementById('memberPetNameInfo').value = null;
-                document.getElementById('memberPetBreedInfo').value = null;
-                document.getElementById('memberPetGenderInfo').value = null;
-                document.getElementById('memberJoinDateInfo').value = null;
-                document.getElementById('memberPhoneInfo').value = null;
-                document.getElementById('memberBalanceInfo').value = null;
-                document.getElementById('memberDiscountRateInfo').value = null;
-                document.getElementById('addNewMemberByEmployeeInfo').value = null;
-                document.getElementById('addNewMemberNoteInfo').value = null;
-            } else {
-                var memberId = Data.key;
-                var memberName = Data.child("memberName").val();
-                var memberPetName = Data.child("memberPetName").val();
-                var memberPetBreed = Data.child("memberPetBreed").val();
-                var memberPetGender = Data.child("memberPetGender").val();
-                var memberJoinDate = Data.child('memberJoinDate').val();
-                var memberPhone = Data.child("memberPhone").val();
-                var memberDiscountRate = Data.child("memberDiscountRate").val();
-                var memberBalance = Data.child("memberBalance").val();
-                var addNewMemberByEmployee = Data.child("employee").val();
-                var addNewMemberNote = Data.child("note").val();
-                current_employee_for_new_member = addNewMemberByEmployee;
-                document.getElementById('memberIdInfo').value = memberId;
-                document.getElementById('memberNameInfo').value = memberName;
-                document.getElementById('memberPetNameInfo').value = memberPetName;
-                document.getElementById('memberPetBreedInfo').value = memberPetBreed;
-                document.getElementById('memberPetGenderInfo').value = memberPetGender;
-                document.getElementById('memberJoinDateInfo').value = memberJoinDate;
-                document.getElementById('memberPhoneInfo').value = memberPhone;
-                document.getElementById('memberBalanceInfo').value = memberBalance;
-                document.getElementById('memberDiscountRateInfo').value = memberDiscountRate;
-                document.getElementById('addNewMemberByEmployeeInfo').value = addNewMemberByEmployee;
-                document.getElementById('addNewMemberNoteInfo').value = addNewMemberNote;
-            }
-        });
-    }
-}
+//         var memberInfo = firebase.database().ref('members/' + memberId);
+//         memberInfo.once('value').then(snapshot => {
+//             var Data = snapshot;
+//             if (!snapshot.exists()) {
+//                 Swal.fire("错误提醒", "查询的会员账号： " + snapshot.key + " 不存在", "error");
+//                 document.getElementById('memberIdInfo').value = null;
+//                 document.getElementById('memberNameInfo').value = null;
+//                 document.getElementById('memberPetNameInfo').value = null;
+//                 document.getElementById('memberPetBreedInfo').value = null;
+//                 document.getElementById('memberPetGenderInfo').value = null;
+//                 document.getElementById('memberJoinDateInfo').value = null;
+//                 document.getElementById('memberPhoneInfo').value = null;
+//                 document.getElementById('memberBalanceInfo').value = null;
+//                 document.getElementById('memberDiscountRateInfo').value = null;
+//                 document.getElementById('addNewMemberByEmployeeInfo').value = null;
+//                 document.getElementById('addNewMemberNoteInfo').value = null;
+//             } else {
+//                 var memberId = Data.key;
+//                 var memberName = Data.child("memberName").val();
+//                 var memberPetName = Data.child("memberPetName").val();
+//                 var memberPetBreed = Data.child("memberPetBreed").val();
+//                 var memberPetGender = Data.child("memberPetGender").val();
+//                 var memberJoinDate = Data.child('memberJoinDate').val();
+//                 var memberPhone = Data.child("memberPhone").val();
+//                 var memberDiscountRate = Data.child("memberDiscountRate").val();
+//                 var memberBalance = Data.child("memberBalance").val();
+//                 var addNewMemberByEmployee = Data.child("employee").val();
+//                 var addNewMemberNote = Data.child("note").val();
+//                 current_employee_for_new_member = addNewMemberByEmployee;
+//                 document.getElementById('memberIdInfo').value = memberId;
+//                 document.getElementById('memberNameInfo').value = memberName;
+//                 document.getElementById('memberPetNameInfo').value = memberPetName;
+//                 document.getElementById('memberPetBreedInfo').value = memberPetBreed;
+//                 document.getElementById('memberPetGenderInfo').value = memberPetGender;
+//                 document.getElementById('memberJoinDateInfo').value = memberJoinDate;
+//                 document.getElementById('memberPhoneInfo').value = memberPhone;
+//                 document.getElementById('memberBalanceInfo').value = memberBalance;
+//                 document.getElementById('memberDiscountRateInfo').value = memberDiscountRate;
+//                 document.getElementById('addNewMemberByEmployeeInfo').value = addNewMemberByEmployee;
+//                 document.getElementById('addNewMemberNoteInfo').value = addNewMemberNote;
+//             }
+//         });
+//     }
+// }
 
 function findEmployeeByIdForEditInfo() {
     var employeeId = document.getElementById('employeeIdSearchingForEditInfo').value.trim();
@@ -463,32 +503,28 @@ function findTransactionByIdForEditInfo() {
 
 function updateMemberInfo() {
 
-    var memberId = document.getElementById('memberIdInfo').value.trim();
+    var memberId = document.getElementById('memberIdSearchedForEdit').value.trim();
     if (memberId == null || memberId == "") {
         Swal.fire("错误提醒", "请输入会员账号", "warning");
     } else if (!updateMemberInfoValidation()) {
         return;
     } else {
-
-        memberName = document.getElementById('memberNameInfo').value;
-        memberPetName = document.getElementById('memberPetNameInfo').value;
-        memberPetBreed = document.getElementById('memberPetBreedInfo').value;
-        memberPetGender = document.getElementById('memberPetGenderInfo').value;
-        memberJoinDate = document.getElementById('memberJoinDateInfo').value;
-        memberPhone = document.getElementById('memberPhoneInfo').value;
-        memberBalance = document.getElementById('memberBalanceInfo').value;
+        memberName = document.getElementById('memberNameSearchedForEdit').value;
+        memberPetName = document.getElementById('memberPetNameSearchedForEdit').value;
+        memberPetBreed = document.getElementById('memberPetBreedSearchedForEdit').value;
+        memberPetGender = document.getElementById('memberPetGenderSearchedForEdit').value;
+        memberJoinDate = document.getElementById('memberJoinDateSearchedForEdit').value;
+        memberPhone = document.getElementById('memberPhoneSearchedForEdit').value;
+        memberBalance = document.getElementById('memberBalanceSearchedForEdit').value;
         memberBalance = convertCurrencyToNumber(memberBalance);
-        memberDiscountRate = document.getElementById('memberDiscountRateInfo').value;
-        addNewMemberByEmployee = document.getElementById('addNewMemberByEmployeeInfo').value;
-        addNewMemberNote = document.getElementById('addNewMemberNoteInfo').value;
+        memberDiscountRate = document.getElementById('memberDiscountRateSearchedForEdit').value;
+        addNewMemberByEmployee = document.getElementById('employeeSearchedForEdit').value;
+        addNewMemberNote = document.getElementById('noteSearchedForEdit').value;
         addNewMemberNote = textAreaLineControl(addNewMemberNote, 20);
-
         var memberInfo = firebase.database().ref('members/' + memberId);
-
         if (current_employee_for_new_member != addNewMemberByEmployee) {
             updateTransactionForEmployeeChange(memberId, addNewMemberByEmployee);
         }
-
         memberInfo.update({ 'memberName': memberName, 'memberPetName': memberPetName, 'memberPetBreed': memberPetBreed, 'memberPetGender': memberPetGender, 'memberJoinDate': memberJoinDate, 'memberPhone': memberPhone, 'memberBalance': memberBalance, 'memberDiscountRate': memberDiscountRate, 'employee': addNewMemberByEmployee, 'note': addNewMemberNote });
 
         Swal.fire("成功", "会员信息已保存", "success").then(() => {
@@ -633,6 +669,8 @@ function memberAcctHandlerForUpdateTransaction(oldTransactionId, UpdatedTransact
                     remainingBalanceForUpdatedTransaction = Number(snapshot.child('memberRemainingBalance').val()) - Number(snapshot.child('amount').val()) + Number(UpdatedTransactionInfoDetail['amount']);
                 } else if (snapshot.child('type').val() === 'spendCredit') {
                     remainingBalanceForUpdatedTransaction = Number(snapshot.child('memberRemainingBalance').val()) + Number(snapshot.child('amount').val()) - Number(UpdatedTransactionInfoDetail['amount']);
+                } else if (snapshot.child('type').val() === 'newMember'){
+                    remainingBalanceForUpdatedTransaction = Number(UpdatedTransactionInfoDetail['amount']);
                 }
                 UpdatedTransactionInfoDetail['memberRemainingBalance'] = Number(Number(remainingBalanceForUpdatedTransaction).toFixed(2));
                 firebase.database().ref('transactions/').child(oldTransactionId).update(UpdatedTransactionInfoDetail);
@@ -682,15 +720,10 @@ function memberAcctModify(transactionType, transactionMemberId, transactionAmoun
 
 }
 
-
 function updateTransactionForEmployeeChange(memberId, newEmployeeId) {
-
     var transactionInfo = firebase.database().ref('transactions/');
-
     transactionInfo.orderByChild('type').equalTo('newMember').on("value", function (snapshot) {
-
         snapshot.forEach(function (data) {
-
             if (data.child('memberId').val() == memberId) {
                 data.ref.update({
                     "employeeId": newEmployeeId
@@ -698,7 +731,6 @@ function updateTransactionForEmployeeChange(memberId, newEmployeeId) {
             }
         });
     });
-
 }
 
 

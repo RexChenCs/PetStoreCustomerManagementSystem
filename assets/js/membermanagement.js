@@ -316,19 +316,6 @@ $(document).ready(function () {
 
 
 
-function searchCatagoryReselect(sectionType) {
-    var catagory = document.getElementById('search_member_catagory_for' + sectionType).value;
-    document.getElementById('search_member_value_for' + sectionType).value = "";
-    if (catagory == "searchByMemberPhone") {
-        document.getElementById('search_member_value_for' + sectionType).placeholder = "Enter Phone Number";
-    } else if (catagory == "searchByMemberId") {
-        document.getElementById('search_member_value_for' + sectionType).placeholder = "Enter Member Id";
-    } else if (catagory == "searchByMemberPetName") {
-        document.getElementById('search_member_value_for' + sectionType).placeholder = "Enter Pet Name";
-    } 
-}
-
-
 function findMemberByIdForVIPManagement(searchCategoryType) {
 
     var memberId = document.getElementById('memberIdSearchingFor' + searchCategoryType).value.trim();
@@ -595,164 +582,163 @@ function saveTransactionInfo(transactionId, transactionInfoDetail) {
 }
 
 
-function searchMemberByCatagory(sectionType) {
-    var searchType = document.getElementById('search_member_catagory_for' + sectionType).value.trim();
-    var searchValue = document.getElementById('search_member_value_for' + sectionType).value.trim();
-    if (searchValue == null || searchValue == "") {
-        Swal.fire("错误提醒", "查询内容不能为空", "warning");
-    } else {
-        if (searchType == 'searchByMemberId') {
-            searchMemberByCatagoryMemberId(searchValue, sectionType);
-        }
-        else if (searchType == 'searchByMemberPetName') {
-            searchMemberByCatagoryPetName(searchValue, sectionType);
-        }
-        else if (searchType == 'searchByMemberPhone') {
-            searchMemberByCatagoryPhoneNumber(searchValue, sectionType);
-        }
-    }
-}
+// function searchMemberByCatagory(sectionType) {
+//     var searchType = document.getElementById('search_member_catagory_for' + sectionType).value.trim();
+//     var searchValue = document.getElementById('search_member_value_for' + sectionType).value.trim();
+//     if (searchValue == null || searchValue == "") {
+//         Swal.fire("错误提醒", "查询内容不能为空", "warning");
+//     } else {
+//         if (searchType == 'searchByMemberId') {
+//             searchMemberByCatagoryMemberId(searchValue, sectionType);
+//         }
+//         else if (searchType == 'searchByMemberPetName') {
+//             searchMemberByCatagoryPetName(searchValue, sectionType);
+//         }
+//         else if (searchType == 'searchByMemberPhone') {
+//             searchMemberByCatagoryPhoneNumber(searchValue, sectionType);
+//         }
+//     }
+// }
 
 
-function searchMemberByCatagoryMemberId(memberId, sectionType) {
+// function searchMemberByCatagoryMemberId(memberId, sectionType) {
 
-    memberInfoLookUpTable(memberId).then(function (snapshot) {
-        if (!snapshot.exists()) {
-            clearContentBySection(sectionType);
-        } else {
-            buildContentBySection(snapshot, sectionType);
-        }
-    });
-}
+//     memberInfoLookUpTable(memberId).then(function (snapshot) {
+//         if (!snapshot.exists()) {
+//             clearContentBySection(sectionType);
+//         } else {
+//             buildContentBySection(snapshot, sectionType);
+//         }
+//     });
+// }
 
-function buildContentBySection(memberInfo, sectionType) {
-    document.getElementById('memberIdSearchedFor' + sectionType).value = memberInfo.key;
-    document.getElementById('memberNameSearchedFor' + sectionType).value = memberInfo.child('memberName').val();
-    document.getElementById('memberPetNameSearchedFor' + sectionType).value = memberInfo.child('memberPetName').val();
-    document.getElementById('memberPhoneSearchedFor' + sectionType).value = memberInfo.child('memberPhone').val();
-    document.getElementById('memberBalanceSearchedFor' + sectionType).value = memberInfo.child('memberBalance').val();
-    document.getElementById('memberDiscountRateSearchedFor' + sectionType).value = memberInfo.child('memberDiscountRate').val();
-    if (sectionType === 'Search') {
-        document.getElementById('memberPetBreedSearchedFor' + sectionType).value = memberInfo.child('memberPetBreed').val();
-        var petGenderChinese='未知';
-        if(memberInfo.child('memberPetGender').val()==='m'){
-            petGenderChinese = '男';
-        } else if(memberInfo.child('memberPetGender').val()==='f'){
-            petGenderChinese = '女';
-        }
-        document.getElementById('memberPetGenderSearchedFor' + sectionType).value = petGenderChinese;
-        document.getElementById('memberJoinDateSearchedFor' + sectionType).value = memberInfo.child('memberJoinDate').val();
-        document.getElementById('employeeSearchedFor' + sectionType).value = memberInfo.child('employee').val();
-        document.getElementById('noteSearchedFor' + sectionType).value = memberInfo.child('note').val();
-    }
-}
+// function buildContentBySection(memberInfo, sectionType) {
+//     document.getElementById('memberIdSearchedFor' + sectionType).value = memberInfo.key;
+//     document.getElementById('memberNameSearchedFor' + sectionType).value = memberInfo.child('memberName').val();
+//     document.getElementById('memberPetNameSearchedFor' + sectionType).value = memberInfo.child('memberPetName').val();
+//     document.getElementById('memberPhoneSearchedFor' + sectionType).value = memberInfo.child('memberPhone').val();
+//     document.getElementById('memberBalanceSearchedFor' + sectionType).value = memberInfo.child('memberBalance').val();
+//     document.getElementById('memberDiscountRateSearchedFor' + sectionType).value = memberInfo.child('memberDiscountRate').val();
+//     if (sectionType === 'Search') {
+//         document.getElementById('memberPetBreedSearchedFor' + sectionType).value = memberInfo.child('memberPetBreed').val();
+//         var petGenderChinese='未知';
+//         if(memberInfo.child('memberPetGender').val()==='m'){
+//             petGenderChinese = '男';
+//         } else if(memberInfo.child('memberPetGender').val()==='f'){
+//             petGenderChinese = '女';
+//         }
+//         document.getElementById('memberPetGenderSearchedFor' + sectionType).value = petGenderChinese;
+//         document.getElementById('memberJoinDateSearchedFor' + sectionType).value = memberInfo.child('memberJoinDate').val();
+//         document.getElementById('employeeSearchedFor' + sectionType).value = memberInfo.child('employee').val();
+//         document.getElementById('noteSearchedFor' + sectionType).value = memberInfo.child('note').val();
+//     }
+// }
 
-function clearContentBySection(sectionType) {
-    document.getElementById('memberIdSearchedFor' + sectionType).value = null;
-    document.getElementById('memberNameSearchedFor' + sectionType).value = null;
-    document.getElementById('memberPetNameSearchedFor' + sectionType).value = null;
-    document.getElementById('memberPhoneSearchedFor' + sectionType).value = null;
-    document.getElementById('memberBalanceSearchedFor' + sectionType).value = null;
-    document.getElementById('memberDiscountRateSearchedFor' + sectionType).value = null;
-    if (sectionType == 'Search') {
-        document.getElementById('memberPetBreedSearchedFor' + sectionType).value = null;
-        document.getElementById('memberPetGenderSearchedFor' + sectionType).value = null;
-        document.getElementById('memberJoinDateSearchedFor' + sectionType).value = null;
-        document.getElementById('employeeSearchedFor' + sectionType).value = null;
-        document.getElementById('noteSearchedFor' + sectionType).value = null;
-    }
-}
+// function clearContentBySection(sectionType) {
+//     document.getElementById('memberIdSearchedFor' + sectionType).value = null;
+//     document.getElementById('memberNameSearchedFor' + sectionType).value = null;
+//     document.getElementById('memberPetNameSearchedFor' + sectionType).value = null;
+//     document.getElementById('memberPhoneSearchedFor' + sectionType).value = null;
+//     document.getElementById('memberBalanceSearchedFor' + sectionType).value = null;
+//     document.getElementById('memberDiscountRateSearchedFor' + sectionType).value = null;
+//     if (sectionType == 'Search') {
+//         document.getElementById('memberPetBreedSearchedFor' + sectionType).value = null;
+//         document.getElementById('memberPetGenderSearchedFor' + sectionType).value = null;
+//         document.getElementById('memberJoinDateSearchedFor' + sectionType).value = null;
+//         document.getElementById('employeeSearchedFor' + sectionType).value = null;
+//         document.getElementById('noteSearchedFor' + sectionType).value = null;
+//     }
+// }
 
-function searchMemberByCatagoryPetName(petName, sectionType) {
+// function searchMemberByCatagoryPetName(petName, sectionType) {
 
-    firebase.database().ref('members/').once("value").then(snapshot => {
-        numberOfSearchedMember = 0;
-        var firstChild;
-        var htmlContent = "<select id='search_member_mutiple_option_for" + sectionType + "' type='text' class='form-control'><option  selected>请选择(会员号-宠物名字-电话)</option>";
-        snapshot.forEach(function (data) {
-            if (String(data.child('memberPetName').val()).toUpperCase().includes(String(petName).toUpperCase())) {
-                firstChild = data;
-                htmlContent += "<option  value='" + data.key + "'>" + data.key + "-" + data.child('memberPetName').val() + "-" + data.child('memberPhone').val() + "</option>";
-                numberOfSearchedMember += 1;
-            }
-        });
+//     firebase.database().ref('members/').once("value").then(snapshot => {
+//         numberOfSearchedMember = 0;
+//         var firstChild;
+//         var htmlContent = "<select id='search_member_mutiple_option_for" + sectionType + "' type='text' class='form-control'><option  selected>请选择(会员号-宠物名字-电话)</option>";
+//         snapshot.forEach(function (data) {
+//             if (String(data.child('memberPetName').val()).toUpperCase().includes(String(petName).toUpperCase())) {
+//                 firstChild = data;
+//                 htmlContent += "<option  value='" + data.key + "'>" + data.key + "-" + data.child('memberPetName').val() + "-" + data.child('memberPhone').val() + "</option>";
+//                 numberOfSearchedMember += 1;
+//             }
+//         });
 
-        if (numberOfSearchedMember === 0) {
-            Swal.fire("错误提醒", "查询的宠物名字： " + petName + " 不存在", "error");
-            clearContentBySection(sectionType);
-        } else if (numberOfSearchedMember === 1) {
-            buildContentBySection(firstChild, sectionType);
-        } else {
-            htmlContent += "</select>";
-            Swal.fire({
-                title: "<strong>发现多个会员</strong>",
-                icon: "info",
-                html: htmlContent,
-                showCloseButton: true,
-                showCancelButton: true,
-                focusConfirm: false,
-                confirmButtonText: "确定",
-                cancelButtonText: "取消"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    memberIdSearchReselect(sectionType);
-                } else {
-                    clearContentBySection(sectionType);
-                }
-            });
-        }
-    });
+//         if (numberOfSearchedMember === 0) {
+//             Swal.fire("错误提醒", "查询的宠物名字： " + petName + " 不存在", "error");
+//             clearContentBySection(sectionType);
+//         } else if (numberOfSearchedMember === 1) {
+//             buildContentBySection(firstChild, sectionType);
+//         } else {
+//             htmlContent += "</select>";
+//             Swal.fire({
+//                 title: "<strong>发现多个会员</strong>",
+//                 icon: "info",
+//                 html: htmlContent,
+//                 showCloseButton: true,
+//                 showCancelButton: true,
+//                 focusConfirm: false,
+//                 confirmButtonText: "确定",
+//                 cancelButtonText: "取消"
+//             }).then((result) => {
+//                 if (result.isConfirmed) {
+//                     memberIdSearchReselect(sectionType);
+//                 } else {
+//                     clearContentBySection(sectionType);
+//                 }
+//             });
+//         }
+//     });
 
-}
-
-
-function searchMemberByCatagoryPhoneNumber(phoneNumber, sectionType) {
-
-    phoneNumber = wrapPhoneNumber(phoneNumber);
-    firebase.database().ref('members/').orderByChild('memberPhone').equalTo(phoneNumber).once("value").then(snapshot => {
-        numberOfSearchedMember = snapshot.numChildren();
-        if (numberOfSearchedMember === 0) {
-            Swal.fire("错误提醒", "查询的电话号码： " + phoneNumber + " 不存在", "error");
-            clearContentBySection(sectionType);
-            return;
-        }
-        var htmlContent = "<select id='search_member_mutiple_option_for" + sectionType + "' type='text' class='form-control'><option  selected>请选择(会员号-名字)</option>";
-        snapshot.forEach(function (data) {
-            if (data.child('memberPhone').val() == phoneNumber) {
-                if (numberOfSearchedMember === 1) {
-                    buildContentBySection(data, sectionType);
-                } else {
-                    htmlContent += "<option  value='" + data.key + "'>" + data.key + "-" + data.child('memberPetName').val() + "</option>";
-                }
-            }
-        });
-
-        if (numberOfSearchedMember > 1) {
-            htmlContent += "</select>";
-            Swal.fire({
-                title: "<strong>发现多个会员</strong>",
-                icon: "info",
-                html: htmlContent,
-                showCloseButton: true,
-                showCancelButton: true,
-                focusConfirm: false,
-                confirmButtonText: "确定",
-                cancelButtonText: "取消"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    memberIdSearchReselect(sectionType);
-                }
-            });
-        }
-    });
-
-}
+// }
 
 
-function memberIdSearchReselect(sectionType) {
-    var memberId = document.getElementById('search_member_mutiple_option_for' + sectionType).value;
-    searchMemberByCatagoryMemberId(memberId, sectionType);
-}
+// function searchMemberByCatagoryPhoneNumber(phoneNumber, sectionType) {
+//     phoneNumber = wrapPhoneNumber(phoneNumber);
+//     firebase.database().ref('members/').orderByChild('memberPhone').equalTo(phoneNumber).once("value").then(snapshot => {
+//         numberOfSearchedMember = snapshot.numChildren();
+//         if (numberOfSearchedMember === 0) {
+//             Swal.fire("错误提醒", "查询的电话号码： " + phoneNumber + " 不存在", "error");
+//             clearContentBySection(sectionType);
+//             return;
+//         }
+//         var htmlContent = "<select id='search_member_mutiple_option_for" + sectionType + "' type='text' class='form-control'><option  selected>请选择(会员号-名字)</option>";
+//         snapshot.forEach(function (data) {
+//             if (data.child('memberPhone').val() == phoneNumber) {
+//                 if (numberOfSearchedMember === 1) {
+//                     buildContentBySection(data, sectionType);
+//                 } else {
+//                     htmlContent += "<option  value='" + data.key + "'>" + data.key + "-" + data.child('memberPetName').val() + "</option>";
+//                 }
+//             }
+//         });
+
+//         if (numberOfSearchedMember > 1) {
+//             htmlContent += "</select>";
+//             Swal.fire({
+//                 title: "<strong>发现多个会员</strong>",
+//                 icon: "info",
+//                 html: htmlContent,
+//                 showCloseButton: true,
+//                 showCancelButton: true,
+//                 focusConfirm: false,
+//                 confirmButtonText: "确定",
+//                 cancelButtonText: "取消"
+//             }).then((result) => {
+//                 if (result.isConfirmed) {
+//                     memberIdSearchReselect(sectionType);
+//                 }
+//             });
+//         }
+//     });
+
+// }
+
+
+// function memberIdSearchReselect(sectionType) {
+//     var memberId = document.getElementById('search_member_mutiple_option_for' + sectionType).value;
+//     searchMemberByCatagoryMemberId(memberId, sectionType);
+// }
 
 
 function employeeSelectedOptionForMemberManagement() {
