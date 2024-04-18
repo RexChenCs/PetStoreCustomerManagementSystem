@@ -97,38 +97,48 @@
     <section id="business" class="price sections">
         <div class="container">
             <div class="head_title text-center">
-                <h1>会员消费查询</h1>
+                <h3>会员消费查询</h3>
             </div>
 
             <div class="container">
 
-                <div class="row">
+                <div class="officeUseBox">
+                <div class="row" style="margin: 3%;">
 
-                    <div class="col-sm-3 form-group">
+                    <div class="col-sm-2 form-group">
+                        <label for="search_transaction_memberId">会员账号</label>
                         <input id="search_transaction_memberId" type="text" class="form-control"
                             placeholder="PH100000"></input>
                     </div>
 
-                    <div class="col-sm-1 form-group">
-                        <input name="start_date_from_label" type="text" class="label-control" value="From"></input>
-                    </div>
-
                     <div class="col-sm-2 form-group">
+                        <label for="search_transaction_starDate">开始日期</label>
                         <input id="search_transaction_starDate" type="date" class="form-control"></input>
                     </div>
 
-                    <div class="col-sm-1 form-group">
-                        <input name="end_date_to_label" type="text" class="label-control" value="To"></input>
-                    </div>
-
                     <div class="col-sm-2 form-group">
+                        <label for="search_transaction_endDate">结束日期</label>
                         <input id="search_transaction_endDate" type="date" class="form-control"></input>
                     </div>
 
-                    <div class="col-sm-3 form-group">
+                    <div class="col-sm-2 form-group">
+                        <label for="search_transaction_type">消费类型</label>
+                        <select id="search_transaction_type" class="form-control" type="text">
+                            <option value="all">全部类型</option>
+                            <option value="newMember">开户</option>
+                            <option value="addCredit">充值</option>
+                            <option value="spendCredit">消费</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-2 form-group"></div>
+
+                    <div class="col-sm-2 form-group">
+                        <label for="search_action">&nbsp;</label>
                         <button id="search_action" class="form-control pull-right" type="button" onclick="searchTransactions()">Search</button>
                     </div>
 
+                </div>
                 </div>
 
                 <div class="table-wrapper">
@@ -136,7 +146,7 @@
                     <div class="table-title">
                         <div class="row">
                             <div class="col-sm-5">
-                                <h2>消费记录</h2>
+                                <h5>消费记录</h5>
                             </div>
                         </div>
                     </div>

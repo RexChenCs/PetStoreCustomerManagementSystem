@@ -1,7 +1,5 @@
 $(document).ready(function () {
     employeeSelectedOptionForAdminManagement();
-    readAcctUserInfoTable('acctUserInfo_table');
-    readAcctUserInfoTable('acctUserInfo_table_copy');
     readEmailNoticeInfo();
     isAdmin("adminsection");
     setup();
@@ -65,7 +63,42 @@ $(document).ready(function () {
                                 document.getElementById('discountLevelIdForEdit').value = discountData[0];
                                 document.getElementById('discountValueForEdit').value = discountData[1];
                                 document.getElementById('discountRateForEdit').value = discountData[2];
-                            }     
+                            }
+                        }
+                    }
+                ]
+            },
+            topEnd: {
+                search: {
+                    placeholder: 'Type search here'
+                }
+            }
+        }
+    });
+
+    $('#acctUserTable').DataTable({
+        layout: {
+            topStart: {
+                buttons: [
+                    {
+                        text: 'create',
+                        action: function () {
+                            document.getElementById('add_acct_user_role_modal').style.display = 'block';
+
+                        },
+                    },
+                    {
+                        text: 'edit',
+                        action: function () {
+                            const acctUserTable = new DataTable('#acctUserTable');
+                            acctUserData = acctUserTable.row('.selected').data();
+                            if (acctUserData === undefined || acctUserData === null) {
+                                Swal.fire("错误提醒", "请点击用户信息", "warning");
+                            } else {
+                                document.getElementById('edit_acct_user_role_modal').style.display = 'block';
+                                document.getElementById('adminRoleEmailForUpdate').value = acctUserData[0];
+                                document.getElementById('isAdminRoleForUpdate').value = acctUserData[1];
+                            }
                         }
                     }
                 ]
@@ -90,6 +123,7 @@ $(document).ready(function () {
         }
     });
     readEmployeeInfoTable();
+
     const discountRateTable = new DataTable('#discountRateTable');
     discountRateTable.on('click', 'tbody tr', (e) => {
         let classList = e.currentTarget.classList;
@@ -102,6 +136,22 @@ $(document).ready(function () {
         }
     });
     readDiscountRateInfoTable();
+
+    const acctUserTable = new DataTable('#acctUserTable');
+    acctUserTable.on('click', 'tbody tr', (e) => {
+        let classList = e.currentTarget.classList;
+        if (classList.contains('selected')) {
+            classList.remove('selected');
+        }
+        else {
+            acctUserTable.rows('.selected').nodes().each((row) => row.classList.remove('selected'));
+            classList.add('selected');
+        }
+    });
+    readAcctUserInfoTable();
+
+
+
     $("input[type='tel']").on({
         keyup: function () {
             formatPhone($(this));
@@ -342,7 +392,7 @@ function updateDiscountRate() {
     } else {
         loadingValue = convertCurrencyToNumber(loadingValue);
         var discountRateInfo = firebase.database().ref('discounts/' + levelId);
-        discountRateInfo.update({ 'value': Number(Number(loadingValue).toFixed(2)), 'rate': Number(Number(discountRate).toFixed(2))});
+        discountRateInfo.update({ 'value': Number(Number(loadingValue).toFixed(2)), 'rate': Number(Number(discountRate).toFixed(2)) });
         Swal.fire("成功", "折扣信息已保存", "success").then(() => {
             readDiscountRateInfoTable();
             document.getElementById('edit_discount_rate_modal').style.display = 'none';
@@ -380,56 +430,6 @@ function employeeSelectedOptionForAdminManagement() {
 }
 
 var current_employee_for_new_member;
-// function findMemberByIdForEditInfo() {
-//     var memberId = document.getElementById('memberIdSearchingForEditInfo').value.trim();
-//     if (memberId == null || memberId == "") {
-//         Swal.fire("错误提醒", "请输入会员账号", "warning");
-//     } else {
-
-//         var memberInfo = firebase.database().ref('members/' + memberId);
-//         memberInfo.once('value').then(snapshot => {
-//             var Data = snapshot;
-//             if (!snapshot.exists()) {
-//                 Swal.fire("错误提醒", "查询的会员账号： " + snapshot.key + " 不存在", "error");
-//                 document.getElementById('memberIdInfo').value = null;
-//                 document.getElementById('memberNameInfo').value = null;
-//                 document.getElementById('memberPetNameInfo').value = null;
-//                 document.getElementById('memberPetBreedInfo').value = null;
-//                 document.getElementById('memberPetGenderInfo').value = null;
-//                 document.getElementById('memberJoinDateInfo').value = null;
-//                 document.getElementById('memberPhoneInfo').value = null;
-//                 document.getElementById('memberBalanceInfo').value = null;
-//                 document.getElementById('memberDiscountRateInfo').value = null;
-//                 document.getElementById('addNewMemberByEmployeeInfo').value = null;
-//                 document.getElementById('addNewMemberNoteInfo').value = null;
-//             } else {
-//                 var memberId = Data.key;
-//                 var memberName = Data.child("memberName").val();
-//                 var memberPetName = Data.child("memberPetName").val();
-//                 var memberPetBreed = Data.child("memberPetBreed").val();
-//                 var memberPetGender = Data.child("memberPetGender").val();
-//                 var memberJoinDate = Data.child('memberJoinDate').val();
-//                 var memberPhone = Data.child("memberPhone").val();
-//                 var memberDiscountRate = Data.child("memberDiscountRate").val();
-//                 var memberBalance = Data.child("memberBalance").val();
-//                 var addNewMemberByEmployee = Data.child("employee").val();
-//                 var addNewMemberNote = Data.child("note").val();
-//                 current_employee_for_new_member = addNewMemberByEmployee;
-//                 document.getElementById('memberIdInfo').value = memberId;
-//                 document.getElementById('memberNameInfo').value = memberName;
-//                 document.getElementById('memberPetNameInfo').value = memberPetName;
-//                 document.getElementById('memberPetBreedInfo').value = memberPetBreed;
-//                 document.getElementById('memberPetGenderInfo').value = memberPetGender;
-//                 document.getElementById('memberJoinDateInfo').value = memberJoinDate;
-//                 document.getElementById('memberPhoneInfo').value = memberPhone;
-//                 document.getElementById('memberBalanceInfo').value = memberBalance;
-//                 document.getElementById('memberDiscountRateInfo').value = memberDiscountRate;
-//                 document.getElementById('addNewMemberByEmployeeInfo').value = addNewMemberByEmployee;
-//                 document.getElementById('addNewMemberNoteInfo').value = addNewMemberNote;
-//             }
-//         });
-//     }
-// }
 
 function findEmployeeByIdForEditInfo() {
     var employeeId = document.getElementById('employeeIdSearchingForEditInfo').value.trim();
@@ -640,7 +640,6 @@ function updateTransactionInfo() {
 }
 
 function memberAcctHandlerForVoidTransaction(transactionId) {
-
     firebase.database().ref('transactions/' + transactionId).once('value').then(snapshot => {
         if (snapshot.exists()) {
             var transactionType = snapshot.child("type").val();
@@ -679,7 +678,7 @@ function memberAcctHandlerForUpdateTransaction(oldTransactionId, UpdatedTransact
                     remainingBalanceForUpdatedTransaction = Number(snapshot.child('memberRemainingBalance').val()) - Number(snapshot.child('amount').val()) + Number(UpdatedTransactionInfoDetail['amount']);
                 } else if (snapshot.child('type').val() === 'spendCredit') {
                     remainingBalanceForUpdatedTransaction = Number(snapshot.child('memberRemainingBalance').val()) + Number(snapshot.child('amount').val()) - Number(UpdatedTransactionInfoDetail['amount']);
-                } else if (snapshot.child('type').val() === 'newMember'){
+                } else if (snapshot.child('type').val() === 'newMember') {
                     remainingBalanceForUpdatedTransaction = Number(UpdatedTransactionInfoDetail['amount']);
                 }
                 UpdatedTransactionInfoDetail['memberRemainingBalance'] = Number(Number(remainingBalanceForUpdatedTransaction).toFixed(2));
@@ -840,6 +839,7 @@ function updateAdminRole() {
                 var usersInfo = firebase.database().ref('users/' + uid);
                 usersInfo.update({ 'isAdmin': isAdminRole });
                 Swal.fire("成功", "信息已保存", "success");
+                readAcctUserInfoTable();
             } else {
                 Swal.fire("失败", "邮箱错误", "error");
             }
@@ -926,33 +926,22 @@ function addAcctUser() {
         var usersInfo = firebase.database().ref('users/' + uid);
         usersInfo.set({ 'email': email, 'isAdmin': isAdminRole });
         Swal.fire("成功", "用户已经添加", "success");
+        readAcctUserInfoTable();
     }
 }
 
-function readAcctUserInfoTable(tableId) {
-
+function readAcctUserInfoTable() {
     var query = firebase.database().ref('users/').orderByKey();
-
+    var table = $('#acctUserTable').DataTable();
     query.once("value", function (snapshot) {
-
-        var table = document.getElementById(tableId);
-
-        // clear up old data to reduce duplication
-        table.innerHTML = null;
-
+        table.clear().draw();
         snapshot.forEach(function (childSnapshot) {
-            var table = document.getElementById(tableId);
             var email = childSnapshot.child("email").val();
             var isAdminRole = childSnapshot.child("isAdmin").val();
-            var row = '<tr>' +
-                '<td>' + email + '</td>' +
-                '<td>' + isAdminRole + '</td>' +
-                '</tr>';
-            table.innerHTML += row;
+            table.row.add([email, isAdminRole]).draw();
         });
     });
 }
-
 
 function updateEmailNoticeInfo() {
     if (updateEmailNoticeInfoValidation()) {
