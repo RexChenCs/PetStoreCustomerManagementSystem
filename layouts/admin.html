@@ -118,7 +118,7 @@
                     <li><a href="./membermanagement.html">VIP Management</a></li>
                     <li><a href="./transactionreview.html">Transaction Review</a></li>
                     <li><a href="./export.html">Data Exportation</a></li>
-                    <li id="adminsection"><a href="./admin.html">Admin</a></li>
+                    <li id="adminsection" class="active"><a href="./admin.html">Admin</a></li>
                     <li class="login" onclick="signout()" style="width:auto;"><a>Sign Out</a></li>
                 </ul>
             </div><!-- /.navbar-collapse -->
@@ -135,7 +135,8 @@
             <div class="row">
                 <div class="portfolio-wrapper text-center">
                     <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="document.getElementById('member_info_edit_modal').style.display='block'">
+                        onclick="checkPermission('memberInfoUpdate','member_info_edit_modal')">
+
                         <div class="community-edition">
                             <i class="fas fa-user-edit"></i>
                             <div class="separator"></div>
@@ -145,7 +146,7 @@
                     </div>
 
                     <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="document.getElementById('transaction_info_edit_modal').style.display='block'">
+                        onclick="checkPermission('transactionInfoUpdate','transaction_info_edit_modal')">
                         <div class="community-edition">
                             <i class="fas fa-edit"></i>
                             <div class="separator"></div>
@@ -156,7 +157,7 @@
 
 
                     <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="document.getElementById('edit_discountRate_modal').style.display='block'">
+                        onclick="checkPermission('discountRateInfoUpdate','edit_discountRate_modal')">
                         <div class="community-edition">
                             <i class="fas fa-tags	"></i>
                             <div class="separator"></div>
@@ -166,7 +167,7 @@
                     </div>
 
                     <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="document.getElementById('employee_search_modal').style.display='block'">
+                        onclick="checkPermission('commissionInfoReview','employee_search_modal')">
                         <div class="community-edition">
                             <i class="fas fa-donate"></i>
                             <div class="separator"></div>
@@ -179,11 +180,9 @@
             </div>
 
             <div class="row">
-
                 <div class="portfolio-wrapper text-center">
-
                     <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="document.getElementById('add_employee_modal').style.display='block'">
+                        onclick="checkPermission('employeeInfoUpdate','add_employee_modal')">
                         <div class="community-edition">
                             <i class="far fa-id-card"></i>
                             <div class="separator"></div>
@@ -203,9 +202,8 @@
                     </div>
 
                     <div class="portfolio-wrapper text-center">
-
                         <div class="col-md-3 col-sm-6 col-xs-12"
-                            onclick="document.getElementById('edit_email_notice_modal').style.display='block'">
+                            onclick="checkPermission('emailNotificationInfoUpdate','edit_email_notice_modal')">
                             <div class="community-edition">
                                 <i class="fa-solid fa-bell"></i>
                                 <div class="separator"></div>
@@ -213,12 +211,10 @@
                                 <p>Edit Email Notice Configration</p>
                             </div>
                         </div>
-
                     </div>
 
-
                     <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="document.getElementById('edit_setting_modal').style.display='block'; loadingSetting()">
+                        onclick="checkPermission('systemConfigInfoUpdate','edit_setting_modal'); loadingSetting()">                        
                         <div class="community-edition">
                             <i class="fa fa-gears"></i>
                             <div class="separator"></div>
@@ -231,20 +227,20 @@
 
             </div>
 
-            <!-- <div class="row">
+            <div class="row">
                 <div class="portfolio-wrapper text-center">
 
                     <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="document.getElementById('edit_admin_role_modal').style.display='block'">
+                        onclick="document.getElementById('user_role_management_modal').style.display='block'">
                         <div class="community-edition">
                             <i class="fas fa-sitemap"></i>
                             <div class="separator"></div>
                             <h4>修改管理者权限</h4>
-                            <p>Edit admin role to user</p>
+                            <p>Edit access group to acct user</p>
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
     </section>
 
 
@@ -700,8 +696,6 @@
         </section>
     </div>
 
-
-
     <!--添加用户-->
     <div id="add_acct_user_role_modal" class="modal">
         <span onclick="document.getElementById('add_acct_user_role_modal').style.display='none'" class="close"
@@ -956,8 +950,6 @@
     </div>
 
 
-
-
     <!--添加折扣-->
     <div id="add_new_discount_rate_modal" class="modal">
         <span onclick="document.getElementById('add_new_discount_rate_modal').style.display='none'" class="close"
@@ -1039,7 +1031,65 @@
         </section>
     </div>
 
+    <!--修改管理者权限-->
+    <div id="user_role_management_modal" class="modal">
+        <span onclick="document.getElementById('user_role_management_modal').style.display='none'" class="close"
+            title="Close Modal">&times;</span>
 
+        <section class="price sections">
+
+            <div class="contain">
+
+                <div class="tab-content">
+
+                    <div class="head_title text-center">
+                        <h3>修改用户权限</h3>
+                    </div>
+
+                    <div class="form_container">
+                        <div class="officeUseBox">
+                            <div class="row" style="margin: 3%;">
+                                <div class="col-sm-4 form-group">
+                                    <label for="acctUserEmailForAccessGroup" class="required">邮箱</label>
+                                    <select class="form-control" id="acctUserEmailForAccessGroup">
+                                        <option selected>用户邮箱</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label for="accessGroupForUpdate" class="required">管理者权限</label>
+                                    <select class="form-control" id="accessGroupForUpdate">
+                                        <option value="" selected>请选择要修改的权限</option>
+                                        <option value="memberInfoUpdate">会员信息修改权限</option>
+                                        <option value="transactionInfoUpdate">交易信息修改权限</option>
+                                        <option value="discountRateInfoUpdate">折扣信息修改权限</option>
+                                        <option value="commissionInfoReview">员工提成查看权限</option>
+                                        <option value="employeeInfoUpdate">员工信息修改权限</option>
+                                        <option value="emailNotificationInfoUpdate">邮箱信息修改权限</option>
+                                        <option value="systemConfigInfoUpdate">系统设置修改权限</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label for="accessTypeForUpdate" class="required">修改种类</label>
+                                    <select class="form-control" id="accessTypeForUpdate">
+                                        <option value="" selected>请选择要修改的类型</option>
+                                        <option value="true">添加</option>
+                                        <option value="false">移除</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="buttonAdjust">
+                            <div class="wrap pull-right">
+                                <button class="button" onclick="updateUserAccessGroup()">修改</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
     <!--Footer-->
     <footer id="footer" class="footer">
         <div class="container">

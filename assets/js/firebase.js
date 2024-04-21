@@ -267,3 +267,34 @@ function discountRateInfoLookUpTable(loadingAmount) {
         return Number(rate);
     });
 }
+
+function checkPermission(permissionType, model){
+
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user === null ){
+            alert(false);
+        } else {
+            firebase.database().ref('users/' + user.uid).once('value', function (snapshot) {
+                if (snapshot.exists()) {
+                    var isPermited = snapshot.child('accessGroup').child(permissionType).val();
+                    if(isPermited==='true'){
+                        document.getElementById(model).style.display='block';
+                    }else{
+                        document.getElementById(model).style.display='none';
+                        Swal.fire({
+                            title: "No Access",
+                            text: 'You dont have access, please request access from admin',
+                            icon: "error"
+                        });
+                    }
+                } else {
+                    Swal.fire({
+                        title: "No Access",
+                        text: 'Invalid User',
+                        icon: "error"
+                    });
+                }
+            });
+        }
+    });
+}

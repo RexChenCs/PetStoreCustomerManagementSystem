@@ -326,6 +326,8 @@ $(document).ready(function () {
         }
     });
 
+
+    acctUserSelectedOptionForAdminManagement();
 });
 
 
@@ -742,7 +744,6 @@ function updateTransactionForEmployeeChange(memberId, newEmployeeId) {
     });
 }
 
-
 function searchTransactionsForCommission() {
 
     var employeeId = document.getElementById('search_employeeId_selection').value;
@@ -978,4 +979,46 @@ function loadingSetting() {
         document.getElementById('discountRateAutoApply').checked = snapshot.child('discountRateAutoApply').val();
         document.getElementById('duplicatedPhoneCheck').checked = snapshot.child('duplicatedPhoneCheck').val();
     });
+}
+
+
+function acctUserSelectedOptionForAdminManagement() {
+    var acctUserInfo = firebase.database().ref('users/').orderByKey();
+    var acctUserEmailSelectAttr = document.getElementById('acctUserEmailForAccessGroup');
+
+    acctUserInfo.on("value", function (snapshot) {
+        ClearOptionsFastAlt('acctUserEmailForAccessGroup');
+        snapshot.forEach(function (childSnapshot) {
+            var userEmail = childSnapshot.child("email").val();
+            const opt = document.createElement("option");
+            opt.value = userEmail;
+            opt.text = userEmail;
+            acctUserEmailSelectAttr.add(opt, null);
+        });
+    });
+}
+
+function updateUserAccessGroup(){
+    var accessGroupForUpdateElement = document.getElementById('accessGroupForUpdate');
+    var accessTypeForUpdateElement  = document.getElementById('accessTypeForUpdate');
+    var accessGroupForUpdate = accessGroupForUpdateElement.value;
+    var accessTypeForUpdate  = accessTypeForUpdateElement.value;
+
+    if(checkValue(accessGroupForUpdate) || checkValue(accessTypeForUpdate)){
+        Swal.fire("错误提醒", "请选择权限种类和修改的类型", "warning");
+    } else{
+        var email = document.getElementById('acctUserEmailForAccessGroup').value;
+        var accessGroupForUpdateText = accessGroupForUpdateElement.options[accessGroupForUpdateElement.selectedIndex].text;
+        var accessTypeForUpdateText  = accessTypeForUpdateElement.options[accessTypeForUpdateElement.selectedIndex].text;
+        userEmailLookUpTable(email).then(function (uid) {
+            if (uid != null) {
+                var usersAccessGroup = firebase.database().ref('users/' + uid).child('accessGroup');
+                usersAccessGroup.update({ [accessGroupForUpdate] : accessTypeForUpdate});
+                Swal.fire("成功", "用户"+email+"的"+accessGroupForUpdateText+"已"+accessTypeForUpdateText, "success");
+            } else {
+                Swal.fire("失败", "邮箱错误", "error");
+            }
+        });
+    
+    }
 }
