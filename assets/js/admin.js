@@ -1,6 +1,4 @@
 $(document).ready(function () {
-    employeeSelectedOptionForAdminManagement();
-    readEmailNoticeInfo();
     setup();
     $('#employeeTable').DataTable({
         layout: {
@@ -148,8 +146,6 @@ $(document).ready(function () {
     });
     readAcctUserInfoTable();
 
-
-
     $("input[type='tel']").on({
         keyup: function () {
             formatPhone($(this));
@@ -271,7 +267,6 @@ $(document).ready(function () {
         }
     });
 
-
     $("input[id='newDiscountValue']").on({
         keyup: function () {
             wrapCurrency($(this));
@@ -323,9 +318,6 @@ $(document).ready(function () {
             }
         }
     });
-
-
-    acctUserSelectedOptionForAdminManagement();
 });
 
 
@@ -346,7 +338,6 @@ function createNewEmployee() {
         });
     }
 }
-
 
 function createNewDiscount() {
     var loadingValue = document.getElementById('newDiscountValue').value.trim();
@@ -468,7 +459,6 @@ function findTransactionByIdForEditInfo() {
     if (transactionId == null || transactionId == "") {
         Swal.fire("错误提醒", "请输入交易查询号", "warning");
     } else {
-
         var transactionInfo = firebase.database().ref('transactions/' + transactionId);
         transactionInfo.once('value').then(snapshot => {
             var Data = snapshot;
@@ -512,7 +502,6 @@ function findTransactionByIdForEditInfo() {
 
 
 function updateMemberInfo() {
-
     var memberId = document.getElementById('memberIdSearchedForEdit').value.trim();
     if (memberId == null || memberId == "") {
         Swal.fire("错误提醒", "请输入会员账号", "warning");
@@ -536,7 +525,6 @@ function updateMemberInfo() {
             updateTransactionForEmployeeChange(memberId, addNewMemberByEmployee);
         }
         memberInfo.update({ 'memberName': memberName, 'memberPetName': memberPetName, 'memberPetBreed': memberPetBreed, 'memberPetGender': memberPetGender, 'memberJoinDate': memberJoinDate, 'memberPhone': memberPhone, 'memberBalance': memberBalance, 'memberDiscountRate': memberDiscountRate, 'employee': addNewMemberByEmployee, 'note': addNewMemberNote });
-
         Swal.fire("成功", "会员信息已保存", "success").then(() => {
             location.reload();
         });
@@ -544,10 +532,8 @@ function updateMemberInfo() {
 }
 
 function voidTransactionInfo() {
-
     var transactionId = document.getElementById('transactionIdInfo').value.trim();
     var status = document.getElementById('transactionStatusInfo').value.trim();
-
     if (transactionId == null || transactionId == "") {
         Swal.fire("错误提醒", "请输入交易查询号", "warning");
     } else if (status === 'void') {
@@ -576,7 +562,6 @@ function voidTransactionInfo() {
         });
     }
 }
-
 
 function updateTransactionInfo() {
 
@@ -826,7 +811,6 @@ function searchTransactionByemployeeIdAndTime(employeeId, startDate, endDate) {
     });
 }
 
-
 function updateAdminRole() {
     var email = document.getElementById('adminRoleEmailForUpdate').value.trim().toLowerCase();
     if (email == null || email == "") {
@@ -845,8 +829,6 @@ function updateAdminRole() {
         });
     }
 }
-
-
 
 function generateNewEmployeeId() {
     return firebase.database().ref('employees/').once("value").then(snapshot => {
@@ -879,7 +861,6 @@ function readEmployeeInfoTable() {
     });
 }
 
-
 function readDiscountRateInfoTable() {
     var query = firebase.database().ref('discounts/').orderByKey();
     var table = $('#discountRateTable').DataTable();
@@ -893,8 +874,6 @@ function readDiscountRateInfoTable() {
         });
     });
 }
-
-
 
 function readEmailNoticeInfo() {
     firebase.database().ref('emailNoticeConfig/').once("value", function (snapshot) {

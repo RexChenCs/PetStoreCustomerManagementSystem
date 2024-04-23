@@ -1,5 +1,35 @@
 //////////////////////////////////////////////////////////---------LOGIN/REGISTER---------/////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+firebase.auth().onAuthStateChanged(function (user) {
+    if (user === null && (window.location == authDomain + "/layouts/home.html" ||
+        window.location == authDomain + "/layouts/transactionreview.html" ||
+        window.location == authDomain + "/layouts/membermanagement.html" ||
+        window.location == authDomain + "/layouts/export.html" ||
+        window.location == authDomain + "/layouts/admin.html")) {
+        window.location.href = authDomain + "/index.html";
+    } else if (window.location == authDomain + "/layouts/home.html" ||
+        window.location == authDomain + "/layouts/transactionreview.html" ||
+        window.location == authDomain + "/layouts/membermanagement.html" ||
+        window.location == authDomain + "/layouts/export.html" ||
+        window.location == authDomain + "/layouts/admin.html") {
+        firebase.database().ref('users/' + user.uid).on('value', function (snapshot) {
+            if (snapshot.exists()) {
+                var isAdmin = snapshot.child('isAdmin').val();
+                var accessForAdminSection = snapshot.child('accessGroup').child('adminSectionForReview').val();
+                if ((accessForAdminSection !== "true" && isAdmin !== 'true') && window.location == authDomain + "/layouts/admin.html") {
+                    window.location.href = authDomain + "/layouts/home.html";
+                    document.getElementById("adminsection").style.display = "none";
+                }
+            } else {
+                if (window.location == authDomain + "/layouts/admin.html") {
+                    window.location.href = authDomain + "/layouts/home.html";
+                }
+            }
+            checkAdminSectionReview();
+        });
+    }
+});
+
 const Toast = Swal.mixin({
     toast: true,
     position: "top-end",
@@ -15,7 +45,6 @@ const Toast = Swal.mixin({
 function login() {
     var email = document.getElementById("signin_email").value;
     var password = document.getElementById("signin_psw").value;
-
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
         .then(function () {
             return firebase.auth().signInWithEmailAndPassword(email, password)
@@ -26,7 +55,7 @@ function login() {
                     }).then(() => {
                         Swal.fire({
                             title: "Sign In",
-                            text: 'You sign in successfully ',
+                            text: 'Welcome ' + user.email,
                             icon: "success",
                             showConfirmButton: false,
                             timer: 1500
@@ -43,7 +72,6 @@ function login() {
                         if (errorMessage == 'INVALID_LOGIN_CREDENTIALS') {
                             errorMessage = 'The password is invalid or the user does not have a password.'
                         }
-
                     }
                     Swal.fire({
                         icon: "error",
@@ -51,7 +79,6 @@ function login() {
                         showConfirmButton: false,
                         footer: 'Details: ' + errorMessage
                     });
-
                 });
         })
         .catch(function (error) {
@@ -68,17 +95,18 @@ function login() {
 
 function checkAdminSectionReview() {
     firebase.auth().onAuthStateChanged(function (user) {
-        if (user !== null ){
+        if (user !== null) {
             firebase.database().ref('users/' + user.uid).once('value', function (snapshot) {
                 if (snapshot.exists()) {
                     document.getElementById("userEmail").innerHTML = snapshot.child('email').val();
                     var isPermited = snapshot.child('accessGroup').child('adminSectionForReview').val();
-                    if(isPermited==='true'){
-                        document.getElementById('adminsection').style.display='block';
-                    }else{
-                        document.getElementById('adminsection').style.display='none';
+                    var isAdmin = snapshot.child('isAdmin').val();
+                    if (isPermited === 'true' || isAdmin === 'true') {
+                        document.getElementById('adminsection').style.display = 'block';
+                    } else {
+                        document.getElementById('adminsection').style.display = 'none';
                     }
-                } 
+                }
             });
         }
     });
@@ -107,38 +135,6 @@ function signout() {
 }
 
 
-firebase.auth().onAuthStateChanged(function (user) {
-    if (user === null && (window.location == authDomain + "/layouts/home.html" ||
-        window.location == authDomain + "/layouts/transactionreview.html" ||
-        window.location == authDomain + "/layouts/membermanagement.html" ||
-        window.location == authDomain + "/layouts/export.html" ||
-        window.location == authDomain + "/layouts/admin.html")) {
-
-        window.location.href = authDomain + "/index.html";
-
-    } else if (window.location == authDomain + "/layouts/home.html" ||
-        window.location == authDomain + "/layouts/transactionreview.html" ||
-        window.location == authDomain + "/layouts/membermanagement.html" ||
-        window.location == authDomain + "/layouts/export.html" ||
-        window.location == authDomain + "/layouts/admin.html") {
-        firebase.database().ref('users/' + user.uid).on('value', function (snapshot) {
-            if (snapshot.exists()) {
-                // var isAdmin = snapshot.child('isAdmin').val();
-                var accessForAdminSection = snapshot.child('accessGroup').child('adminSectionForReview').val();
-                if (accessForAdminSection !== "true" && window.location == authDomain + "/layouts/admin.html") {
-                    window.location.href = authDomain + "/layouts/home.html";
-                    document.getElementById("adminsection").style.display = "none";
-                }
-            } else {
-                if (window.location == authDomain + "/layouts/admin.html") {
-                    window.location.href = authDomain + "/layouts/home.html";
-                }
-            }
-            checkAdminSectionReview();
-        });
-    }
-});
-
 function sendEmail(message) {
     firebase.database().ref('emailNoticeConfig/').on("value", function (snapshot) {
         var publicKey = snapshot.child('publicKey').val();
@@ -162,7 +158,7 @@ function memberInfoLookUpTable(memberId) {
     return firebase.database().ref('members/' + memberId).once('value').then(snapshot => {
         if (!snapshot.exists()) {
             Swal.fire("错误提醒", "查询的会员账号不存在", "error");
-        } 
+        }
         return snapshot;
     });
 }
@@ -200,12 +196,12 @@ function transactionInfoLookUpTable(transactionId) {
     return transactionInfo.once('value').then(snapshot => {
         if (!snapshot.exists()) {
             Swal.fire("错误提醒", "查询的交易号不存在", "error");
-        } 
+        }
         return snapshot;
     });
 }
 
-function memberInfoConvertor(snapshot){
+function memberInfoConvertor(snapshot) {
     var memberId = snapshot.key;
     var memberName = snapshot.child("memberName").val();
     var memberPetName = snapshot.child("memberPetName").val();
@@ -235,7 +231,7 @@ function memberInfoConvertor(snapshot){
 
 
 function calDiscountRate(loadingAmount, elementId) {
-    discountRateInfoLookUpTable(loadingAmount).then(function(discountRate){
+    discountRateInfoLookUpTable(loadingAmount).then(function (discountRate) {
         var settingInfo = firebase.database().ref('setting/');
         settingInfo.on("value", function (snapshot) {
             var isEnable = snapshot.child('discountRateAutoApply').val();
@@ -261,18 +257,23 @@ function discountRateInfoLookUpTable(loadingAmount) {
     });
 }
 
-function checkPermission(permissionType, model){
+function checkPermission(permissionType, model) {
     firebase.auth().onAuthStateChanged(function (user) {
-        if (user === null ){
-            alert(false);
+        if (user === null) {
+            Swal.fire({
+                title: "No Access",
+                text: 'Invalid User',
+                icon: "error"
+            });
         } else {
             firebase.database().ref('users/' + user.uid).once('value', function (snapshot) {
                 if (snapshot.exists()) {
                     var isPermited = snapshot.child('accessGroup').child(permissionType).val();
-                    if(isPermited==='true'){
-                        document.getElementById(model).style.display='block';
-                    }else{
-                        document.getElementById(model).style.display='none';
+                    var isAdmin = snapshot.child('isAdmin').val();
+                    if (isPermited === 'true' || isAdmin === 'true') {
+                        document.getElementById(model).style.display = 'block';
+                    } else {
+                        document.getElementById(model).style.display = 'none';
                         Swal.fire({
                             title: "No Access",
                             text: 'You dont have access, please request access from admin',

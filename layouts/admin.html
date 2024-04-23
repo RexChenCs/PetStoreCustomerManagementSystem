@@ -135,7 +135,7 @@
             <div class="row">
                 <div class="portfolio-wrapper text-center">
                     <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="checkPermission('memberInfoUpdate','member_info_edit_modal')">
+                        onclick="checkPermission('memberInfoUpdate','member_info_edit_modal');employeeSelectedOptionForAdminManagement();">
 
                         <div class="community-edition">
                             <i class="fas fa-user-edit"></i>
@@ -146,7 +146,7 @@
                     </div>
 
                     <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="checkPermission('transactionInfoUpdate','transaction_info_edit_modal')">
+                        onclick="checkPermission('transactionInfoUpdate','transaction_info_edit_modal');employeeSelectedOptionForAdminManagement();">
                         <div class="community-edition">
                             <i class="fas fa-edit"></i>
                             <div class="separator"></div>
@@ -192,7 +192,7 @@
                     </div>
 
                     <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="document.getElementById('acct_user_management_modal').style.display='block'">
+                        onclick="checkPermission('acctUserManagement','acct_user_management_modal')">
                         <div class="community-edition">
                             <i class="fas fa-portrait"></i>
                             <div class="separator"></div>
@@ -203,7 +203,7 @@
 
                     <div class="portfolio-wrapper text-center">
                         <div class="col-md-3 col-sm-6 col-xs-12"
-                            onclick="checkPermission('emailNotificationInfoUpdate','edit_email_notice_modal')">
+                            onclick="checkPermission('emailNotificationInfoUpdate','edit_email_notice_modal');readEmailNoticeInfo();">
                             <div class="community-edition">
                                 <i class="fa-solid fa-bell"></i>
                                 <div class="separator"></div>
@@ -230,7 +230,7 @@
             <div class="row">
                 <div class="portfolio-wrapper text-center">
                     <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="document.getElementById('user_role_management_modal').style.display='block'; refreshUserAccessTags();">
+                        onclick="checkPermission('userRoleAccess','user_role_management_modal'); refreshUserAccessTags();acctUserSelectedOptionForAdminManagement();">
                         <div class="community-edition">
                             <i class="fas fa-sitemap"></i>
                             <div class="separator"></div>
