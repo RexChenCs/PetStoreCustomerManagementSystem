@@ -1,9 +1,7 @@
 $(document).ready(function () {
     employeeSelectedOptionForAdminManagement();
     readEmailNoticeInfo();
-    isAdmin("adminsection");
     setup();
-
     $('#employeeTable').DataTable({
         layout: {
             topStart: {
@@ -408,7 +406,7 @@ function employeeSelectedOptionForAdminManagement() {
     var employeeSelectAttr = document.getElementById('employeeSearchedForEdit');
     var employeeSelectAttr1 = document.getElementById('search_employeeId_selection');
     var employeeSelectAttr2 = document.getElementById('transactionByEmployeeInfo');
-    employeeInfo.on("value", function (snapshot) {
+    employeeInfo.once("value", function (snapshot) {
         ClearOptionsFastAlt('employeeSearchedForEdit');
         ClearOptionsFastAlt('search_employeeId_selection');
         ClearOptionsFastAlt('transactionByEmployeeInfo');
@@ -733,7 +731,7 @@ function memberAcctModify(transactionType, transactionMemberId, transactionAmoun
 
 function updateTransactionForEmployeeChange(memberId, newEmployeeId) {
     var transactionInfo = firebase.database().ref('transactions/');
-    transactionInfo.orderByChild('type').equalTo('newMember').on("value", function (snapshot) {
+    transactionInfo.orderByChild('type').equalTo('newMember').once("value", function (snapshot) {
         snapshot.forEach(function (data) {
             if (data.child('memberId').val() == memberId) {
                 data.ref.update({
@@ -769,7 +767,7 @@ function searchTransactionByemployeeIdAndTime(employeeId, startDate, endDate) {
     var commissionTotal = 0;
     var transactionInfo = firebase.database().ref('transactions/');
 
-    transactionInfo.orderByChild('type').equalTo('newMember').on("value", function (snapshot) {
+    transactionInfo.orderByChild('type').equalTo('newMember').once("value", function (snapshot) {
         snapshot.forEach(function (childSnapshot) {
             var Data = childSnapshot;
             if (Data.child("employeeId").val() == employeeId) {
@@ -986,7 +984,7 @@ function acctUserSelectedOptionForAdminManagement() {
     var acctUserInfo = firebase.database().ref('users/').orderByKey();
     var acctUserEmailSelectAttr = document.getElementById('acctUserEmailForAccessGroup');
 
-    acctUserInfo.on("value", function (snapshot) {
+    acctUserInfo.once("value", function (snapshot) {
         ClearOptionsFastAlt('acctUserEmailForAccessGroup');
         snapshot.forEach(function (childSnapshot) {
             var userEmail = childSnapshot.child("email").val();
@@ -998,27 +996,47 @@ function acctUserSelectedOptionForAdminManagement() {
     });
 }
 
-function updateUserAccessGroup(){
+function updateUserAccessGroup() {
     var accessGroupForUpdateElement = document.getElementById('accessGroupForUpdate');
-    var accessTypeForUpdateElement  = document.getElementById('accessTypeForUpdate');
+    var accessTypeForUpdateElement = document.getElementById('accessTypeForUpdate');
     var accessGroupForUpdate = accessGroupForUpdateElement.value;
-    var accessTypeForUpdate  = accessTypeForUpdateElement.value;
+    var accessTypeForUpdate = accessTypeForUpdateElement.value;
 
-    if(checkValue(accessGroupForUpdate) || checkValue(accessTypeForUpdate)){
+    if (checkValue(accessGroupForUpdate) || checkValue(accessTypeForUpdate)) {
         Swal.fire("错误提醒", "请选择权限种类和修改的类型", "warning");
-    } else{
+    } else {
         var email = document.getElementById('acctUserEmailForAccessGroup').value;
         var accessGroupForUpdateText = accessGroupForUpdateElement.options[accessGroupForUpdateElement.selectedIndex].text;
-        var accessTypeForUpdateText  = accessTypeForUpdateElement.options[accessTypeForUpdateElement.selectedIndex].text;
+        var accessTypeForUpdateText = accessTypeForUpdateElement.options[accessTypeForUpdateElement.selectedIndex].text;
         userEmailLookUpTable(email).then(function (uid) {
             if (uid != null) {
                 var usersAccessGroup = firebase.database().ref('users/' + uid).child('accessGroup');
-                usersAccessGroup.update({ [accessGroupForUpdate] : accessTypeForUpdate});
-                Swal.fire("成功", "用户"+email+"的"+accessGroupForUpdateText+"已"+accessTypeForUpdateText, "success");
+                usersAccessGroup.update({ [accessGroupForUpdate]: accessTypeForUpdate });
+                refreshUserAccessTags();
+                Swal.fire("成功", "用户" + email + "的" + accessGroupForUpdateText + "已" + accessTypeForUpdateText, "success");
             } else {
                 Swal.fire("失败", "邮箱错误", "error");
             }
         });
-    
+
     }
+}
+
+function refreshUserAccessTags() {
+    var userEmail = document.getElementById('acctUserEmailForAccessGroup').value;
+    var accessTags = document.getElementById('access_tags');
+    accessTags.innerHTML = null;
+    var tags="";
+    userEmailLookUpTable(userEmail).then(function (uid) {
+        if (uid != null) {
+            firebase.database().ref('users/' + uid).child('accessGroup').once('value', (snapshot) => {
+                snapshot.forEach((childSnapshot) => {
+                    if (childSnapshot.val() === 'true') {
+                        tags += "<span class='access_tag'>" + childSnapshot.key + "</span>";
+                    }
+                });
+                accessTags.innerHTML=tags;
+            });
+        }
+    });
 }

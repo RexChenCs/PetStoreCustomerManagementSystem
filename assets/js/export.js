@@ -78,9 +78,7 @@ $(document).ready(function () {
             },
         }
     });
-    // readExportTable('members_table');
     setup();
-    isAdmin("adminsection");
 });
 
 function readExportTable(export_table_name) {

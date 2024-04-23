@@ -185,3 +185,37 @@
   -webkit-box-shadow: 0 4px 8px rgba(255, 255, 255, 0.08);
           box-shadow: 0 4px 8px rgba(255, 255, 255, 0.08);
 }
+
+#access_title{
+  font:bold 24pt "Trebuchet MS";
+  text-align: center;
+  color: #6AD;
+  letter-spacing: -2px;
+}
+
+#access_tags{
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 4px #CCC inset;
+  padding: 10px;
+  width: 100%;
+  background: #fafafa;
+  margin: auto;
+}
+
+.access_tag{
+  display: inline-block;
+  background: #F95;
+  color: #FFF;
+  padding: 5px 10px;
+  margin:2px 2px 2px 20px;
+  font: normal 16px sans-serif;
+  position: relative;
+  cursor: default;
+  box-shadow:1px 1px 0 rgba(0,0,0,.2);
+  -webkit-transform-origin:0% 50%;
+  -webkit-animation: swing 1s;
+  -o-animation: swing 1s;
+  animation: swing 1s ;
+}

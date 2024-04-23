@@ -118,7 +118,7 @@
                     <li><a href="./membermanagement.html">VIP Management</a></li>
                     <li><a href="./transactionreview.html">Transaction Review</a></li>
                     <li><a href="./export.html">Data Exportation</a></li>
-                    <li id="adminsection" class="active"><a href="./admin.html">Admin</a></li>
+                    <li id="adminsection" class="active" style="display: none;"><a href="./admin.html">Admin</a></li>
                     <li class="login" onclick="signout()" style="width:auto;"><a>Sign Out</a></li>
                 </ul>
             </div><!-- /.navbar-collapse -->
@@ -214,7 +214,7 @@
                     </div>
 
                     <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="checkPermission('systemConfigInfoUpdate','edit_setting_modal'); loadingSetting()">                        
+                        onclick="checkPermission('systemConfigInfoUpdate','edit_setting_modal'); loadingSetting()">
                         <div class="community-edition">
                             <i class="fa fa-gears"></i>
                             <div class="separator"></div>
@@ -229,9 +229,8 @@
 
             <div class="row">
                 <div class="portfolio-wrapper text-center">
-
                     <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="document.getElementById('user_role_management_modal').style.display='block'">
+                        onclick="document.getElementById('user_role_management_modal').style.display='block'; refreshUserAccessTags();">
                         <div class="community-edition">
                             <i class="fas fa-sitemap"></i>
                             <div class="separator"></div>
@@ -1051,14 +1050,13 @@
                             <div class="row" style="margin: 3%;">
                                 <div class="col-sm-4 form-group">
                                     <label for="acctUserEmailForAccessGroup" class="required">邮箱</label>
-                                    <select class="form-control" id="acctUserEmailForAccessGroup">
-                                        <option selected>用户邮箱</option>
-                                    </select>
+                                    <select class="form-control" id="acctUserEmailForAccessGroup" onchange="refreshUserAccessTags()"></select>
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <label for="accessGroupForUpdate" class="required">管理者权限</label>
                                     <select class="form-control" id="accessGroupForUpdate">
                                         <option value="" selected>请选择要修改的权限</option>
+                                        <option value="adminSectionForReview">管理页面查看权限</option>
                                         <option value="memberInfoUpdate">会员信息修改权限</option>
                                         <option value="transactionInfoUpdate">交易信息修改权限</option>
                                         <option value="discountRateInfoUpdate">折扣信息修改权限</option>
@@ -1078,6 +1076,11 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="form_container">
+                        <h1 id="access_title">acct user access</h1>
+                        <div id="access_tags"></div>
                     </div>
 
                     <div class="row">

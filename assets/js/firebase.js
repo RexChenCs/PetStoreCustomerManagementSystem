@@ -18,7 +18,6 @@ function login() {
 
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
         .then(function () {
-
             return firebase.auth().signInWithEmailAndPassword(email, password)
                 .then(function (user) {
                     Toast.fire({
@@ -67,15 +66,22 @@ function login() {
 
 }
 
-function isAdmin(id) {
-    var isAdminRole = window.sessionStorage.getItem('isAdminRole');
-    var userEmail = window.sessionStorage.getItem('userEmail');
-    document.getElementById("userEmail").innerHTML = userEmail;
-    if (isAdminRole === "true") {
-        document.getElementById(id).style.display = "block";
-    } else {
-        document.getElementById(id).style.display = "none";
-    }
+function checkAdminSectionReview() {
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user !== null ){
+            firebase.database().ref('users/' + user.uid).once('value', function (snapshot) {
+                if (snapshot.exists()) {
+                    document.getElementById("userEmail").innerHTML = snapshot.child('email').val();
+                    var isPermited = snapshot.child('accessGroup').child('adminSectionForReview').val();
+                    if(isPermited==='true'){
+                        document.getElementById('adminsection').style.display='block';
+                    }else{
+                        document.getElementById('adminsection').style.display='none';
+                    }
+                } 
+            });
+        }
+    });
 }
 
 function signout() {
@@ -117,12 +123,9 @@ firebase.auth().onAuthStateChanged(function (user) {
         window.location == authDomain + "/layouts/admin.html") {
         firebase.database().ref('users/' + user.uid).on('value', function (snapshot) {
             if (snapshot.exists()) {
-                var isAdmin = snapshot.child('isAdmin').val();
-                var email = snapshot.child('email').val();
-                window.sessionStorage.setItem("isAdminRole", isAdmin);
-                window.sessionStorage.setItem("userEmail", email);
-                document.getElementById("adminsection").style.display = "block";
-                if (isAdmin === "false" && window.location == authDomain + "/layouts/admin.html") {
+                // var isAdmin = snapshot.child('isAdmin').val();
+                var accessForAdminSection = snapshot.child('accessGroup').child('adminSectionForReview').val();
+                if (accessForAdminSection !== "true" && window.location == authDomain + "/layouts/admin.html") {
                     window.location.href = authDomain + "/layouts/home.html";
                     document.getElementById("adminsection").style.display = "none";
                 }
@@ -130,17 +133,8 @@ firebase.auth().onAuthStateChanged(function (user) {
                 if (window.location == authDomain + "/layouts/admin.html") {
                     window.location.href = authDomain + "/layouts/home.html";
                 }
-                document.getElementById("adminsection").style.display = "none";
             }
-            //initial the setting right after login
-            var isAdminRole = window.sessionStorage.getItem('isAdminRole');
-            var userEmail = window.sessionStorage.getItem('userEmail');
-            document.getElementById("userEmail").innerHTML = userEmail;
-            if (isAdminRole === "true") {
-                document.getElementById("adminsection").style.display = "block";
-            } else {
-                document.getElementById("adminsection").style.display = "none";
-            }
+            checkAdminSectionReview();
         });
     }
 });
@@ -204,7 +198,6 @@ function userEmailLookUpTable(email) {
 function transactionInfoLookUpTable(transactionId) {
     var transactionInfo = firebase.database().ref('transactions/' + transactionId);
     return transactionInfo.once('value').then(snapshot => {
-        //let transactionInfoJson = null;
         if (!snapshot.exists()) {
             Swal.fire("错误提醒", "查询的交易号不存在", "error");
         } 
@@ -269,7 +262,6 @@ function discountRateInfoLookUpTable(loadingAmount) {
 }
 
 function checkPermission(permissionType, model){
-
     firebase.auth().onAuthStateChanged(function (user) {
         if (user === null ){
             alert(false);

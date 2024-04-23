@@ -1,3 +1,19 @@
+jQuery(document).ready(function ($) {
+
+    $("input[id='search_transaction_memberId']").on({
+        click: function () {
+            $(this).val('');
+        },
+        blur: function () {
+            let isNum = /^\d+$/.test($(this).val());
+            if (isNum) {
+                formatMemberId($(this));
+            }
+        }
+    });
+    setup();
+});
+
 function searchTransactions() {
 
     var memberId = document.getElementById('search_transaction_memberId').value;
@@ -6,7 +22,6 @@ function searchTransactions() {
     var transactionType = document.getElementById('search_transaction_type').value;
     var tableBody = document.getElementById('transaction_table');
     tableBody.innerHTML = null;
-
     if (memberId == "") {
         if (startDate > endDate && startDate != null && endDate != null) {
             Swal.fire("错误提醒", "开始时间不能大于结束时间", "warning");
@@ -55,7 +70,7 @@ function searchTransactionByDate(startDate, endDate, type) {
 
 function searchTransactionByIdAndDate(memberId, startDate, endDate, type) {
 
-    firebase.database().ref('transactions/').orderByChild('memberId').equalTo(memberId).on("value", function (snapshot) {
+    firebase.database().ref('transactions/').orderByChild('memberId').equalTo(memberId).once("value", function (snapshot) {
 
         if (!snapshot.exists()) {
             Swal.fire("错误提醒", "查询的会员账号： " + memberId + " 不存在", "error");
@@ -150,23 +165,6 @@ function checkTransactionNoteDetail(transactionId) {
         Swal.fire('备注详情', snapshot.child('note').val());
     });
 }
-
-jQuery(document).ready(function ($) {
-
-    $("input[id='search_transaction_memberId']").on({
-        click: function () {
-            $(this).val('');
-        },
-        blur: function () {
-            let isNum = /^\d+$/.test($(this).val());
-            if (isNum) {
-                formatMemberId($(this));
-            }
-        }
-    });
-    isAdmin("adminsection");
-    setup();
-});
 
 function getEmployeeNameById(employeeId) {
     var employeeName;
