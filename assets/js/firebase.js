@@ -201,34 +201,6 @@ function transactionInfoLookUpTable(transactionId) {
     });
 }
 
-function memberInfoConvertor(snapshot) {
-    var memberId = snapshot.key;
-    var memberName = snapshot.child("memberName").val();
-    var memberPetName = snapshot.child("memberPetName").val();
-    var memberPhone = snapshot.child("memberPhone").val();
-    var memberDiscountRate = snapshot.child("memberDiscountRate").val();
-    var memberBalance = snapshot.child("memberBalance").val();
-    var employee = snapshot.child("employee").val();
-    var memberJoinDate = snapshot.child("memberJoinDate").val();
-    var memberPetBreed = snapshot.child("memberPetBreed").val();
-    var memberPetGender = snapshot.child("memberPetGender").val();
-    var note = snapshot.child("note").val();
-    var memberInfoJson = '{ "memberId":"' + memberId + '",'
-        + '"memberName":"' + memberName + '",'
-        + '"memberPetName":"' + memberPetName + '",'
-        + '"memberPhone":"' + memberPhone + '",'
-        + '"memberDiscountRate":"' + memberDiscountRate + '",'
-        + '"employee":"' + employee + '",'
-        + '"memberJoinDate":"' + memberJoinDate + '",'
-        + '"memberPetBreed":"' + memberPetBreed + '",'
-        + '"memberPetGender":"' + memberPetGender + '",'
-        + '"note":"' + note + '",'
-        + '"memberBalance":"' + memberBalance + '"'
-        + '}';
-
-    return JSON.parse(memberInfoJson);
-}
-
 
 function calDiscountRate(loadingAmount, elementId) {
     discountRateInfoLookUpTable(loadingAmount).then(function (discountRate) {
@@ -241,7 +213,6 @@ function calDiscountRate(loadingAmount, elementId) {
         });
     });
 }
-
 
 function discountRateInfoLookUpTable(loadingAmount) {
     loadingAmount = Number(loadingAmount);
