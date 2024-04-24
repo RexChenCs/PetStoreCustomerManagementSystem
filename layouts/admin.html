@@ -35,7 +35,6 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <!--For Plugins external css-->
-    <link rel="stylesheet" href="../assets/css/plugins.css" />
     <link rel="stylesheet" href="../assets/css/roboto-webfont.css" />
     <!--Theme custom css -->
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -48,12 +47,8 @@
     <link rel="stylesheet" href="../assets/css/button.css" />
 
     <!--JS-->
-    <script src="../assets/js/common.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
-    <!-- <script src="https://code.jquery.com/jquery-3.7.1.js"></script> -->
     <script src="../assets/js/vendor/bootstrap.min.js"></script>
-    <script src="../assets/js/modernizr.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
     <script src="../assets/js/config.js"></script>
@@ -61,7 +56,7 @@
     <script src="../assets/js/validation.js"></script>
     <script src="../assets/js/admin.js"></script>
     <script src="https://kit.fontawesome.com/7692abe868.js" crossorigin="anonymous"></script>
-
+    <script src="../assets/js/common.js"></script>
 
     <!--table -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.min.css">
@@ -230,7 +225,7 @@
             <div class="row">
                 <div class="portfolio-wrapper text-center">
                     <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="checkPermission('userRoleAccess','user_role_management_modal'); refreshUserAccessTags();acctUserSelectedOptionForAdminManagement();">
+                        onclick="checkPermission('userRoleAccess','user_role_management_modal'); acctUserSelectedOptionForAdminManagement();refreshUserAccessTags();">
                         <div class="community-edition">
                             <i class="fas fa-sitemap"></i>
                             <div class="separator"></div>
@@ -610,7 +605,6 @@
                                     <input type="checkbox" id="discountRateEditable" />
                                     <label for="discountRateEditable">Discount Rate Editable</label>
                                 </div>
-
                                 <div class="setting">
                                     <input type="checkbox" id="discountRateAutoApply" />
                                     <label for="discountRateAutoApply">Discount Rate Auto Applied</label>
@@ -618,6 +612,14 @@
                                 <div class="setting">
                                     <input type="checkbox" id="duplicatedPhoneCheck" />
                                     <label for="duplicatedPhoneCheck">Duplicated Phone Check</label>
+                                </div>
+                                <div class="setting">
+                                    <input type="checkbox" id="goInactiveEnable" onchange="showAndHideTimeOutInputOptions()" />
+                                    <label for="goInactiveEnable">Go Inactive Enable</label>
+                                </div>
+                                <div class="length range__slider" data-min="1" data-max="60">
+                                    <div class="length__title field-title" data-length='1'>time out minutes:</div>
+                                    <input id="timeOutInactiveMinute" type="range" min="1" max="60" onchange="refreshTimeOutMinuteValueByLengthChange()" />
                                 </div>
                             </div>
 
@@ -699,18 +701,12 @@
     <div id="add_acct_user_role_modal" class="modal">
         <span onclick="document.getElementById('add_acct_user_role_modal').style.display='none'" class="close"
             title="Close Modal">&times;</span>
-
         <section class="price sections">
-
             <div class="contain">
-
                 <div class="tab-content">
-
                     <div class="head_title text-center">
                         <h3>添加用户</h3>
                     </div>
-
-
                     <div class="form_container">
                         <div class="officeUseBox">
                             <div class="row" style="margin: 3%;">
@@ -718,17 +714,15 @@
                                     <label for="acctUserIdForAdd" class="required">用户ID</label>
                                     <input type="text" class="form-control" id="acctUserIdForAdd">
                                 </div>
-
                                 <div class="col-sm-4 form-group">
                                     <label for="acctUserEmailForAdd" class="required">用户邮箱</label>
                                     <input type="email" class="form-control" id="acctUserEmailForAdd">
                                 </div>
-
                                 <div class="col-sm-4 form-group">
                                     <label for="acctUserRoleForAdd">管理者权限</label>
                                     <select class="form-control" id="acctUserRoleForAdd">
-                                        <option value="true">是</option>
                                         <option value="false">否</option>
+                                        <option value="true">是</option>
                                     </select>
                                 </div>
                             </div>

@@ -78,7 +78,6 @@ $(document).ready(function () {
             },
         }
     });
-    setup();
 });
 
 function readExportTable(export_table_name) {
@@ -158,37 +157,3 @@ function readExportTable(export_table_name) {
     }
 
 }
-
-function setup() {
-    this.addEventListener("mousemove", resetTimer, false);
-    this.addEventListener("mousedown", resetTimer, false);
-    this.addEventListener("keypress", resetTimer, false);
-    this.addEventListener("DOMMouseScroll", resetTimer, false);
-    this.addEventListener("mousewheel", resetTimer, false);
-    this.addEventListener("touchmove", resetTimer, false);
-    this.addEventListener("MSPointerMove", resetTimer, false);
-    startTimer();
-}
-
-
-function startTimer() {
-    // wait 15 minus before calling goInactive
-    timeoutID = window.setTimeout(goInactive, 900000);
-}
-
-function resetTimer(e) {
-    window.clearTimeout(timeoutID);
-    goActive();
-}
-
-function goInactive() {
-    if (firebase.auth().currentUser != null) {
-        alert("Time out: your are no active within 15 minus!");
-        signout();
-    }
-}
-
-function goActive() {
-    startTimer();
-}
-

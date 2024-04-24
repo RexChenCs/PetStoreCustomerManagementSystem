@@ -1,3 +1,7 @@
+jQuery(document).ready(function ($) {
+    goInactiveEnable();
+});
+
 let USDollar = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -51,7 +55,6 @@ function formatMemberId(input) {
     var output = 'PH' + (100000 + Number(input_val));
     input.val(output);
 }
-
 
 function generateNewMemberId() {
     firebase.database().ref('members/').on("value", function (snapshot) {
@@ -109,13 +112,13 @@ function ClearOptionsFastAlt(id) {
     document.getElementById(id).innerHTML = "";
 }
 
-
 function getCurrentNYDate() {
     var currentTZ = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York' });
     var nyDate = currentTZ.format(new Date());
     return new Date(nyDate);
 }
 
+let timeOutMinute;
 function setup() {
     this.addEventListener("mousemove", resetTimer, false);
     this.addEventListener("mousedown", resetTimer, false);
@@ -127,10 +130,9 @@ function setup() {
     startTimer();
 }
 
-
 function startTimer() {
-    // wait 15 minus before calling goInactive
-    timeoutID = window.setTimeout(goInactive, 900000);
+    var time = timeOutMinute*60000; // one section 1000 unit ms
+    timeoutID = window.setTimeout(goInactive, time);
 }
 
 function resetTimer(e) {
@@ -140,7 +142,7 @@ function resetTimer(e) {
 
 function goInactive() {
     if (firebase.auth().currentUser != null) {
-        alert("Time out: your are no active within 15 minus!");
+        alert("Time out: your are no active within "+timeOutMinute+" minus!");
         signout();
     }
 }
@@ -268,7 +270,6 @@ function searchMemberByCatagoryPhoneNumber(phoneNumber, sectionType) {
     });
 
 }
-
 
 function memberIdSearchReselect(sectionType) {
     var memberId = document.getElementById('search_member_mutiple_option_for' + sectionType).value;

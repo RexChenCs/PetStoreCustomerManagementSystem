@@ -1,7 +1,5 @@
 $(document).ready(function () {
 
-    setup();
-
     $("input[type='tel']").on({
         click: function () {
             $(this).val('');

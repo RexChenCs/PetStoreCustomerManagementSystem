@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    setup();
+    acctUserSelectedOptionForAdminManagement();
+    showAndHideTimeOutInputOptions();
     $('#employeeTable').DataTable({
         layout: {
             topStart: {
@@ -320,7 +321,6 @@ $(document).ready(function () {
     });
 });
 
-
 function createNewEmployee() {
     var employeeName = document.getElementById('newEmployeeName').value.trim();
     if (employeeName == null || employeeName == "") {
@@ -391,7 +391,6 @@ function updateDiscountRate() {
     }
 }
 
-
 function employeeSelectedOptionForAdminManagement() {
     var employeeInfo = firebase.database().ref('employees/').orderByKey();
     var employeeSelectAttr = document.getElementById('employeeSearchedForEdit');
@@ -453,7 +452,6 @@ function findEmployeeByIdForEditInfo() {
     }
 }
 
-
 function findTransactionByIdForEditInfo() {
     var transactionId = document.getElementById('transactionIdSearchingForEditInfo').value.trim();
     if (transactionId == null || transactionId == "") {
@@ -499,7 +497,6 @@ function findTransactionByIdForEditInfo() {
         });
     }
 }
-
 
 function updateMemberInfo() {
     var memberId = document.getElementById('memberIdSearchedForEdit').value.trim();
@@ -936,17 +933,17 @@ function updateEmailNoticeInfo() {
     }
 }
 
-
 function updateSetting() {
     var emailNotificationOn = document.getElementById('emailNotification').checked;
     var discountRateEditable = document.getElementById('discountRateEditable').checked;
     var discountRateAutoApply = document.getElementById('discountRateAutoApply').checked;
     var duplicatedPhoneCheck = document.getElementById('duplicatedPhoneCheck').checked;
+    var goInactiveEnable = document.getElementById('goInactiveEnable').checked;
+    var timeOutInactiveMinute = document.getElementById('timeOutInactiveMinute').value;
     var settingInfo = firebase.database().ref('setting/');
-    settingInfo.set({ 'emailNotification': emailNotificationOn, 'discountRateEditable': discountRateEditable, 'discountRateAutoApply': discountRateAutoApply, 'duplicatedPhoneCheck': duplicatedPhoneCheck });
+    settingInfo.set({ 'emailNotification': emailNotificationOn, 'discountRateEditable': discountRateEditable, 'discountRateAutoApply': discountRateAutoApply, 'duplicatedPhoneCheck': duplicatedPhoneCheck, 'goInactiveEnable': goInactiveEnable,'timeOutInactiveMinute':timeOutInactiveMinute });
     Swal.fire("成功", "设置已更改", "success");
 }
-
 
 function loadingSetting() {
     var settingInfo = firebase.database().ref('setting/');
@@ -955,9 +952,12 @@ function loadingSetting() {
         document.getElementById('discountRateEditable').checked = snapshot.child('discountRateEditable').val();
         document.getElementById('discountRateAutoApply').checked = snapshot.child('discountRateAutoApply').val();
         document.getElementById('duplicatedPhoneCheck').checked = snapshot.child('duplicatedPhoneCheck').val();
+        document.getElementById('goInactiveEnable').checked = snapshot.child('goInactiveEnable').val();
+        document.getElementById('timeOutInactiveMinute').value = snapshot.child('timeOutInactiveMinute').val();
     });
+    showAndHideTimeOutInputOptions();
+    refreshTimeOutMinuteValueByLengthChange();
 }
-
 
 function acctUserSelectedOptionForAdminManagement() {
     var acctUserInfo = firebase.database().ref('users/').orderByKey();
@@ -1005,7 +1005,7 @@ function refreshUserAccessTags() {
     var userEmail = document.getElementById('acctUserEmailForAccessGroup').value;
     var accessTags = document.getElementById('access_tags');
     accessTags.innerHTML = null;
-    var tags="";
+    var tags = "";
     userEmailLookUpTable(userEmail).then(function (uid) {
         if (uid != null) {
             firebase.database().ref('users/' + uid).child('accessGroup').once('value', (snapshot) => {
@@ -1014,8 +1014,24 @@ function refreshUserAccessTags() {
                         tags += "<span class='access_tag'>" + childSnapshot.key + "</span>";
                     }
                 });
-                accessTags.innerHTML=tags;
+                accessTags.innerHTML = tags;
             });
         }
     });
+}
+
+function refreshTimeOutMinuteValueByLengthChange(){
+    const sliderValue = document.querySelector(".length__title");
+    const lengthEl = document.getElementById("timeOutInactiveMinute").value;
+    sliderValue.setAttribute("data-length", lengthEl);
+}
+
+function showAndHideTimeOutInputOptions(){
+    var goInactiveEnable = document.getElementById('goInactiveEnable').checked;
+    const slider = document.querySelector(".range__slider");
+    if(goInactiveEnable){
+        slider.style.display="block";
+    } else{
+        slider.style.display="none";
+    }
 }

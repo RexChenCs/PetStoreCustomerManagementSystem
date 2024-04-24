@@ -11,7 +11,6 @@ jQuery(document).ready(function ($) {
             }
         }
     });
-    setup();
 });
 
 function searchTransactions() {

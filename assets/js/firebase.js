@@ -90,7 +90,6 @@ function login() {
                 icon: "error"
             });
         });
-
 }
 
 function checkAdminSectionReview() {
@@ -134,7 +133,6 @@ function signout() {
     });
 }
 
-
 function sendEmail(message) {
     firebase.database().ref('emailNoticeConfig/').on("value", function (snapshot) {
         var publicKey = snapshot.child('publicKey').val();
@@ -153,7 +151,6 @@ function sendEmail(message) {
     });
 }
 
-
 function memberInfoLookUpTable(memberId) {
     return firebase.database().ref('members/' + memberId).once('value').then(snapshot => {
         if (!snapshot.exists()) {
@@ -163,9 +160,7 @@ function memberInfoLookUpTable(memberId) {
     });
 }
 
-
 function memberPhoneLookUpTable(phoneNumber) {
-
     var memberInfo = firebase.database().ref('members/');
     return memberInfo.orderByChild('memberPhone').equalTo(phoneNumber).once("value").then(snapshot => {
         var isExistPhoneNumber = false;
@@ -176,7 +171,6 @@ function memberPhoneLookUpTable(phoneNumber) {
         });
         return isExistPhoneNumber;
     });
-
 }
 
 function userEmailLookUpTable(email) {
@@ -200,7 +194,6 @@ function transactionInfoLookUpTable(transactionId) {
         return snapshot;
     });
 }
-
 
 function calDiscountRate(loadingAmount, elementId) {
     discountRateInfoLookUpTable(loadingAmount).then(function (discountRate) {
@@ -259,6 +252,17 @@ function checkPermission(permissionType, model) {
                     });
                 }
             });
+        }
+    });
+}
+
+function goInactiveEnable(){
+    firebase.database().ref('setting/').on("value", function (snapshot) {
+        var isEnable = snapshot.child('goInactiveEnable').val();
+        var timeout = snapshot.child('timeOutInactiveMinute').val();
+        if (isEnable) {
+            timeOutMinute = Number(timeout);
+            setup();
         }
     });
 }
