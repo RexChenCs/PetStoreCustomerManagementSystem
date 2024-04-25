@@ -398,9 +398,9 @@ function addCreditForMember() {
                     'status': 'paid',
                     'note': addCreditNote
                 });
-                var message = "操作类型：充值，会员号：" + memberId + ",金额：" + creditAmount + ",余额:" + newBalance + ",员工：" + addCreditEmployee + ",日期：" + addCreditDate + ",最新会员折扣： " + newDiscountRate;
+                var message = "操作类型：充值，会员号：" + memberId + ",金额：" + Number(creditAmount).toFixed(2) + ",余额:" + Number(newBalance).toFixed(2) + ",员工：" + addCreditEmployee + ",日期：" + addCreditDate + ",最新会员折扣： " + newDiscountRate;
                 sendEmailEnable(message);
-                swalWithBootstrapButtons.fire("充值成功", "会员: " + memberId + " 已充值 $" + creditAmount + ". 请重新查询最新信息", "success").then(() => {
+                swalWithBootstrapButtons.fire("充值成功", "会员: " + memberId + " 已充值 $" + Number(creditAmount).toFixed(2) + ". 请重新查询最新信息", "success").then(() => {
                     location.reload();
                 });
             } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -466,9 +466,9 @@ function spendCreditForMember() {
                         'status': 'paid',
                         'note': spendCreditNote
                     });
-                    var message = "操作类型:消费，会员号：" + memberId + ",金额：" + creditAmount + ",余额:" + newBalance + ",员工：" + spendCreditEmployee + ",日期：" + spendCreditDate;
+                    var message = "操作类型:消费，会员号：" + memberId + ",金额：" + Number(creditAmount).toFixed(2) + ",余额:" + Number(newBalance).toFixed(2) + ",员工：" + spendCreditEmployee + ",日期：" + spendCreditDate;
                     sendEmailEnable(message);
-                    swalWithBootstrapButtons.fire("消费成功", "会员: " + memberId + " 已消费 $" + creditAmount + ". 请重新查询最新信息", "success").then(() => { location.reload() });
+                    swalWithBootstrapButtons.fire("消费成功", "会员: " + memberId + " 已消费 $" + Number(creditAmount).toFixed(2) + ". 请重新查询最新信息", "success").then(() => { location.reload() });
                 }
             } else if (result.dismiss === Swal.DismissReason.cancel) {
                 swalWithBootstrapButtons.fire('消费失败', '本次消费已取消', 'error');
@@ -565,7 +565,7 @@ function saveMemberInfo(memberId, memberInfoDetails) {
     };
 
     saveTransactionInfo(transactionId, transactionInfoDetail);
-    var message = "操作类型:开户，会员号：" + memberId + ",金额：" + memberBalance + ",员工：" + addNewMemberByEmployee + ",日期：" + memberJoinDate + ", 折扣：" + memberDiscountRate;
+    var message = "操作类型:开户，会员号：" + memberId + ",金额：" + Number(memberBalance).toFixed(2) + ",员工：" + addNewMemberByEmployee + ",日期：" + memberJoinDate + ", 折扣：" + memberDiscountRate;
     sendEmailEnable(message);
     Swal.fire("办理成功", "新会员已经加入: " + memberId, "success").then(() => {
         location.reload()
