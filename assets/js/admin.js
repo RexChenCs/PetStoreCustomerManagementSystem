@@ -752,7 +752,7 @@ function searchTransactionByemployeeIdAndTime(employeeId, startDate, endDate) {
     transactionInfo.orderByChild('type').equalTo('newMember').once("value", function (snapshot) {
         snapshot.forEach(function (childSnapshot) {
             var Data = childSnapshot;
-            if (Data.child("employeeId").val() == employeeId) {
+            if (Data.child("employeeId").val() == employeeId && Data.child("status").val() == 'paid') {
                 var amount = Data.child("amount").val();
                 var date = Data.child("date").val();
                 var memberId = Data.child("memberId").val();
