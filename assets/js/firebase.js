@@ -49,46 +49,73 @@ function login() {
         .then(function () {
             return firebase.auth().signInWithEmailAndPassword(email, password)
                 .then(function (user) {
-                    Toast.fire({
-                        icon: "success",
-                        title: "Signed In successfully"
-                    }).then(() => {
-                        Swal.fire({
-                            title: "Sign In",
-                            text: 'Welcome ' + user.email,
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1500
-                        }).then(function () {
-                            window.location.href = authDomain + "/layouts/home.html";
+                    firebase.database().ref('users/' + user.uid).once('value', function (snapshot) {
+                        if (snapshot.exists()) {
+                            var isAdmin = snapshot.child('isAdmin').val();
+                            if (isAdmin === 'true') {
+                                var adminSecurityCode = snapshot.child('securityCode').val();
+                                Swal.fire({
+                                    title: "Pls enter security code",
+                                    input: "text",
+                                    inputAttributes: {
+                                        autocapitalize: "off",
+                                        autocomplete: "off"
+                                    },
+                                    showCancelButton: true,
+                                    confirmButtonText: "Enter",
+                                    showLoaderOnConfirm: true,
+                                    preConfirm: async (securityCode) => {
+                                        if (adminSecurityCode == securityCode) {
+                                            Toast.fire({
+                                                icon: "success",
+                                                title: "Signed In successfully"
+                                            }).then(() => {
+                                                Swal.fire({
+                                                    title: "Sign In",
+                                                    text: 'Welcome ' + user.email,
+                                                    icon: "success",
+                                                    showConfirmButton: false,
+                                                    timer: 1500
+                                                }).then(function () {
+                                                    window.location.href = authDomain + "/layouts/home.html";
+                                                });
+                                            });
+                                        } else {
+                                            Swal.showValidationMessage(`Login failed: Invalid Security Code`);
+                                            firebase.auth().signOut();
+                                        }
+                                    },
+                                    allowOutsideClick: () => false
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = authDomain + "/layouts/home.html";
+                                    }
+                                });
+                            }
+                        }
+                    }).catch(function (error) {
+                            var errorMessage = error.message;
+                            if (isValidJSON(errorMessage)) {
+                                errorMessage = JSON.parse(errorMessage).error.message;
+                                if (errorMessage == 'INVALID_LOGIN_CREDENTIALS') {
+                                    errorMessage = 'The password is invalid or the user does not have a password.'
+                                }
+                            }
+                            Swal.fire({
+                                icon: "error",
+                                html: '<i class="fas fa-exclamation-circle" style="color:red"></i>Invalid Email or Password',
+                                showConfirmButton: false,
+                                footer: 'Details: ' + errorMessage
+                            });
                         });
-
-                    });
                 })
                 .catch(function (error) {
-                    var errorMessage = error.message;
-                    if (isValidJSON(errorMessage)) {
-                        errorMessage = JSON.parse(errorMessage).error.message;
-                        if (errorMessage == 'INVALID_LOGIN_CREDENTIALS') {
-                            errorMessage = 'The password is invalid or the user does not have a password.'
-                        }
-                    }
                     Swal.fire({
-                        icon: "error",
-                        html: '<i class="fas fa-exclamation-circle" style="color:red"></i>Invalid Email or Password',
-                        showConfirmButton: false,
-                        footer: 'Details: ' + errorMessage
+                        title: "Error!",
+                        text: "INVALID_LOGIN_CREDENTIALS",
+                        icon: "error"
                     });
                 });
-        })
-        .catch(function (error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            Swal.fire({
-                title: "Error!",
-                text: errorCode + ":" + errorMessage,
-                icon: "error"
-            });
         });
 }
 
@@ -256,7 +283,7 @@ function checkPermission(permissionType, model) {
     });
 }
 
-function goInactiveEnable(){
+function goInactiveEnable() {
     firebase.database().ref('setting/').on("value", function (snapshot) {
         var isEnable = snapshot.child('goInactiveEnable').val();
         var timeout = snapshot.child('timeOutInactiveMinute').val();

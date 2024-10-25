@@ -1,18 +1,4 @@
 $(document).ready(function () {
-  const passwordField = document.getElementById("signin_psw");
-  const togglePassword = document.querySelector(".password-toggle-icon i");
-
-  togglePassword.addEventListener("click", function () {
-    if (passwordField.type === "password") {
-      passwordField.type = "text";
-      togglePassword.classList.remove("fa-eye");
-      togglePassword.classList.add("fa-eye-slash");
-    } else {
-      passwordField.type = "password";
-      togglePassword.classList.remove("fa-eye-slash");
-      togglePassword.classList.add("fa-eye");
-    }
-  });
 
   $(document).on('keypress', 'input,select', function (e) {
     if (e.which == 13) {
@@ -26,3 +12,16 @@ $(document).ready(function () {
   });
 
 });
+
+function toggle(){
+  const passwordField = document.getElementById("signin_psw");
+  const eyeicon = document.getElementById("eye-icon");
+
+  if (passwordField.type === "password") {
+    passwordField.type = "text";
+    eyeicon.src="./assets/images/invisible.png"
+  } else {
+    passwordField.type = "password";
+    eyeicon.src="./assets/images/visible.png"
+  }
+}
