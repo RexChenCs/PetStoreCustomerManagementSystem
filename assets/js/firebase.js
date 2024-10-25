@@ -65,7 +65,7 @@ function login() {
                                     confirmButtonText: "Enter",
                                     showLoaderOnConfirm: true,
                                     preConfirm: async (securityCode) => {
-                                        if (adminSecurityCode == securityCode) {
+                                        if (adminSecurityCode === securityCode) {
                                             Toast.fire({
                                                 icon: "success",
                                                 title: "Signed In successfully"
@@ -90,6 +90,21 @@ function login() {
                                     if (result.isConfirmed) {
                                         window.location.href = authDomain + "/layouts/home.html";
                                     }
+                                });
+                            } else {
+                                Toast.fire({
+                                    icon: "success",
+                                    title: "Signed In successfully"
+                                }).then(() => {
+                                    Swal.fire({
+                                        title: "Sign In",
+                                        text: 'Welcome ' + user.email,
+                                        icon: "success",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    }).then(function () {
+                                        window.location.href = authDomain + "/layouts/home.html";
+                                    });
                                 });
                             }
                         }
