@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang=""> <!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Overview</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--favicon-->
+    <link rel="apple-touch-icon" sizes="57x57" href="../favicon.ico/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../favicon.ico/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../favicon.ico/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../favicon.ico/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../favicon.ico/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../favicon.ico/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../favicon.ico/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../favicon.ico/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../favicon.ico/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../favicon.ico/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../favicon.ico/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../favicon.ico/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../favicon.ico/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <!--end of favicon-->
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <!--For Plugins external css-->
+    <link rel="stylesheet" href="../assets/css/roboto-webfont.css" />
+    <!--Theme custom css -->
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <!--Theme Responsive css-->
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+    <link rel="stylesheet" href="../assets/css/membershipManagement.css" />
+    <!--overview css-->
+    <link rel="stylesheet" href="../assets/css/overview.css" />
+    <script src="https://kit.fontawesome.com/7692abe868.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../assets/css/tools.css">
+    </script>
+
+
+</head>
+
+<body>
+    <!--[if lt IE 8]><p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p><![endif]-->
+
+    <!-- Sections -->
+    <section id="social" class="social">
+        <div class="container">
+            <!-- Example row of columns -->
+            <div class="row">
+                <div class="social-wrapper">
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6">
+                        <div class="social-icon pull-right">
+                            <a href="#"><i class="fa fa-user"></i>
+                                <spam id="userEmail"></spam>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- /container -->
+    </section>
+
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand"><img src="../assets/images/logo.png" style="width: 200px; height: 40px"
+                        alt="Logo" /></a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="./home.html">Overview</a></li>
+                    <li><a href="./membermanagement.html">VIP Management</a></li>
+                    <li><a href="./transactionreview.html">Transaction Review</a></li>
+                    <li><a href="./export.html">Data Exportation</a></li>
+                    <li class="active"><a href="./tools.html">Tools</a></li>
+                    <li id="adminsection" style="display: none;"><a href="./admin.html">Admin</a></li>
+                    <li class="login" onclick="signout()" style="width:auto;"><a>Sign Out</a></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+
+
+    <!-- Sections -->
+
+
+    <div class="toolcontainer">
+
+        <div class="line"></div>
+        <div class="box mr20" onclick="document.getElementById('creditCardFeeCalculator').style.display='block'">
+            <div class="title">刷卡价格表</div>
+            <div class="svg">
+                <svg id="svg-slide" width="180" height="180" viewBox="0 0 200 200">
+                    <title>刷卡价格表</title>
+                    <g id="svg-slide-g-01">
+                        <rect class="cls-1" x="55.28" y="62.44" width="90.19" height="66.13" />
+                    </g>
+                    <g id="svg-slide-g-02">
+                        <rect class="cls-2" x="51.38" y="54.43" width="98" height="8.01" />
+                    </g>
+                    <g id="svg-slide-g-03">
+                        <rect class="cls-4" x="99.3" y="131.89" width="2.15" height="5.53" />
+                        <path class="cls-5"
+                            d="M100.37,135.87a5,5,0,1,0,5,5A5,5,0,0,0,100.37,135.87Zm0,7.91a2.87,2.87,0,1,1,2.87-2.88A2.88,2.88,0,0,1,100.37,143.78Z" />
+                        <rect class="cls-2" x="51.38" y="128.57" width="98" height="3.32" />
+                    </g>
+                    <g id="svg-slide-g-04">
+                        <rect class="cls-3" x="60.56" y="72.17" width="50" height="2" />
+                        <rect class="cls-3" x="60.56" y="68.17" width="38" height="2" />
+                    </g>
+                    <g id="svg-slide-g-05">
+                        <path class="cls-6"
+                            d="M110.58,83.14l9.55-14.2c-5.71-4.09-11.86-6.5-20.86-6.5V79.88C104.66,79.88,107.72,81.1,110.58,83.14Z" />
+                        <path class="cls-7"
+                            d="M115.14,97.08a14.31,14.31,0,0,1-2.1,7.45L125.38,112a28.8,28.8,0,0,0-7.9-38.36l-8.37,11.72A14.37,14.37,0,0,1,115.14,97.08Z" />
+                        <path class="cls-2"
+                            d="M113,104.53a14.38,14.38,0,0,1-12.3,6.95c-8,0-15.14-6.45-15.14-14.4s6.46-14.4,13.66-14.4V68.28c-14.4,0-28.06,12.89-28.06,28.8s13.26,28.8,29.17,28.8A29.1,29.1,0,0,0,125.19,112Z" />
+                    </g>
+                    <g id="svg-slide-g-06">
+                        <rect class="cls-6" x="60.56" y="118.17" width="6" height="6" />
+                        <rect class="cls-7" x="86.56" y="118.17" width="6" height="6" />
+                        <rect class="cls-2" x="111.56" y="118.17" width="6" height="6" />
+                        <rect class="cls-3" x="119.56" y="121.17" width="20" height="1" />
+                        <rect class="cls-3" x="94.56" y="121.17" width="10" height="1" />
+                        <rect class="cls-3" x="68.56" y="121.17" width="10" height="1" />
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+    </div>
+
+    <!--信用卡费用计算-->
+    <div id="creditCardFeeCalculator" class="modal">
+
+        <span onclick="document.getElementById('creditCardFeeCalculator').style.display='none'" class="close"
+            title="Close Modal">&times;</span>
+        <section class="price sections">
+            <div class="contain">
+                <div class="tab-content">
+                    <div class="head_title text-center">
+                        <h3>信用卡费用计算</h3>
+                    </div>
+                    <div id="creditCalToolContainer">
+
+                        <div id="calc">
+                            <h1> CC Sale Price Calculator </h1>
+                            <div class="input-group">
+                                <span class="input-group-addon">现金价格</span>
+                                <input type="number" class="form-control"  id="cash-price">
+                            </div>
+                 
+
+                            <div id="checkBox">
+                                <label>
+                                    <p>是否加税(NY Tax)</p>
+                                </label>
+                                <input class="check" type="radio" name="nyctax" id="taxAdded" checked>是</input>
+                                <input class="check" type="radio" name="nyctax" id="taxRemoved">否</input>
+                            </div>
+                            <div id="submit"> <button type="submit" class="btn btn-primary"
+                                    onClick="getCreditSalePrice()">Submit</button></div>
+                            <div id="income">
+                                <p>信用卡支付价格: <span id="creditPrice"></span></p>
+                                <p>NY TAX(纽约税): <span id="nycTax"></span></p>
+                                <p>总支付价格: <span id="totalPrice"></span></p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+    </div>
+    </section>
+
+    </div>
+
+    <!--Footer-->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer-wrapper">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="copyright">
+                            <p> © 2024, Rex Chen, All rights reserved.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/firebase.js"></script>
+    <script src="../assets/js/tools.js"></script>
+
+</body>
+
+</html>

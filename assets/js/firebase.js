@@ -4,6 +4,7 @@ firebase.auth().onAuthStateChanged(function (user) {
     if (user === null && (window.location == authDomain + "/layouts/home.html" ||
         window.location == authDomain + "/layouts/transactionreview.html" ||
         window.location == authDomain + "/layouts/membermanagement.html" ||
+        window.location == authDomain + "/layouts/tools.html" ||
         window.location == authDomain + "/layouts/export.html" ||
         window.location == authDomain + "/layouts/admin.html")) {
         window.location.href = authDomain + "/index.html";
@@ -11,6 +12,7 @@ firebase.auth().onAuthStateChanged(function (user) {
         window.location == authDomain + "/layouts/transactionreview.html" ||
         window.location == authDomain + "/layouts/membermanagement.html" ||
         window.location == authDomain + "/layouts/export.html" ||
+        window.location == authDomain + "/layouts/tools.html" ||
         window.location == authDomain + "/layouts/admin.html") {
         firebase.database().ref('users/' + user.uid).on('value', function (snapshot) {
             if (snapshot.exists()) {
@@ -66,19 +68,17 @@ function login() {
                                     showLoaderOnConfirm: true,
                                     preConfirm: async (securityCode) => {
                                         if (adminSecurityCode === securityCode) {
-                                            Toast.fire({
-                                                icon: "success",
-                                                title: "Signed In successfully"
-                                            }).then(() => {
-                                                Swal.fire({
-                                                    title: "Sign In",
-                                                    text: 'Welcome ' + user.email,
-                                                    icon: "success",
-                                                    showConfirmButton: false,
-                                                    timer: 1500
-                                                }).then(function () {
-                                                    window.location.href = authDomain + "/layouts/home.html";
-                                                });
+                                            Swal.fire({
+                                                title: "Sign In",
+                                                text: 'Welcome ' + user.email,
+                                                iconHtml: '<img src="./assets/images/loginCat.gif">',
+                                                customClass: {
+                                                    icon: 'no-border'
+                                                },
+                                                showConfirmButton: false,
+                                                timer: 1500
+                                            }).then(function () {
+                                                window.location.href = authDomain + "/layouts/home.html";
                                             });
                                         } else {
                                             Swal.showValidationMessage(`Login failed: Invalid Security Code`);
@@ -92,19 +92,17 @@ function login() {
                                     }
                                 });
                             } else {
-                                Toast.fire({
-                                    icon: "success",
-                                    title: "Signed In successfully"
-                                }).then(() => {
-                                    Swal.fire({
-                                        title: "Sign In",
-                                        text: 'Welcome ' + user.email,
-                                        icon: "success",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    }).then(function () {
-                                        window.location.href = authDomain + "/layouts/home.html";
-                                    });
+                                Swal.fire({
+                                    title: "Sign In",
+                                    text: 'Welcome ' + user.email,
+                                    iconHtml: '<img src="./assets/images/loginCat.gif">',
+                                    customClass: {
+                                        icon: 'no-border'
+                                    },
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then(function () {
+                                    window.location.href = authDomain + "/layouts/home.html";
                                 });
                             }
                         }
@@ -117,7 +115,10 @@ function login() {
                                 }
                             }
                             Swal.fire({
-                                icon: "error",
+                                iconHtml: '<img src="./assets/images/error.gif">',
+                                customClass: {
+                                    icon: 'no-border'
+                                },
                                 html: '<i class="fas fa-exclamation-circle" style="color:red"></i>Invalid Email or Password',
                                 showConfirmButton: false,
                                 footer: 'Details: ' + errorMessage
@@ -128,7 +129,10 @@ function login() {
                     Swal.fire({
                         title: "Error!",
                         text: "INVALID_LOGIN_CREDENTIALS",
-                        icon: "error"
+                        iconHtml: '<img src="./assets/images/error.gif">',
+                        customClass: {
+                            icon: 'no-border'
+                        }
                     });
                 });
         });

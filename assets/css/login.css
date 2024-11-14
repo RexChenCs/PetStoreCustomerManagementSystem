@@ -175,7 +175,7 @@ input:-webkit-autofill:active
 {
     cursor: pointer;
 }
-.login-sign1
+.logo-sign
 {
     width: 350px;
     height: 150px;
@@ -191,33 +191,12 @@ input:-webkit-autofill:active
     animation-timing-function: linear;
 }
 
-.login-sign2
-{
-    width: 150px;
-    height: 150px;
-    position: absolute;
-    margin-bottom: auto;
-    bottom: 50px;
-    margin-right: auto;
-    right: 100px;
-    transform: rotateZ(0deg);
-    animation-name: sign2-animate;
-    animation-duration: 5s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-}
 
 @keyframes sign1-animate
 {
     0%{ transform: rotateZ(0deg);}
     50%{transform: rotateZ(10deg);}
     100%{ transform: rotateZ(0deg);}
-}
-
-@keyframes sign2-animate
-{
-    0%{ }
-    100%{transform: rotateZ(360deg);}
 }
 
 
@@ -281,7 +260,7 @@ input:-webkit-autofill:active
         justify-content: left;
     
     } 
-    .login-sign1
+    .logo-sign
     {
         width: 300px;
         height: 100px;
@@ -293,19 +272,8 @@ input:-webkit-autofill:active
         transform: rotateZ(0deg);
         
     }
-    .login-sign2
-    {
-        width: 100px;
-        height: 100px;
-        position: absolute;
-        margin-bottom: auto;
-        bottom: 20px;
-        margin-right: auto;
-        right: 10px;
-        transform: rotateZ(0deg);
-        animation-name: sign2-animate;
-        animation-duration: 5s;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
-    }
+}
+
+.no-border {
+    border: 0;
 }
