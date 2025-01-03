@@ -86,6 +86,51 @@ function updateTransactionValidation(){
     return true;
 }
 
+function uploadDocVacFileValidation(){
+    var fileName = document.getElementById("fileName").value;
+    var fileType = document.getElementById("fileType").value;
+    var doc_vac_petName = document.getElementById("doc_vac_petName").value;
+    var doc_vac_breed = document.getElementById("doc_vac_breed").value;
+    var doc_vac_expiredDate = document.getElementById("doc_vac_expiredDate").value;
+    var file = document.getElementById("chooseFile").files[0];
+
+
+    if(checkValue(fileName) ||  checkValue(fileType) ||  checkValue(doc_vac_petName) ||  checkValue(doc_vac_breed) || checkValue(doc_vac_expiredDate)){
+        Swal.fire("错误提醒", "必要内容不能为空", "warning");
+        return false;
+    }
+
+    if(file == null){
+        Swal.fire("错误提醒", "上传文件不能为空", "warning");
+        return false;
+    }
+    return true;
+
+}
+
+function searchFilesValidation(){
+    var fileType = document.getElementById("search_fileType").value;
+    var petType = document.getElementById("search_vac_doc_petType_forSearch").value;
+    var filterType = document.getElementById("search_vac_doc_catagory_forSearch").value;
+    var filterInputValue = document.getElementById("search_vac_doc_input_value_forSearch").value;
+
+    if(checkValue(fileType)){
+        Swal.fire("错误提醒", "请选择文件类型", "warning");
+        return false;
+    }
+    if(fileType === 'vaccines'&& checkValue(petType)) {
+        Swal.fire("错误提醒", "请选择宠物类型", "warning");
+        return false;
+    }
+
+    if(fileType === 'vaccines'&& filterType !== 'searchByPetBreed' && checkValue(filterInputValue)){
+        Swal.fire("错误提醒", "请输入查询内容", "warning");
+        return false;
+    }
+
+    return true;
+}
+
 
 
 function checkValue(value){

@@ -1,4 +1,22 @@
 /* Portrait tablets and medium desktops */
+@media (min-width: 1199px) {
+    body {
+        font-size: 15px;
+    }
+    .home-content h1 {
+    font-size: 40px;
+	}
+	.signup-process .signup-details h5 {
+    font-size: 21px;
+	}
+	.signup-process .signup-details .number li {
+    font-size: 13px;
+
+	}
+	.community-edition{
+		margin-bottom:20px;
+	}
+}
 @media (min-width: 992px) and (max-width: 1199px) {
     body {
         font-size: 15px;

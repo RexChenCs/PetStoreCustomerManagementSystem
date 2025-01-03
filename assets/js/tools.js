@@ -16,6 +16,9 @@ function getCreditSalePrice() {
 }
 
 $(document).ready(function () {
+
+    generateNavigation("navTools");
+
     var weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     
     $('#datePicker').datepicker({ //initiate JQueryUI datepicker
@@ -48,7 +51,10 @@ $(document).ready(function () {
         $('.bottom').removeClass('d-none'); //display total hours worked
         let chosenDate = $('#datePicker').datepicker('getDate'); //get chosen date from datepicker
         let newDate;
-        const monStartWeekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        var monStartWeekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        if(weekDays.length == 14){
+            monStartWeekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday','Monday1', 'Tuesday1', 'Wednesday1', 'Thursday1', 'Friday1', 'Saturday1', 'Sunday1'];
+        }
         for (let i = 0; i < weekDays.length; i++) { //iterate through each weekday
             newDate = new Date(chosenDate); //create date object
             newDate.setDate(chosenDate.getDate() + i); //increment set date
@@ -105,8 +111,6 @@ $(document).ready(function () {
 
 
         }
-        // $('.start-time input').timepicker({ 'timeFormat': 'H:mm', 'step': 1, 'scrollDefault': '10:00' });
-        // $('.finish-time input').timepicker({ 'timeFormat': 'H:mm', 'step': 1, 'scrollDefault': '21:00' });
 
         $("input[type='timeFormat']").on({
             click: function () {
@@ -118,17 +122,6 @@ $(document).ready(function () {
         });
     }
 
-    // function updateTotal() { //function to update the total hours worked
-    //     alert("test");
-    //     let totalHoursWorked = 0;
-    //     let hrs = document.querySelectorAll('.hours-worked');
-    //     hrs.forEach(function (val) {
-    //         totalHoursWorked += Number(val.innerHTML);
-    //     });
-    //     var hourlyRate = document.getElementById('hourlyRate').value;
-    //     document.querySelector('#totalHours').innerHTML = totalHoursWorked;
-    //     document.querySelector('#totalWages').innerHTML = (totalHoursWorked * convertCurrencyToNumber(hourlyRate)).toFixed(2);
-    // }
 
     $("input[id='hourlyRate']").on({
         keyup: function () {
@@ -153,7 +146,7 @@ function updateTotal() { //function to update the total hours worked
         totalHoursWorked += Number(val.innerHTML);
     });
     var hourlyRate = document.getElementById('hourlyRate').value;
-    document.querySelector('#totalHours').innerHTML = totalHoursWorked;
+    document.querySelector('#totalHours').innerHTML = totalHoursWorked.toFixed(2);
     document.querySelector('#totalWages').innerHTML = (totalHoursWorked * convertCurrencyToNumber(hourlyRate)).toFixed(2);
 }
 

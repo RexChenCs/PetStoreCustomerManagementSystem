@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    generateNavigation("navData");
+
     $('#export_table_members').DataTable({
         "language": {
             'loadingRecords': 'Processing...',

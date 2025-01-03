@@ -1,5 +1,7 @@
 jQuery(document).ready(function ($) {
 
+    generateNavigation("navTrans");
+
     $("input[id='search_transaction_memberId']").on({
         click: function () {
             $(this).val('');

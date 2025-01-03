@@ -20,7 +20,6 @@
     font-weight: 700;
     color: #313133;
     background: #82ca9c;
-    /* background: linear-gradient(90deg, rgb(74, 202, 6) 0%, rgb(113, 173, 16) 100%); */
     border: none;
     border-radius: 1000px;
     box-shadow: 12px 12px 24px rgba(59, 106, 2, 0.725);
@@ -31,7 +30,7 @@
     padding: 10px;
 }
 
-button::before {
+.button::before {
     content: '';
     border-radius: 1000px;
     min-width: calc(300px + 12px);

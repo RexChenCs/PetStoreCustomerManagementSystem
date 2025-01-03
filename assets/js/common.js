@@ -1,5 +1,6 @@
 jQuery(document).ready(function ($) {
     goInactiveEnable();
+
 });
 
 let USDollar = new Intl.NumberFormat('en-US', {
@@ -104,7 +105,7 @@ function wrapDiscountRate(input) {
 }
 
 function textAreaLineControl(text, charlimit) {
-    return text.replace('\n','<br>');
+    return text.replace('\n', '<br>');
 }
 
 
@@ -131,7 +132,7 @@ function setup() {
 }
 
 function startTimer() {
-    var time = timeOutMinute*60000; // one section 1000 unit ms
+    var time = timeOutMinute * 60000; // one section 1000 unit ms
     timeoutID = window.setTimeout(goInactive, time);
 }
 
@@ -142,7 +143,7 @@ function resetTimer(e) {
 
 function goInactive() {
     if (firebase.auth().currentUser != null) {
-        alert("Time out: your are no active within "+timeOutMinute+" minus!");
+        alert("Time out: your are no active within " + timeOutMinute + " minus!");
         signout();
     }
 }
@@ -160,7 +161,7 @@ function searchCatagoryReselect(sectionType) {
         document.getElementById('search_member_value_for' + sectionType).placeholder = "Enter Member Id";
     } else if (catagory == "searchByMemberPetName") {
         document.getElementById('search_member_value_for' + sectionType).placeholder = "Enter Pet Name";
-    } 
+    }
 }
 
 function searchMemberByCatagory(sectionType) {
@@ -285,10 +286,10 @@ function buildContentBySection(memberInfo, sectionType) {
     document.getElementById('memberDiscountRateSearchedFor' + sectionType).value = memberInfo.child('memberDiscountRate').val();
     if (sectionType === 'Search' || sectionType === 'Edit') {
         document.getElementById('memberPetBreedSearchedFor' + sectionType).value = memberInfo.child('memberPetBreed').val();
-        var petGenderChinese='未知';
-        if(memberInfo.child('memberPetGender').val()==='m'){
+        var petGenderChinese = '未知';
+        if (memberInfo.child('memberPetGender').val() === 'm') {
             petGenderChinese = '男';
-        } else if(memberInfo.child('memberPetGender').val()==='f'){
+        } else if (memberInfo.child('memberPetGender').val() === 'f') {
             petGenderChinese = '女';
         }
         document.getElementById('memberPetGenderSearchedFor' + sectionType).value = memberInfo.child('memberPetGender').val();
@@ -312,4 +313,55 @@ function clearContentBySection(sectionType) {
         document.getElementById('employeeSearchedFor' + sectionType).value = null;
         document.getElementById('noteSearchedFor' + sectionType).value = null;
     }
+}
+
+function generateNavigation(id) {
+
+    var isAdmin = sessionStorage.getItem("isAdmin");
+    if (isAdmin === 'N') {
+        $('#navbar').append(`
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand"><img src="../assets/images/logo.png" style="width: 200px; height: 40px" alt="Logo" /></a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li id="navHome"><a href="./home.html">Overview</a></li>
+                        <li id="navVip"><a href="./membermanagement.html">VIP Management</a></li>
+                        <li id="navTrans"><a href="./transactionreview.html">Transaction Review</a></li>
+                        <li id="navData"><a href="./export.html">Data Exportation</a></li>
+                        <li id="navTools"><a href="./tools.html">Tools</a></li>
+                        <li class="login" onclick="signout()" style="width:auto;"><a>Sign Out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    `);
+
+    } else if(isAdmin === 'Y'){
+        $('#navbar').append(`
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand"><img src="../assets/images/logo.png" style="width: 200px; height: 40px" alt="Logo" /></a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li id="navHome"><a href="./home.html">Overview</a></li>
+                        <li id="navVip"><a href="./membermanagement.html">VIP Management</a></li>
+                        <li id="navTrans"><a href="./transactionreview.html">Transaction Review</a></li>
+                        <li id="navData"><a href="./export.html">Data Exportation</a></li>
+                        <li id="navTools"><a href="./tools.html">Tools</a></li>
+                        <li id="navAdmin"><a href="./admin.html">Admin</a></li>
+                        <li class="login" onclick="signout()" style="width:auto;"><a>Sign Out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    `);
+
+    }
+
+    document.getElementById(id).setAttribute("class", "active");
 }

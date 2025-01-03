@@ -16,18 +16,18 @@ firebase.auth().onAuthStateChanged(function (user) {
         window.location == authDomain + "/layouts/admin.html") {
         firebase.database().ref('users/' + user.uid).on('value', function (snapshot) {
             if (snapshot.exists()) {
+                document.getElementById("userEmail").innerHTML = snapshot.child('email').val();
                 var isAdmin = snapshot.child('isAdmin').val();
                 var accessForAdminSection = snapshot.child('accessGroup').child('adminSectionForReview').val();
                 if ((accessForAdminSection !== "true" && isAdmin !== 'true') && window.location == authDomain + "/layouts/admin.html") {
                     window.location.href = authDomain + "/layouts/home.html";
-                    document.getElementById("adminsection").style.display = "none";
                 }
             } else {
                 if (window.location == authDomain + "/layouts/admin.html") {
                     window.location.href = authDomain + "/layouts/home.html";
                 }
             }
-            checkAdminSectionReview();
+            //  checkAdminSectionReview();
         });
     }
 });
@@ -53,77 +53,68 @@ function login() {
                 .then(function (user) {
                     firebase.database().ref('users/' + user.uid).once('value', function (snapshot) {
                         if (snapshot.exists()) {
-                            var isAdmin = snapshot.child('isAdmin').val();
-                            if (isAdmin === 'true') {
-                                var adminSecurityCode = snapshot.child('securityCode').val();
-                                Swal.fire({
-                                    title: "Pls enter security code",
-                                    input: "text",
-                                    inputAttributes: {
-                                        autocapitalize: "off",
-                                        autocomplete: "off"
-                                    },
-                                    showCancelButton: true,
-                                    confirmButtonText: "Enter",
-                                    showLoaderOnConfirm: true,
-                                    preConfirm: async (securityCode) => {
-                                        if (adminSecurityCode === securityCode) {
-                                            Swal.fire({
-                                                title: "Sign In",
-                                                text: 'Welcome ' + user.email,
-                                                iconHtml: '<img src="./assets/images/loginCat.gif">',
-                                                customClass: {
-                                                    icon: 'no-border'
-                                                },
-                                                showConfirmButton: false,
-                                                timer: 1500
-                                            }).then(function () {
-                                                window.location.href = authDomain + "/layouts/home.html";
-                                            });
+                            var userSecurityCode = snapshot.child('securityCode').val();
+                            Swal.fire({
+                                title: "Pls enter security code",
+                                input: "text",
+                                inputAttributes: {
+                                    autocapitalize: "off",
+                                    autocomplete: "off"
+                                },
+                                showCancelButton: true,
+                                confirmButtonText: "Enter",
+                                showLoaderOnConfirm: true,
+                                preConfirm: async (securityCode) => {
+                                    if (userSecurityCode === securityCode) {
+                                        var isAdmin = snapshot.child('isAdmin').val();
+                                        var isPermited = snapshot.child('accessGroup').child('adminSectionForReview').val();
+                                        if (isAdmin === 'true' || isPermited === 'true') {
+                                            sessionStorage.setItem("isAdmin", "Y");
                                         } else {
-                                            Swal.showValidationMessage(`Login failed: Invalid Security Code`);
-                                            firebase.auth().signOut();
+                                            sessionStorage.setItem("isAdmin", "N");
                                         }
-                                    },
-                                    allowOutsideClick: () => false
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        window.location.href = authDomain + "/layouts/home.html";
+                                        Swal.fire({
+                                            title: "Sign In",
+                                            text: 'Welcome ' + user.email,
+                                            iconHtml: '<img src="./assets/images/loginCat.gif">',
+                                            customClass: {
+                                                icon: 'no-border'
+                                            },
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        }).then(function () {
+                                            window.location.href = authDomain + "/layouts/home.html";
+                                        });
+                                    } else {
+                                        Swal.showValidationMessage(`Login failed: Invalid Security Code`);
+                                        firebase.auth().signOut();
                                     }
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: "Sign In",
-                                    text: 'Welcome ' + user.email,
-                                    iconHtml: '<img src="./assets/images/loginCat.gif">',
-                                    customClass: {
-                                        icon: 'no-border'
-                                    },
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                }).then(function () {
+                                },
+                                allowOutsideClick: () => false
+                            }).then((result) => {
+                                if (result.isConfirmed) {
                                     window.location.href = authDomain + "/layouts/home.html";
-                                });
-                            }
+                                }
+                            });
                         }
                     }).catch(function (error) {
-                            var errorMessage = error.message;
-                            if (isValidJSON(errorMessage)) {
-                                errorMessage = JSON.parse(errorMessage).error.message;
-                                if (errorMessage == 'INVALID_LOGIN_CREDENTIALS') {
-                                    errorMessage = 'The password is invalid or the user does not have a password.'
-                                }
+                        var errorMessage = error.message;
+                        if (isValidJSON(errorMessage)) {
+                            errorMessage = JSON.parse(errorMessage).error.message;
+                            if (errorMessage == 'INVALID_LOGIN_CREDENTIALS') {
+                                errorMessage = 'The password is invalid or the user does not have a password.'
                             }
-                            Swal.fire({
-                                iconHtml: '<img src="./assets/images/error.gif">',
-                                customClass: {
-                                    icon: 'no-border'
-                                },
-                                html: '<i class="fas fa-exclamation-circle" style="color:red"></i>Invalid Email or Password',
-                                showConfirmButton: false,
-                                footer: 'Details: ' + errorMessage
-                            });
+                        }
+                        Swal.fire({
+                            iconHtml: '<img src="./assets/images/error.gif">',
+                            customClass: {
+                                icon: 'no-border'
+                            },
+                            html: '<i class="fas fa-exclamation-circle" style="color:red"></i>Invalid Email or Password',
+                            showConfirmButton: false,
+                            footer: 'Details: ' + errorMessage
                         });
+                    });
                 })
                 .catch(function (error) {
                     Swal.fire({
@@ -147,9 +138,9 @@ function checkAdminSectionReview() {
                     var isPermited = snapshot.child('accessGroup').child('adminSectionForReview').val();
                     var isAdmin = snapshot.child('isAdmin').val();
                     if (isPermited === 'true' || isAdmin === 'true') {
-                        document.getElementById('adminsection').style.display = 'block';
+                        sessionStorage.setItem("isAdmin", "Y");
                     } else {
-                        document.getElementById('adminsection').style.display = 'none';
+                        sessionStorage.setItem("isAdmin", "N");
                     }
                 }
             });
@@ -311,4 +302,41 @@ function goInactiveEnable() {
             setup();
         }
     });
+}
+
+function fileInfoLookUpTable(fileName, fileType , petType) {
+    var fileRef = 'files/' + fileType + '/' + fileName;
+    if(fileType === 'vaccines'){
+        fileRef = 'files/' + fileType + '/' + petType + '/' +fileName;
+    }
+    return firebase.database().ref(fileRef).once('value').then(snapshot => {
+        if (snapshot.exists()) {
+            Swal.fire("错误提醒", "同文件类型的文件名已存在", "error");
+        }
+        return snapshot;
+    });
+}
+
+function uploadFile(fileName, fileType, file, petType) {
+    var fileStorageRef = fileType + '/' + fileName;
+    if(fileType === 'vaccines'){
+        fileStorageRef = fileType + '/' + petType + '/' + fileName;
+    }
+    var storageRef = firebase.storage().ref();
+    storageRef.child(fileStorageRef).put(file);
+}
+
+function loadingFile(fileName, petType, fileType) {
+
+    fileName = fileName.replace('&', ' ');
+    var fileStorageRef = fileType + '/' + fileName;
+    if(fileType === 'vaccines'){
+        fileStorageRef = fileType + '/' + petType + '/' + fileName;
+    }
+
+    var storageRef = firebase.storage().ref();
+    storageRef.child(fileStorageRef).getDownloadURL()
+        .then((url) => {
+            Swal.fire('备注详情', '<a target="_blank" href="'+url+'">查看文件</a>');
+        });
 }

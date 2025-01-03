@@ -1,5 +1,9 @@
 $(document).ready(function () {
 
+    // loadingFile('笑笑打针疫苗','vaccines');
+
+    generateNavigation("navVip");
+
     $("input[type='tel']").on({
         click: function () {
             $(this).val('');
@@ -28,13 +32,13 @@ $(document).ready(function () {
         keyup: function () {
             wrapCurrency($(this));
         },
-        change: function (){
-            if($(this).val()==='others'){
-                document.getElementById('memberBalance_customize_section').style.display='block'
+        change: function () {
+            if ($(this).val() === 'others') {
+                document.getElementById('memberBalance_customize_section').style.display = 'block'
                 document.getElementById('memberDiscountRate').value = null;
                 document.getElementById('memberDiscountRate').readOnly = false;
-            }else{
-                document.getElementById('memberBalance_customize_section').style.display='none';
+            } else {
+                document.getElementById('memberBalance_customize_section').style.display = 'none';
                 discountRateEnable();
                 calDiscountRate($(this).val(), 'memberDiscountRate');
             }
@@ -72,9 +76,52 @@ $(document).ready(function () {
             wrapDiscountRate($(this));
         },
         blur: function () {
-            if (!isValidDiscountRate($(this).val()) &&!checkValue($(this).val())) {
+            if (!isValidDiscountRate($(this).val()) && !checkValue($(this).val())) {
                 Swal.fire("错误提醒", "请输入正确折扣率(例如:0.90)", "warning");
                 $(this).val('');
+            }
+        }
+    });
+
+    //Doc Type Selection event listen
+    $("select[id='fileType']").on({
+        change: function () {
+            if ($(this).val() === 'vaccines') {
+                document.getElementById('doc_vac_info').style.display = 'block'
+            } else {
+                document.getElementById('doc_vac_info').style.display = 'none';
+            }
+
+        }
+    });
+
+    $("select[id='search_fileType']").on({
+        change: function () {
+            if ($(this).val() === 'vaccines') {
+                document.getElementById('search_vacFilter').style.display = 'block'
+            } else {
+                document.getElementById('search_vacFilter').style.display = 'none';
+            }
+
+        }
+    });
+
+    $("select[id='doc_vac_petType']").on({
+        change: function () {
+            if ($(this).val() === "") {
+                ClearOptionsFastAlt('doc_vac_breed');
+            } else {
+                petBreedSelectedOptionForUpload($(this).val());
+            }
+        }
+    });
+
+    $("select[id='search_vac_doc_petType_forSearch']").on({
+        change: function () {
+            if ($(this).val() === "") {
+                ClearOptionsFastAlt('doc_vac_breed');
+            } else {
+                petBreedSelectedOptionForSearch($(this).val());
             }
         }
     });
@@ -83,21 +130,18 @@ $(document).ready(function () {
         keyup: function () {
             wrapCurrency($(this));
         },
-        change: function (){
-            if($(this).val()==='others'){
-                document.getElementById('add_credit_member_balance_customize_section').style.display='block'
+        change: function () {
+            if ($(this).val() === 'others') {
+                document.getElementById('add_credit_member_balance_customize_section').style.display = 'block'
                 document.getElementById('add_credit_discountRate').value = null;
                 document.getElementById('add_credit_discountRate').readOnly = false;
-
-            }else{
-                document.getElementById('add_credit_member_balance_customize_section').style.display='none';
+            } else {
+                document.getElementById('add_credit_member_balance_customize_section').style.display = 'none';
                 discountRateEnable();
                 calDiscountRate($(this).val(), 'add_credit_discountRate');
             }
-            
         }
     });
-
 
     $("input[id='add_credit_member_balance_customize']").on({
         keyup: function () {
@@ -126,7 +170,6 @@ $(document).ready(function () {
             }
         }
     });
-
 
     $("input[id='member_spend_credit_balance_original']").on({
         keyup: function () {
@@ -290,6 +333,19 @@ $(document).ready(function () {
         }
     });
 
+    $("select[id='search_vac_doc_catagory_forSearch']").on({
+        change: function () {
+            if ($(this).val() === 'searchByPetBreed') {
+                document.getElementById('search_vac_doc_input_value_forSearch').style.display = 'none'
+                document.getElementById('search_vac_doc_select_value_forSearch').style.display = 'block'
+
+            } else {
+                document.getElementById('search_vac_doc_input_value_forSearch').style.display = 'block'
+                document.getElementById('search_vac_doc_select_value_forSearch').style.display = 'none'
+            }
+        }
+    });
+
 
     $(document).on('keypress', 'input,select', function (e) {
         if (e.which == 13) {
@@ -305,6 +361,7 @@ $(document).ready(function () {
     document.getElementById('memberJoinDate').valueAsDate = getCurrentNYDate();
     document.getElementById('add_credit_date').valueAsDate = getCurrentNYDate();
     document.getElementById('spend_credit_date').valueAsDate = getCurrentNYDate();
+    document.getElementById('fileCreatedDate').valueAsDate = getCurrentNYDate();
     generateNewMemberId();
     employeeSelectedOptionForMemberManagement();
     loadingValueSelectedOptionForMemberManagement();
@@ -314,7 +371,6 @@ $(document).ready(function () {
 
 
 function findMemberByIdForVIPManagement(searchCategoryType) {
-
     var memberId = document.getElementById('memberIdSearchingFor' + searchCategoryType).value.trim();
     document.getElementById('memberIdSearchedFor' + searchCategoryType).value = null;
     document.getElementById('memberNameSearchedFor' + searchCategoryType).value = null;
@@ -339,14 +395,13 @@ function findMemberByIdForVIPManagement(searchCategoryType) {
     }
 }
 
-
 function addCreditForMember() {
 
     var memberId = document.getElementById('memberIdSearchedForAdd').value.trim();
     var creditAmount = document.getElementById('add_credit_member_balance').value.trim();
-    if(creditAmount==='others'){
+    if (creditAmount === 'others') {
         creditAmount = convertCurrencyToNumber(document.getElementById('add_credit_member_balance_customize').value.trim())
-    } else{
+    } else {
         creditAmount = Number(creditAmount);
     }
     var originalDiscountRate = Number(document.getElementById('memberDiscountRateSearchedForAdd').value.trim());
@@ -376,9 +431,9 @@ function addCreditForMember() {
                 var addCreditDate = document.getElementById('add_credit_date').value.trim();
                 var addCreditEmployee = document.getElementById('add_credit_employeeName').value.trim();
                 var newDiscountRate = Number(document.getElementById('add_credit_discountRate').value.trim());
-                var addCreditNote = document.getElementById('add_credit_note').value;                  
-                addCreditNote= textAreaLineControl(addCreditNote, 20);
-                
+                var addCreditNote = document.getElementById('add_credit_note').value;
+                addCreditNote = textAreaLineControl(addCreditNote, 20);
+
                 var newBalance = Number(memberBalance) + Number(creditAmount);
                 var memberInfo = firebase.database().ref('members/' + memberId);
                 memberInfo.update({
@@ -451,7 +506,7 @@ function spendCreditForMember() {
                     var spendCreditDate = document.getElementById('spend_credit_date').value.trim();
                     var spendCreditEmployee = document.getElementById('spend_credit_employeeName').value.trim();
                     var spendCreditNote = document.getElementById('spend_credit_note').value;
-                    spendCreditNote = textAreaLineControl(spendCreditNote,20);
+                    spendCreditNote = textAreaLineControl(spendCreditNote, 20);
 
                     const transactionId = generateTransactionId();
                     var transactionInfo = firebase.database().ref('transactions/' + transactionId);
@@ -477,7 +532,6 @@ function spendCreditForMember() {
     }
 }
 
-
 function addNewMember() {
     if (!addNewMemberValidation()) {
         return;
@@ -492,16 +546,16 @@ function addNewMember() {
     var memberBalance = document.getElementById('memberBalance').value.trim();
     var memberBalance_customize = document.getElementById('memberBalance_customize').value.trim();
 
-    if(memberBalance==='others'){
+    if (memberBalance === 'others') {
         memberBalance = convertCurrencyToNumber(memberBalance_customize);
-    } else{
+    } else {
         memberBalance = Number(memberBalance);
     }
 
     var memberDiscountRate = Number(document.getElementById('memberDiscountRate').value.trim());
     var addNewMemberByEmployee = document.getElementById('addNewMemberByEmployee').value.trim();
     var addNewMemberNote = document.getElementById('addNewMemberNote').value.trim();
-    addNewMemberNote= textAreaLineControl(addNewMemberNote,20);
+    addNewMemberNote = textAreaLineControl(addNewMemberNote, 20);
 
     var memberInfoDetails = { 'memberName': memberName, 'memberPetName': memberPetName, 'memberPetBreed': memberPetBreed, 'memberPetGender': memberPetGender, 'memberJoinDate': memberJoinDate, 'memberPhone': memberPhone, 'memberBalance': memberBalance, 'memberDiscountRate': memberDiscountRate, 'employee': addNewMemberByEmployee, 'note': addNewMemberNote };
 
@@ -605,6 +659,34 @@ function employeeSelectedOptionForMemberManagement() {
     });
 }
 
+function petBreedSelectedOptionForUpload(petType) {
+    var petBreedSelectAttr = document.getElementById('doc_vac_breed');
+    firebase.database().ref('petBreed/' + petType).orderByKey().on("value", function (snapshot) {
+        ClearOptionsFastAlt('doc_vac_breed');
+        snapshot.forEach(function (childSnapshot) {
+            var petBreed = childSnapshot.key;
+            const opt = document.createElement("option");
+            opt.value = petBreed;
+            opt.text = petBreed;
+            petBreedSelectAttr.add(opt, null);
+        });
+    });
+}
+
+function petBreedSelectedOptionForSearch(petType) {
+    var petBreedSelectAttr = document.getElementById('search_vac_doc_select_value_forSearch');
+    firebase.database().ref('petBreed/' + petType).orderByKey().on("value", function (snapshot) {
+        ClearOptionsFastAlt('search_vac_doc_select_value_forSearch');
+        snapshot.forEach(function (childSnapshot) {
+            var petBreed = childSnapshot.key;
+            const opt = document.createElement("option");
+            opt.value = petBreed;
+            opt.text = petBreed;
+            petBreedSelectAttr.add(opt, null);
+        });
+    });
+}
+
 function discountRateEnable() {
     var settingInfo = firebase.database().ref('setting/');
     settingInfo.on("value", function (snapshot) {
@@ -674,4 +756,213 @@ function loadingValueSelectedOptionForMemberManagement() {
         opt1.text = '自定义面值';
         newMemberValueSelectAttr.add(opt1, null);
     });
+
+    $('#chooseFile').bind('change', function () {
+        var filename = $("#chooseFile").val();
+        if (/^\s*$/.test(filename)) {
+            $(".file-upload").removeClass('active');
+            $("#noFile").text("No file chosen...");
+        }
+        else {
+            $(".file-upload").addClass('active');
+            $("#noFile").text(filename.replace("C:\\fakepath\\", ""));
+        }
+    });
+}
+
+function uploadFiles() {
+    var file = document.getElementById("chooseFile").files[0];
+    var fileType = document.getElementById("fileType").value;
+    var fileCreatedDate = document.getElementById('fileCreatedDate').value;
+    var fileName = document.getElementById("fileName").value;
+    var petType = document.getElementById('doc_vac_petType').value;
+    if (fileType === "") { Swal.fire("错误提醒", "请选择文件类型", "warning"); }
+    else if (fileType === "vaccines" && uploadDocVacFileValidation()) {
+        fileInfoLookUpTable(fileName, fileType, petType).then(function (snapshot) {
+            if (!snapshot.exists()) {
+
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger'
+                    }, buttonsStyling: true
+                });
+                swalWithBootstrapButtons.fire({
+                    title: '确定上传文件?',
+                    text: "请确定上传疫苗文件" + fileName,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var petType = document.getElementById('doc_vac_petType').value;
+                        var petName = document.getElementById('doc_vac_petName').value.trim();
+                        var petBreed = document.getElementById('doc_vac_breed').value.trim();
+                        var expiredDate = document.getElementById('doc_vac_expiredDate').value.trim();
+                        var docNote = document.getElementById('doc_vac_note').value.trim();
+                        docNote = textAreaLineControl(docNote, 20);
+
+                        uploadFile(fileName, fileType, file, petType);
+
+                        var fileInfo = firebase.database().ref('files/vaccines/' + petType + '/' + fileName);
+                        fileInfo.set({
+                            'petName': petName,
+                            'petBreed': petBreed,
+                            'expiredDate': expiredDate,
+                            'createdDate': fileCreatedDate,
+                            'note': docNote
+                        });
+
+                        swalWithBootstrapButtons.fire("上传成功", "文件: " + fileName + " 已上传", "success").then(() => {
+                            location.reload();
+                        });
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        swalWithBootstrapButtons.fire('上传取消', '本次上传已取消', 'error');
+                    }
+                });
+
+            }
+        });
+
+    }
+}
+
+function addNewPetBreed() {
+    Swal.fire({
+        title: "添加类型",
+        input: "select",
+        inputOptions: {
+            dogs: "狗",
+            cats: "猫",
+        },
+        showCancelButton: true,
+        cancelButtonText: "取消",
+        confirmButtonText: "继续",
+        allowOutsideClick: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: "添加品种",
+                input: "text",
+                showCancelButton: true,
+                cancelButtonText: "取消",
+                confirmButtonText: "确定",
+                allowOutsideClick: false
+            }).then((result1) => {
+                if (result1.isConfirmed) {
+                    if (result1.value !== '') {
+                        var petBreedInfo = firebase.database().ref('petBreed/' + result.value);
+                        var petBreed = {};
+                        petBreed[result1.value] = '';
+                        petBreedInfo.update(petBreed).then(() => {
+                            Swal.fire("添加成功", "新品种已添加", "success");
+                        });
+                    } else {
+                        Swal.fire("错误提醒", "请输入内容", "warning");
+                    }
+                }
+            });
+        }
+    });
+}
+
+function searchFiles() {
+    if (searchFilesValidation()) {
+        var table = document.getElementById('filesInfo_table');
+        table.innerHTML = null;
+        var fileType = document.getElementById("search_fileType").value;
+        var petType = document.getElementById("search_vac_doc_petType_forSearch").value;
+        var filterType = document.getElementById("search_vac_doc_catagory_forSearch").value;
+        var filterInputValue = document.getElementById("search_vac_doc_input_value_forSearch").value;
+        var filterSelectValue = document.getElementById("search_vac_doc_select_value_forSearch").value;
+
+        if (fileType === 'vaccines') {
+
+            if (filterType === 'searchByFileName') {
+                searchVaccinesFilesByFileName(petType, filterInputValue);
+            } else if(filterType === 'searchByPetName'){
+                searchVaccinesFilesByPetName(petType, filterInputValue);
+            } else if(filterType === 'searchByPetBreed'){
+                searchVaccinesFilesByPetBreed(petType, filterSelectValue);
+            }
+
+        }
+    }
+}
+
+function searchVaccinesFilesByFileName(petType, fileName) {
+
+
+    firebase.database().ref('files/vaccines/' + petType).once("value").then(snapshot => {
+        snapshot.forEach(function (data) {
+            if (String(data.key).toUpperCase().includes(String(fileName).toUpperCase())) {
+                firstChild = data;
+                generateFilesInfoTable(data,petType,'vaccines');
+            }
+        });
+    });
+
+}
+
+function searchVaccinesFilesByPetName(petType, petName) {
+
+
+    firebase.database().ref('files/vaccines/' + petType).once("value").then(snapshot => {
+        snapshot.forEach(function (data) {
+            if (String(data.child('petName').val()).toUpperCase().includes(String(petName).toUpperCase())) {
+                firstChild = data;
+                generateFilesInfoTable(data,petType,'vaccines');
+            }
+        });
+    });
+
+}
+
+function searchVaccinesFilesByPetBreed(petType, petBreed) {
+
+    firebase.database().ref('files/vaccines/' + petType).once("value").then(snapshot => {
+        snapshot.forEach(function (data) {
+            if (String(data.child('petBreed').val()).toUpperCase().includes(String(petBreed).toUpperCase())) {
+                firstChild = data;
+                generateFilesInfoTable(data,petType,'vaccines');
+            }
+        });
+    });
+
+}
+
+
+function generateFilesInfoTable(data,petType, fileType) {
+    var table = document.getElementById('filesInfo_table');
+    var fileName = data.key;
+    var petName = data.child("petName").val();
+    var petBreed = data.child("petBreed").val();
+    var createdDate = data.child("createdDate").val();
+    var expiredDate = data.child("expiredDate").val();
+    var note = data.child("note").val();
+    if (note === null || note === '') {
+        note = '未备注';
+    } else {
+        note = '<i class="fa fa-search" onclick=checkFilesNoteDetail("' + note + '")>查看备注</i>'
+    }
+
+    var fileNameConv = fileName.replace(' ', '&');
+    fileUrl = '<i class="fa fa-search" onclick=loadingFile("'+fileNameConv+'","'+petType+'","'+fileType+'")></i>'
+    var row = '<tr>' +
+        '<td>' + fileName + '</td>' +
+        '<td>' + petName + '</td>' +
+        '<td>' + petBreed + '</td>' +
+        '<td>' + createdDate + '</td>' +
+        '<td>' + expiredDate + '</td>' +
+        '<td>' + note + '</td>' +
+        '<td>' + fileUrl + '</td>' +
+        '</tr>';
+    table.innerHTML += row;
+
+}
+
+function checkFilesNoteDetail(note) {
+    Swal.fire('详情', note);
 }
