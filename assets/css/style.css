@@ -535,20 +535,6 @@ textarea::-ms-input-placeholder {
     padding-top: 2px;
 }
 
-
-/*for image bg*/
-
-
-/*.img-bg{
-  background: url(../images/home-msg.jpg) no-repeat center top fixed;
-   background-size: cover;
-  -moz-background-size: cover;
-  -webkit-background-size: cover;
-  -o-background-size: cover;
-  width: 100%;
-  overflow: hidden;
-}*/
-
 /*For Our Global CSS*/
 .heading-content h1 {
     font-size: 48px;
@@ -558,11 +544,11 @@ textarea::-ms-input-placeholder {
 /* For Social Wrapper */
 .social {
     background: #000;
-    padding: 10px 0;
+    padding: 20px 0;
 }
 
 .social-wrapper .social-icon a {
-    float: left;
+    float: right;
     font-size: 13px;
     color: #fff;
 }
@@ -592,60 +578,6 @@ textarea::-ms-input-placeholder {
 .social-wrapper .social-contact a i {
     padding-right: 5px;
 }
-
-/*For Menu Style*/
-.navbar-default {
-    background-color: transparent;
-    border-color: transparent;
-    border-radius: 0;
-    padding-top: 20px;
-}
-
-.navbar-default .navbar-nav>.active>a,
-.navbar-default .navbar-nav>.active>a:hover,
-.navbar-default .navbar-nav>.active>a:focus {
-    color: #82ca9c;
-    background-color: transparent;
-}
-
-.navbar-default .navbar-nav>li>a {
-    color: #000;
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-.navbar-default .navbar-nav li a :hover {
-    color: #82ca9c;
-}
-
-.navbar-default .collapse .login a {
-    color: #82ca9c;
-    border: 1px solid #82ca9c;
-    border-radius: 20px;
-    padding: 4px 30px;
-    font-size: 12px;
-    margin-top: 10px;
-    margin-left: 30px;
-    display: inline-block;
-    overflow: hidden;
-}
-
-.navbar-default .collapse .login:hover a {
-    background-color: rgba(0, 173, 62, 0.75);
-    color: #fff;
-}
-
-.navbar-default .navbar-nav>li>a:hover,
-.navbar-default .navbar-nav>li>a:focus {
-    color: #82ca9c;
-    background-color: transparent;
-}
-
-.navbar-brand {
-    margin-top: -5px;
-}
-
 
 /*For Home Section*/
 .home home-wrapper {

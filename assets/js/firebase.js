@@ -16,7 +16,8 @@ firebase.auth().onAuthStateChanged(function (user) {
         window.location == authDomain + "/layouts/admin.html") {
         firebase.database().ref('users/' + user.uid).on('value', function (snapshot) {
             if (snapshot.exists()) {
-                document.getElementById("userEmail").innerHTML = snapshot.child('email').val();
+                // document.getElementById("userEmail").innerHTML = snapshot.child('email').val();
+
                 var isAdmin = snapshot.child('isAdmin').val();
                 var accessForAdminSection = snapshot.child('accessGroup').child('adminSectionForReview').val();
                 if ((accessForAdminSection !== "true" && isAdmin !== 'true') && window.location == authDomain + "/layouts/admin.html") {
@@ -66,6 +67,7 @@ function login() {
                                 showLoaderOnConfirm: true,
                                 preConfirm: async (securityCode) => {
                                     if (userSecurityCode === securityCode) {
+                                        sessionStorage.setItem("userEmail", email);
                                         var isAdmin = snapshot.child('isAdmin').val();
                                         var isPermited = snapshot.child('accessGroup').child('adminSectionForReview').val();
                                         if (isAdmin === 'true' || isPermited === 'true') {

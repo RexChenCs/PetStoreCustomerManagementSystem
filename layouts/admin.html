@@ -33,7 +33,17 @@
 
     <!--end of favicon-->
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+
+    <link rel="stylesheet" href="../assets/css/NavigationBar.css" />
+
     <!--For Plugins external css-->
     <link rel="stylesheet" href="../assets/css/roboto-webfont.css" />
     <!--Theme custom css -->
@@ -47,8 +57,8 @@
     <link rel="stylesheet" href="../assets/css/button.css" />
 
     <!--JS-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="../assets/js/vendor/bootstrap.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="../assets/js/vendor/bootstrap.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
     <script src="../assets/js/config.js"></script>
@@ -56,7 +66,6 @@
     <script src="../assets/js/validation.js"></script>
     <script src="../assets/js/admin.js"></script>
     <script src="https://kit.fontawesome.com/7692abe868.js" crossorigin="anonymous"></script>
-    <script src="../assets/js/common.js"></script>
 
     <!--table -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.min.css">
@@ -76,61 +85,25 @@
     <script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/fixedColumns.dataTables.js"></script>
     <script src="https://cdn.datatables.net/responsive/3.0.1/js/dataTables.responsive.js"></script>
     <script src="https://cdn.datatables.net/responsive/3.0.1/js/responsive.dataTables.js"></script>
+    <script src="../assets/js/common.js"></script>
 
 
 </head>
 
 <body>
-    <section id="social" class="social">
-        <div class="container">
-            <!-- Example row of columns -->
-            <div class="row">
-                <div class="social-wrapper">
-                    <div class="col-md-6"></div>
-                    <div class="col-md-6">
-                        <div class="social-icon pull-right">
-                            <a href="#"><i class="fa fa-user"></i>
-                                <spam id="userEmail"></spam>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> <!-- /container -->
-    </section>
 
-    <nav class="navbar navbar-default">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <a class="navbar-brand"><img src="../assets/images/logo.png" style="width: 200px; height: 40px"
-                        alt="Logo" /></a>
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="./home.html">Overview</a></li>
-                    <li><a href="./membermanagement.html">VIP Management</a></li>
-                    <li><a href="./transactionreview.html">Transaction Review</a></li>
-                    <li><a href="./export.html">Data Exportation</a></li>
-                    <li><a href="./tools.html">Tools</a></li>
-                    <li id="adminsection" class="active" "><a href="./admin.html">Admin</a></li>
-                    <li class="login" onclick="signout()" style="width:auto;"><a>Sign Out</a></li>
-                </ul>
-            </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-    </nav>
 
-    <!-- Sections -->
-    <section id="business" class="portfolio sections">
-        <div class="container">
+    <section id="navbar"></section>
+
+    <section class="portfolio">
+        <div class="contain">
             <div class="head_title text-center">
                 <h3>Admin Management</h3>
             </div>
 
-            <div class="row">
-                <div class="portfolio-wrapper text-center">
-                    <div class="col-md-3 col-sm-6 col-xs-12"
+            <div class="container">
+                <div class="row portfolio-wrapper text-center">
+                    <div class="col"
                         onclick="checkPermission('memberInfoUpdate','member_info_edit_modal');employeeSelectedOptionForAdminManagement();">
 
                         <div class="community-edition">
@@ -141,7 +114,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3 col-sm-6 col-xs-12"
+                    <div class="col"
                         onclick="checkPermission('transactionInfoUpdate','transaction_info_edit_modal');employeeSelectedOptionForAdminManagement();">
                         <div class="community-edition">
                             <i class="fas fa-edit"></i>
@@ -152,8 +125,7 @@
                     </div>
 
 
-                    <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="checkPermission('discountRateInfoUpdate','edit_discountRate_modal')">
+                    <div class="col" onclick="checkPermission('discountRateInfoUpdate','edit_discountRate_modal')">
                         <div class="community-edition">
                             <i class="fas fa-tags	"></i>
                             <div class="separator"></div>
@@ -162,7 +134,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3 col-sm-6 col-xs-12"
+                    <div class="col"
                         onclick="checkPermission('commissionInfoReview','employee_search_modal');employeeSelectedOptionForAdminManagement();">
                         <div class="community-edition">
                             <i class="fas fa-donate"></i>
@@ -173,12 +145,10 @@
                     </div>
 
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="portfolio-wrapper text-center">
-                    <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="checkPermission('employeeInfoUpdate','add_employee_modal')">
+
+                <div class="row portfolio-wrapper text-center">
+                    <div class="col" onclick="checkPermission('employeeInfoUpdate','add_employee_modal')">
                         <div class="community-edition">
                             <i class="far fa-id-card"></i>
                             <div class="separator"></div>
@@ -187,8 +157,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="checkPermission('acctUserManagement','acct_user_management_modal')">
+                    <div class="col" onclick="checkPermission('acctUserManagement','acct_user_management_modal')">
                         <div class="community-edition">
                             <i class="fas fa-portrait"></i>
                             <div class="separator"></div>
@@ -197,19 +166,18 @@
                         </div>
                     </div>
 
-                    <div class="portfolio-wrapper text-center">
-                        <div class="col-md-3 col-sm-6 col-xs-12"
-                            onclick="checkPermission('emailNotificationInfoUpdate','edit_email_notice_modal');readEmailNoticeInfo();">
-                            <div class="community-edition">
-                                <i class="fa-solid fa-bell"></i>
-                                <div class="separator"></div>
-                                <h4>修改提醒邮件设置</h4>
-                                <p>Edit Email Notice Configration</p>
-                            </div>
+                    <div class="col"
+                        onclick="checkPermission('emailNotificationInfoUpdate','edit_email_notice_modal');readEmailNoticeInfo();">
+                        <div class="community-edition">
+                            <i class="fa-solid fa-bell"></i>
+                            <div class="separator"></div>
+                            <h4>修改提醒邮件设置</h4>
+                            <p>Edit Email Notice Configration</p>
                         </div>
                     </div>
 
-                    <div class="col-md-3 col-sm-6 col-xs-12"
+
+                    <div class="col"
                         onclick="checkPermission('systemConfigInfoUpdate','edit_setting_modal'); loadingSetting()">
                         <div class="community-edition">
                             <i class="fa fa-gears"></i>
@@ -221,21 +189,23 @@
 
                 </div>
 
-            </div>
 
-            <div class="row">
-                <div class="portfolio-wrapper text-center">
-                    <div class="col-md-3 col-sm-6 col-xs-12"
-                        onclick="checkPermission('userRoleAccess','user_role_management_modal'); acctUserSelectedOptionForAdminManagement();refreshUserAccessTags();">
-                        <div class="community-edition">
-                            <i class="fas fa-sitemap"></i>
-                            <div class="separator"></div>
-                            <h4>修改管理者权限</h4>
-                            <p>Edit access group to acct user</p>
-                        </div>
-                    </div>
+                <div class="row portfolio-wrapper text-center">
+
+                <div class="col"
+                onclick="checkPermission('userRoleAccess','user_role_management_modal'); acctUserSelectedOptionForAdminManagement();refreshUserAccessTags();">
+                <div class="community-edition">
+                    <i class="fas fa-sitemap"></i>
+                    <div class="separator"></div>
+                    <h4>修改管理者权限</h4>
+                    <p>Edit access group to acct user</p>
+                </div>
                 </div>
             </div>
+            </div>
+
+
+        </div>
     </section>
 
 
@@ -336,8 +306,8 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="buttonAdjust">
-                                <div class="wrap pull-right">
+                            <div class="col buttonAdjust">
+                                <div class="wrap float-right">
                                     <button class="button" onclick="updateMemberInfo()">修改</button>
                                 </div>
                             </div>
@@ -445,8 +415,8 @@
                         </div>
 
                         <div class="row">
-                            <div class="buttonAdjust">
-                                <div class="wrap pull-right">
+                            <div class="col buttonAdjust">
+                                <div class="wrap float-right">
                                     <button class="button" onclick="updateTransactionInfo()">修改</button>
                                 </div>
                             </div>
@@ -467,7 +437,7 @@
             title="Close Modal">&times;</span>
 
         <!-- Sections -->
-        <section class="price sections">
+        <section>
             <div class="container">
                 <div class="head_title text-center">
                     <h3>员工提成查询</h3>
@@ -550,7 +520,7 @@
         <span onclick="document.getElementById('edit_discountRate_modal').style.display='none'" class="close"
             title="Close Modal">&times;</span>
 
-        <section class="price sections">
+        <section>
 
             <div class="contain">
 
@@ -615,12 +585,14 @@
                                     <label for="duplicatedPhoneCheck">Duplicated Phone Check</label>
                                 </div>
                                 <div class="setting">
-                                    <input type="checkbox" id="goInactiveEnable" onchange="showAndHideTimeOutInputOptions()" />
+                                    <input type="checkbox" id="goInactiveEnable"
+                                        onchange="showAndHideTimeOutInputOptions()" />
                                     <label for="goInactiveEnable">Go Inactive Enable</label>
                                 </div>
                                 <div class="length range__slider" data-min="1" data-max="60">
                                     <div class="length__title field-title" data-length='1'>time out minutes:</div>
-                                    <input id="timeOutInactiveMinute" type="range" min="1" max="60" onchange="refreshTimeOutMinuteValueByLengthChange()" />
+                                    <input id="timeOutInactiveMinute" type="range" min="1" max="60"
+                                        onchange="refreshTimeOutMinuteValueByLengthChange()" />
                                 </div>
                             </div>
 
@@ -731,8 +703,8 @@
                     </div>
 
                     <div class="row">
-                        <div class="buttonAdjust">
-                            <div class="wrap pull-right">
+                        <div class="col buttonAdjust">
+                            <div class="wrap float-right">
                                 <button class="button" onclick="addAcctUser()">添加</button>
                             </div>
                         </div>
@@ -778,8 +750,8 @@
                     </div>
 
                     <div class="row">
-                        <div class="buttonAdjust">
-                            <div class="wrap pull-right">
+                        <div class="col buttonAdjust">
+                            <div class="wrap float-right">
                                 <button class="button" onclick="updateAdminRole()">修改</button>
                             </div>
                         </div>
@@ -837,8 +809,8 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="buttonAdjust">
-                                <div class="wrap pull-right">
+                            <div class="col buttonAdjust">
+                                <div class="wrap float-right">
                                     <button class="button" onclick="updateEmailNoticeInfo()">保存</button>
                                 </div>
                             </div>
@@ -882,8 +854,8 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="buttonAdjust">
-                                <div class="wrap pull-right">
+                            <div class="col buttonAdjust">
+                                <div class="wrap float-right">
                                     <button class="button" onclick="createNewEmployee()">添加</button>
                                 </div>
                             </div>
@@ -931,8 +903,8 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="buttonAdjust">
-                                <div class="wrap pull-right">
+                            <div class="col buttonAdjust">
+                                <div class="wrap float-right">
                                     <button class="button" onclick="updateEmployee()">更新</button>
                                 </div>
                             </div>
@@ -969,8 +941,8 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="buttonAdjust">
-                                <div class="wrap pull-right">
+                            <div class="col buttonAdjust">
+                                <div class="wrap float-right">
                                     <button class="button" onclick="createNewDiscount()">添加</button>
                                 </div>
                             </div>
@@ -1013,8 +985,8 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="buttonAdjust">
-                                <div class="wrap pull-right">
+                            <div class="col buttonAdjust">
+                                <div class="wrap float-right">
                                     <button class="button" onclick="updateDiscountRate()">更新</button>
                                 </div>
                             </div>
@@ -1045,7 +1017,8 @@
                             <div class="row" style="margin: 3%;">
                                 <div class="col-sm-4 form-group">
                                     <label for="acctUserEmailForAccessGroup" class="required">邮箱</label>
-                                    <select class="form-control" id="acctUserEmailForAccessGroup" onchange="refreshUserAccessTags()"></select>
+                                    <select class="form-control" id="acctUserEmailForAccessGroup"
+                                        onchange="refreshUserAccessTags()"></select>
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <label for="accessGroupForUpdate" class="required">管理者权限</label>
@@ -1079,8 +1052,8 @@
                     </div>
 
                     <div class="row">
-                        <div class="buttonAdjust">
-                            <div class="wrap pull-right">
+                        <div class="col buttonAdjust">
+                            <div class="wrap float-right">
                                 <button class="button" onclick="updateUserAccessGroup()">修改</button>
                             </div>
                         </div>
@@ -1091,13 +1064,9 @@
     <!--Footer-->
     <footer id="footer" class="footer">
         <div class="container">
-            <div class="row">
-                <div class="footer-wrapper">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="copyright">
-                            <p> © 2024, Rex Chen, All rights reserved.</p>
-                        </div>
-                    </div>
+            <div class="footer-wrapper">
+                <div class="copyright">
+                    <p> © 2024, Rex Chen, All rights reserved.</p>
                 </div>
             </div>
         </div>

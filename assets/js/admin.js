@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    generateNavigation("navAdmin");
     acctUserSelectedOptionForAdminManagement();
     showAndHideTimeOutInputOptions();
     $('#employeeTable').DataTable({

@@ -1,6 +1,16 @@
 jQuery(document).ready(function ($) {
     goInactiveEnable();
-
+    $(document).ready(function () {
+        setTimeout(function () { navBar(); });
+    });
+    $(window).on('resize', function () {
+        setTimeout(function () { navBar(); }, 500);
+    });
+    $(".navbar-toggler").click(function () {
+        $(".navbar-collapse").slideToggle(300);
+        setTimeout(function () { navBar(); });
+    });
+    
 });
 
 let USDollar = new Intl.NumberFormat('en-US', {
@@ -315,7 +325,7 @@ function clearContentBySection(sectionType) {
     }
 }
 
-function generateNavigation(id) {
+function oldgenerateNavigation(id) {
 
     var isAdmin = sessionStorage.getItem("isAdmin");
     if (isAdmin === 'N') {
@@ -339,7 +349,7 @@ function generateNavigation(id) {
         </nav>
     `);
 
-    } else if(isAdmin === 'Y'){
+    } else if (isAdmin === 'Y') {
         $('#navbar').append(`
         <nav class="navbar navbar-default">
             <div class="container">
@@ -365,3 +375,150 @@ function generateNavigation(id) {
 
     document.getElementById(id).setAttribute("class", "active");
 }
+
+
+function generateNavigation(id) {
+    const userEmail = sessionStorage.getItem("userEmail").split('@');
+    var user = userEmail[0];
+
+    var isAdmin = sessionStorage.getItem("isAdmin");
+    if (isAdmin === 'N') {
+        $('#navbar').append(`
+        <nav class="navbar navbar-expand-custom navbar-mainbg">
+                <a class="navbar-brand navbar-logo" href="./home.html"><img src='../assets/images/logo.png' style='height:50px;width: 250px'></a>
+                <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars text-white"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto">
+                        <div class="hori-selector"><div class="left"></div><div class="right"></div></div>
+                        <li id="navHome" class="nav-item">
+                            <a class="nav-link" href="./home.html">Overview</a>
+                        </li>
+                        <li id="navVip" class="nav-item">
+                            <a class="nav-link" href="./membermanagement.html">VIP Management</a>
+                        </li>
+                        <li id="navTrans" class="nav-item">
+                            <a class="nav-link" href="./transactionreview.html">Transaction Review</a>
+                        </li>                    
+                        <li id="navFile" class="nav-item">
+                            <a class="nav-link" href="./filemanagement.html">File Management</a>
+                        </li>
+                        <li id="navTools" class="nav-item">
+                            <a class="nav-link" href="./tools.html">Tools</a>
+                        </li>
+      
+                    </ul>
+                </div>
+                
+                <div class="navbar-brand dropdown nav-profile">
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <i class="fa fa-user"></i>${user}</a>
+                    <ul class="dropdown-menu dropdown-menu-lg-right">
+                        <li class='navbar-logout'><a  onclick="signout()">Sign Out&nbsp;&nbsp;<i class="fa fa-sign-out"></i></a></li>
+                    </ul>
+                </div>
+    
+                
+            </nav>
+    `);
+    } else if (isAdmin === 'Y') {
+        $('#navbar').append(`
+            <nav class="navbar navbar-expand-custom navbar-mainbg">
+                    <a class="navbar-brand navbar-logo" href="./home.html"><img src='../assets/images/logo.png' style='height:50px;width: 250px'></a>
+                    <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-bars text-white"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ml-auto">
+                            <div class="hori-selector"><div class="left"></div><div class="right"></div></div>
+                            <li id="navHome" class="nav-item">
+                                <a class="nav-link" href="./home.html">Overview</a>
+                            </li>
+                            <li id="navVip" class="nav-item">
+                                <a class="nav-link" href="./membermanagement.html">VIP Management</a>
+                            </li>
+                            <li id="navTrans" class="nav-item">
+                                <a class="nav-link" href="./transactionreview.html">Transaction Review</a>
+                            </li>                    
+                            <li id="navFile" class="nav-item">
+                                <a class="nav-link" href="./filemanagement.html">File Management</a>
+                            </li>
+                            <li id="navTools" class="nav-item">
+                                <a class="nav-link" href="./tools.html">Tools</a>
+                            </li>
+                            <li id="navAdmin" class="nav-item">
+                                <a class="nav-link" href="./admin.html">Admin</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="navbar-brand dropdown nav-profile">                      
+                        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-user"></i>${user}</a>
+                        <ul class="dropdown-menu dropdown-menu-lg-right">
+                            <li class='navbar-logout'><a  onclick="signout()">Sign Out&nbsp;&nbsp;<i class="fa fa-sign-out"></i></a></li>
+                        </ul>
+                    </div>            
+                </nav>
+        `);
+    }
+    document.getElementById(id).setAttribute("class", "active");
+
+}
+// ---------Responsive-navbar-active-animation-----------
+function navBar() {
+    var tabsNewAnim = $('#navbarSupportedContent');
+    var selectorNewAnim = $('#navbarSupportedContent').find('li').length;
+    var activeItemNewAnim = tabsNewAnim.find('.active');
+    var activeWidthNewAnimHeight = activeItemNewAnim.innerHeight();
+    var activeWidthNewAnimWidth = activeItemNewAnim.innerWidth();
+    var itemPosNewAnimTop = activeItemNewAnim.position();
+    var itemPosNewAnimLeft = activeItemNewAnim.position();
+    $(".hori-selector").css({
+        "top": itemPosNewAnimTop.top + "px",
+        "left": itemPosNewAnimLeft.left + "px",
+        "height": activeWidthNewAnimHeight + "px",
+        "width": activeWidthNewAnimWidth + "px"
+    });
+    $("#navbarSupportedContent").on("click", "li", function (e) {
+        $('#navbarSupportedContent ul li').removeClass("active");
+        $(this).addClass('active');
+        var activeWidthNewAnimHeight = $(this).innerHeight();
+        var activeWidthNewAnimWidth = $(this).innerWidth();
+        var itemPosNewAnimTop = $(this).position();
+        var itemPosNewAnimLeft = $(this).position();
+        $(".hori-selector").css({
+            "top": itemPosNewAnimTop.top + "px",
+            "left": itemPosNewAnimLeft.left + "px",
+            "height": activeWidthNewAnimHeight + "px",
+            "width": activeWidthNewAnimWidth + "px"
+        });
+    });
+}
+
+
+$(document).ready(function () {
+    setTimeout(function () { navBar(); });
+});
+$(window).on('resize', function () {
+    setTimeout(function () { navBar(); }, 500);
+});
+$(".navbar-toggler").click(function () {
+    $(".navbar-collapse").slideToggle(300);
+    setTimeout(function () { navBar(); });
+});
+
+
+
+// --------------add active class-on another-page move----------
+jQuery(document).ready(function ($) {
+    // Get current path and find target link
+    var path = window.location.pathname.split("/").pop();
+
+    // Account for home page with empty path
+    if (path == '') {
+        path = 'index.html';
+    }
+
+    var target = $('#navbarSupportedContent ul li a[href="' + path + '"]');
+    // Add active class to target link
+    target.parent().addClass('active');
+});

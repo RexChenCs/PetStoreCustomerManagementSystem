@@ -2,59 +2,15 @@
 
 jQuery(document).ready(function ($) {
 
+    $("input[id='inputForPetNames']").on({
+        click: function () {
+            readMembershipOverviewTable();
+        }
+    });
+    // readMembershipOverviewTable();
     generateNavigation("navHome");
-
-    $('#navbar-collapse').find('a[href*=#]:not([href=#])').click(function () {
-        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
-            var target = $(this.hash);
-            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-            if (target.length) {
-                $('html,body').animate({
-                    scrollTop: (target.offset().top - 40)
-                }, 1000);
-                if ($('.navbar-toggle').css('display') != 'none') {
-                    $(this).parents('.container').find(".navbar-toggle").trigger("click");
-                }
-                return false;
-            }
-        }
-    });
 	
-	readMembershipOverviewTable();
-	checkScrolling($('.membershipOverviewTable'));
-
-	$(window).on('resize', function(){
-		window.requestAnimationFrame(function(){checkScrolling($('.membershipOverviewTable'))});
-	});
-	$('.membershipOverviewTable').on('scroll', function(){ 
-		var selected = $(this);
-		window.requestAnimationFrame(function(){checkScrolling(selected)});
-	});
-
-	function checkScrolling(tables){
-		tables.each(function(){
-			var table= $(this),
-				totalTableWidth = parseInt(table.children('.cd-pricing-features').width()),
-		 		tableViewport = parseInt(table.width());
-			if( table.scrollLeft() >= totalTableWidth - tableViewport -1 ) {
-				table.parent('li').addClass('is-ended');
-			} else {
-				table.parent('li').removeClass('is-ended');
-			}
-		});
-	}
-
-    $(window).scroll(function(){
-        if ($(this).scrollTop() > 600) {
-            $('.scrollup').fadeIn('slow');
-        } else {
-            $('.scrollup').fadeOut('slow');
-        }
-    });
-    $('.scrollup').click(function(){
-        $("html, body").animate({ scrollTop: 0 }, 1000);
-        return false;
-    });	
+    
 });
 
 function membershipOverviewSearch() {
@@ -86,13 +42,12 @@ function readMembershipOverviewTable() {
 
     query.on("value", function (snapshot) {
 
-        var table = document.getElementById('membershipOverviewTable');
-
+        var table = document.getElementById('membershipOverviewTableBody');
         // clear up old data to reduce duplication
-        table.innerHTML = '<tr class="header"> <th style="width:20%;">宠物名</th><th style="width:20%;">会员号</th><th style="width:20%;">电话</th> <th style="width:20%;">会员折扣</th> <th style="width:20%;">余额</th></tr>';
-
+        // table.innerHTML = '<tr class="header"> <th style="width:20%;">宠物名</th><th style="width:20%;">会员号</th><th style="width:20%;">电话</th> <th style="width:20%;">会员折扣</th> <th style="width:20%;">余额</th></tr>';
+        table.innerHTML =null;
         snapshot.forEach(function (childSnapshot) {
-            var table = document.getElementById('membershipOverviewTable');
+            var table = document.getElementById('membershipOverviewTableBody');
             var data = childSnapshot;
 
             var memberPetName = data.child("memberPetName").val();
@@ -112,6 +67,7 @@ function readMembershipOverviewTable() {
             table.innerHTML += row;
 
         });
+        navBar();
     });
 }
 
