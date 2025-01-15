@@ -69,18 +69,19 @@ $(document).ready(function () {
         }
     });
     document.getElementById('fileCreatedDate').valueAsDate = getCurrentNYDate();
+
+    $(document).on('keypress', 'input,select', function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            var $next = $('[tabIndex=' + (+this.tabIndex + 1) + ']');
+            if (!$next.length) {
+                $next = $('[tabIndex=1]');
+            }
+            $next.focus().click();
+        }
+    });
 });
 
-$(document).on('keypress', 'input,select', function (e) {
-    if (e.which == 13) {
-        e.preventDefault();
-        var $next = $('[tabIndex=' + (+this.tabIndex + 1) + ']');
-        if (!$next.length) {
-            $next = $('[tabIndex=1]');
-        }
-        $next.focus().click();
-    }
-});
 
 function petBreedSelectedOptionForUpload(petType) {
     var petBreedSelectAttr = document.getElementById('doc_vac_breed');

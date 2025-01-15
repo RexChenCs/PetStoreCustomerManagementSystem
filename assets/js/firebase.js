@@ -139,6 +139,8 @@ function signout() {
                 title: "Sign Out",
                 text: 'You sign out successfully ',
                 icon: "success"
+            }).then((result) => {
+                window.location.href = authDomain + "/index.html";
             });
         }).catch(function (error) {
             var errorMessage = error.message;
