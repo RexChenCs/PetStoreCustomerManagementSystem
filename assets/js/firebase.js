@@ -16,8 +16,6 @@ firebase.auth().onAuthStateChanged(function (user) {
         window.location == authDomain + "/layouts/admin.html") {
         firebase.database().ref('users/' + user.uid).on('value', function (snapshot) {
             if (snapshot.exists()) {
-                // document.getElementById("userEmail").innerHTML = snapshot.child('email').val();
-
                 var isAdmin = snapshot.child('isAdmin').val();
                 var accessForAdminSection = snapshot.child('accessGroup').child('adminSectionForReview').val();
                 if ((accessForAdminSection !== "true" && isAdmin !== 'true') && window.location == authDomain + "/layouts/admin.html") {
@@ -28,7 +26,6 @@ firebase.auth().onAuthStateChanged(function (user) {
                     window.location.href = authDomain + "/layouts/home.html";
                 }
             }
-            //  checkAdminSectionReview();
         });
     }
 });
@@ -75,27 +72,27 @@ function login() {
                                         } else {
                                             sessionStorage.setItem("isAdmin", "N");
                                         }
-                                        Swal.fire({
-                                            title: "Sign In",
-                                            text: 'Welcome ' + user.email,
-                                            iconHtml: '<img src="./assets/images/loginCat.gif">',
-                                            customClass: {
-                                                icon: 'no-border'
-                                            },
-                                            showConfirmButton: false,
-                                            timer: 1500
-                                        }).then(function () {
-                                            window.location.href = authDomain + "/layouts/home.html";
-                                        });
                                     } else {
                                         Swal.showValidationMessage(`Login failed: Invalid Security Code`);
-                                        firebase.auth().signOut();
                                     }
                                 },
                                 allowOutsideClick: () => false
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    window.location.href = authDomain + "/layouts/home.html";
+                                    Swal.fire({
+                                        title: "Sign In",
+                                        text: 'Welcome ' + user.email,
+                                        iconHtml: '<img src="./assets/images/loginCat.gif">',
+                                        customClass: {
+                                            icon: 'no-border'
+                                        },
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    }).then(function () {
+                                        window.location.href = authDomain + "/layouts/home.html";
+                                    });
+                                } else{
+                                    firebase.auth().signOut();
                                 }
                             });
                         }
@@ -131,24 +128,6 @@ function login() {
         });
 }
 
-function checkAdminSectionReview() {
-    firebase.auth().onAuthStateChanged(function (user) {
-        if (user !== null) {
-            firebase.database().ref('users/' + user.uid).once('value', function (snapshot) {
-                if (snapshot.exists()) {
-                    document.getElementById("userEmail").innerHTML = snapshot.child('email').val();
-                    var isPermited = snapshot.child('accessGroup').child('adminSectionForReview').val();
-                    var isAdmin = snapshot.child('isAdmin').val();
-                    if (isPermited === 'true' || isAdmin === 'true') {
-                        sessionStorage.setItem("isAdmin", "Y");
-                    } else {
-                        sessionStorage.setItem("isAdmin", "N");
-                    }
-                }
-            });
-        }
-    });
-}
 
 function signout() {
     Toast.fire({
