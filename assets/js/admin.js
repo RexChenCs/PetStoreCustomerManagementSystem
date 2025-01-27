@@ -651,28 +651,34 @@ function memberAcctHandlerForUpdateTransaction(oldTransactionId, UpdatedTransact
         }
     });
 
-    //  if add => old balance - old amount + new amount 
-    //  if delete => old balance + old amount - new amount 
-    if (isSuccessfulUpdateMemberAcct) {
-        transactionInfoLookUpTable(oldTransactionId).then(function (snapshot) {
-            if (snapshot.exists()) {
-                var remainingBalanceForUpdatedTransaction = 0;
-                if (snapshot.child('type').val() === 'addCredit') {
-                    remainingBalanceForUpdatedTransaction = Number(snapshot.child('memberRemainingBalance').val()) - Number(snapshot.child('amount').val()) + Number(UpdatedTransactionInfoDetail['amount']);
-                } else if (snapshot.child('type').val() === 'spendCredit') {
-                    remainingBalanceForUpdatedTransaction = Number(snapshot.child('memberRemainingBalance').val()) + Number(snapshot.child('amount').val()) - Number(UpdatedTransactionInfoDetail['amount']);
-                } else if (snapshot.child('type').val() === 'newMember') {
-                    remainingBalanceForUpdatedTransaction = Number(UpdatedTransactionInfoDetail['amount']);
+
+    isSuccessfulUpdateMemberAcct.then(function (result) {
+        //  if add => old balance - old amount + new amount 
+        //  if delete => old balance + old amount - new amount 
+        console.log(result);
+
+        if (result) {
+            transactionInfoLookUpTable(oldTransactionId).then(function (snapshot) {
+                if (snapshot.exists()) {
+                    var remainingBalanceForUpdatedTransaction = 0;
+                    if (snapshot.child('type').val() === 'addCredit') {
+                        remainingBalanceForUpdatedTransaction = Number(snapshot.child('memberRemainingBalance').val()) - Number(snapshot.child('amount').val()) + Number(UpdatedTransactionInfoDetail['amount']);
+                    } else if (snapshot.child('type').val() === 'spendCredit') {
+                        remainingBalanceForUpdatedTransaction = Number(snapshot.child('memberRemainingBalance').val()) + Number(snapshot.child('amount').val()) - Number(UpdatedTransactionInfoDetail['amount']);
+                    } else if (snapshot.child('type').val() === 'newMember') {
+                        remainingBalanceForUpdatedTransaction = Number(UpdatedTransactionInfoDetail['amount']);
+                    }
+                    UpdatedTransactionInfoDetail['memberRemainingBalance'] = Number(Number(remainingBalanceForUpdatedTransaction).toFixed(2));
+                    firebase.database().ref('transactions/').child(oldTransactionId).update(UpdatedTransactionInfoDetail);
+                    findTransactionByIdForEditInfo();
+                    Swal.fire("成功", "订单已修改");
+                } else {
+                    Swal.fire("错误提醒", "交易未发现", "warning");
                 }
-                UpdatedTransactionInfoDetail['memberRemainingBalance'] = Number(Number(remainingBalanceForUpdatedTransaction).toFixed(2));
-                firebase.database().ref('transactions/').child(oldTransactionId).update(UpdatedTransactionInfoDetail);
-                findTransactionByIdForEditInfo();
-                Swal.fire("成功", "订单已修改");
-            } else {
-                Swal.fire("错误提醒", "交易未发现", "warning");
-            }
-        });
-    }
+            });
+        }
+
+    })
 }
 
 function markTransactionAsVoid(transactionId) {
@@ -942,7 +948,7 @@ function updateSetting() {
     var goInactiveEnable = document.getElementById('goInactiveEnable').checked;
     var timeOutInactiveMinute = document.getElementById('timeOutInactiveMinute').value;
     var settingInfo = firebase.database().ref('setting/');
-    settingInfo.set({ 'emailNotification': emailNotificationOn, 'discountRateEditable': discountRateEditable, 'discountRateAutoApply': discountRateAutoApply, 'duplicatedPhoneCheck': duplicatedPhoneCheck, 'goInactiveEnable': goInactiveEnable,'timeOutInactiveMinute':timeOutInactiveMinute });
+    settingInfo.set({ 'emailNotification': emailNotificationOn, 'discountRateEditable': discountRateEditable, 'discountRateAutoApply': discountRateAutoApply, 'duplicatedPhoneCheck': duplicatedPhoneCheck, 'goInactiveEnable': goInactiveEnable, 'timeOutInactiveMinute': timeOutInactiveMinute });
     Swal.fire("成功", "设置已更改", "success");
 }
 
@@ -1021,18 +1027,18 @@ function refreshUserAccessTags() {
     });
 }
 
-function refreshTimeOutMinuteValueByLengthChange(){
+function refreshTimeOutMinuteValueByLengthChange() {
     const sliderValue = document.querySelector(".length__title");
     const lengthEl = document.getElementById("timeOutInactiveMinute").value;
     sliderValue.setAttribute("data-length", lengthEl);
 }
 
-function showAndHideTimeOutInputOptions(){
+function showAndHideTimeOutInputOptions() {
     var goInactiveEnable = document.getElementById('goInactiveEnable').checked;
     const slider = document.querySelector(".range__slider");
-    if(goInactiveEnable){
-        slider.style.display="block";
-    } else{
-        slider.style.display="none";
+    if (goInactiveEnable) {
+        slider.style.display = "block";
+    } else {
+        slider.style.display = "none";
     }
 }
