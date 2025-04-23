@@ -15,7 +15,20 @@ jQuery(document).ready(function ($) {
     });
 });
 
+let totalSpend = 0; // Total for spendCredit
+let totalNewMember = 0; // Total for newMember
+let totalAddCredit = 0; // Total for addCredit
+
 function searchTransactions() {
+
+
+    totalSpend = 0; // Total for spendCredit
+    totalNewMember = 0; // Total for newMember
+    totalAddCredit = 0; // Total for addCredit
+    // Update the footer with the totals
+    document.getElementById('total_spend').textContent = `$${totalSpend.toFixed(2)}`;
+    document.getElementById('total_new_member').textContent = `$${totalNewMember.toFixed(2)}`;
+    document.getElementById('total_add_credit').textContent = `$${totalAddCredit.toFixed(2)}`;
 
     var memberId = document.getElementById('search_transaction_memberId').value;
     var startDate = document.getElementById('search_transaction_starDate').valueAsDate;
@@ -40,32 +53,42 @@ function searchTransactionByDate(startDate, endDate, type) {
     var transactionInfo = firebase.database().ref('transactions/');
 
     transactionInfo.on("value", function (snapshot) {
-
+        let transactionCount = 0;
         snapshot.forEach(function (childSnapshot) {
 
             var date = childSnapshot.child("date").val();
+            var transactionType = childSnapshot.child("type").val();
 
-            if (startDate != null && endDate == null && new Date(date) >= new Date(startDate)) {
+            if (startDate != null && endDate == null && new Date(date) >= new Date(startDate) && (type === 'all' || type === transactionType)) {
+                transactionCount++;
+                generateTransactionTable(childSnapshot);
 
-                generateTransactionTable(childSnapshot, type);
+            } else if (startDate == null && endDate != null && new Date(date) <= new Date(endDate) && (type === 'all' || type === transactionType)) {
+                transactionCount++;
+                generateTransactionTable(childSnapshot);
 
-            } else if (startDate == null && endDate != null && new Date(date) <= new Date(endDate)) {
+            } else if (startDate != null && endDate != null && new Date(date) >= new Date(startDate) && new Date(date) <= new Date(endDate) && (type === 'all' || type === transactionType)) {
+                transactionCount++;
+                generateTransactionTable(childSnapshot);
 
-                generateTransactionTable(childSnapshot, type);
-
-            } else if (startDate != null && endDate != null && new Date(date) >= new Date(startDate) && new Date(date) <= new Date(endDate)) {
-
-                generateTransactionTable(childSnapshot, type);
-
-            } else if (startDate == null && endDate == null) {
-
-                generateTransactionTable(childSnapshot, type);
+            } else if (startDate == null && endDate == null && (type === 'all' || type === transactionType)) {
+                transactionCount++;
+                generateTransactionTable(childSnapshot);
 
             }
 
+            if (transactionCount === 0) {
+                const tableBody = document.getElementById('transaction_table');
+                const noRecordsRowInfo = '<tr id="no_records_row"><td colspan="9" class="text-center text-muted">暂无记录</td></tr>';
+                tableBody.innerHTML = noRecordsRowInfo;
+            } else {
+                const noRecordsRow = document.getElementById('no_records_row');
+                if (noRecordsRow) {
+                    noRecordsRow.remove();
+                }
+            }
         });
     });
-
 }
 
 
@@ -80,25 +103,36 @@ function searchTransactionByIdAndDate(memberId, startDate, endDate, type) {
         } else {
 
             snapshot.forEach(function (childSnapshot) {
-
+                var transactionCount = 0;
                 var date = childSnapshot.child("date").val();
 
-                if (startDate != null && endDate == null && new Date(date) >= new Date(startDate)) {
+                if (startDate != null && endDate == null && new Date(date) >= new Date(startDate) && (type === 'all' || type === transactionType)) {
+                    transactionCount++;
+                    generateTransactionTable(childSnapshot);
 
-                    generateTransactionTable(childSnapshot, type);
+                } else if (startDate == null && endDate != null && new Date(date) <= new Date(endDate) && (type === 'all' || type === transactionType)) {
+                    transactionCount++;
+                    generateTransactionTable(childSnapshot);
 
-                } else if (startDate == null && endDate != null && new Date(date) <= new Date(endDate)) {
+                } else if (startDate != null && endDate != null && new Date(date) >= new Date(startDate) && new Date(date) <= new Date(endDate) && (type === 'all' || type === transactionType)) {
+                    transactionCount++;
+                    generateTransactionTable(childSnapshot);
 
-                    generateTransactionTable(childSnapshot, type);
+                } else if (startDate == null && endDate == null && (type === 'all' || type === transactionType)) {
+                    transactionCount++;
+                    generateTransactionTable(childSnapshot);
 
-                } else if (startDate != null && endDate != null && new Date(date) >= new Date(startDate) && new Date(date) <= new Date(endDate)) {
+                }
 
-                    generateTransactionTable(childSnapshot, type);
-
-                } else if (startDate == null && endDate == null) {
-
-                    generateTransactionTable(childSnapshot, type);
-
+                if (transactionCount === 0) {
+                    const tableBody = document.getElementById('transaction_table');
+                    const noRecordsRowInfo = '<tr id="no_records_row"><td colspan="9" class="text-center text-muted">暂无记录</td></tr>';
+                    tableBody.innerHTML = noRecordsRowInfo;
+                } else {
+                    const noRecordsRow = document.getElementById('no_records_row');
+                    if (noRecordsRow) {
+                        noRecordsRow.remove();
+                    }
                 }
 
             });
@@ -109,7 +143,7 @@ function searchTransactionByIdAndDate(memberId, startDate, endDate, type) {
 
 }
 
-function generateTransactionTable(data, type) {
+function generateTransactionTable(data) {
 
     var table = document.getElementById('transaction_table');
     var transactionId = data.key;
@@ -117,7 +151,7 @@ function generateTransactionTable(data, type) {
     var memberId = data.child("memberId").val();
     var transactionDate = data.child("date").val();
     var transactionType = data.child("type").val();
-    var transactionAmount = data.child("amount").val();
+    var transactionAmount = parseFloat(data.child("amount").val()) || 0; // Ensure amount is a number
     var memberRemainingBalance = data.child("memberRemainingBalance").val();
     var transactionStatus = data.child("status").val();
     var transactionNote = data.child("note").val();
@@ -138,27 +172,39 @@ function generateTransactionTable(data, type) {
 
     memberInfoLookUpTable(memberId).then(function (memberInfo) {
 
-        if (type === 'all' || type === transactionType) {
-            if (transactionNote === null || transactionNote === '') {
-                transactionNote = '未备注';
-            } else {
-                transactionNote = '<i class="fa fa-search" onclick=checkTransactionNoteDetail("' + transactionId + '")>查看备注</i>'
-            }
-            var row = '<tr>' +
-                '<td>' + transactionId + '</td>' +
-                '<td>' + memberId + '</td>' +
-                '<td>' + memberInfo.child('memberPetName').val() + '</td>' +
-                '<td>' + transactionDate + '</td>' +
-                '<td>' + transactionTypeConv + '</td>' +
-                '<td>$' + transactionAmount + '</td>' +
-                '<td>$' + memberRemainingBalance + '</td>' +
-                '<td>' + transactionStatusConv + '</td>' +
-                '<td>' + transactionNote + '</td>' +
-                '</tr>';
-            table.innerHTML += row;
+        if (transactionNote === null || transactionNote === '') {
+            transactionNote = '未备注';
+        } else {
+            transactionNote = '<i class="fa fa-search" onclick=checkTransactionNoteDetail("' + transactionId + '")>查看备注</i>'
         }
-    });
+        var row = '<tr>' +
+            '<td>' + transactionId + '</td>' +
+            '<td>' + memberId + '</td>' +
+            '<td>' + memberInfo.child('memberPetName').val() + '</td>' +
+            '<td>' + transactionDate + '</td>' +
+            '<td>' + transactionTypeConv + '</td>' +
+            '<td>$' + transactionAmount.toFixed(2) + '</td>' +
+            '<td>$' + memberRemainingBalance + '</td>' +
+            '<td>' + transactionStatusConv + '</td>' +
+            '<td>' + transactionNote + '</td>' +
+            '</tr>';
+        table.innerHTML += row;
 
+        // Update totals based on transaction type
+        if (transactionType === 'spendCredit') {
+            totalSpend += transactionAmount;
+        } else if (transactionType === 'newMember') {
+            totalNewMember += transactionAmount;
+        } else if (transactionType === 'addCredit') {
+            totalAddCredit += transactionAmount;
+        }
+
+        // Update the footer with the totals
+        document.getElementById('total_spend').textContent = `$${totalSpend.toFixed(2)}`;
+        document.getElementById('total_new_member').textContent = `$${totalNewMember.toFixed(2)}`;
+        document.getElementById('total_add_credit').textContent = `$${totalAddCredit.toFixed(2)}`;
+
+    });
 }
 
 function checkTransactionNoteDetail(transactionId) {

@@ -126,7 +126,21 @@
                                 <th>备注</th>
                             </tr>
                         </thead>
-                        <tbody id="transaction_table"></tbody>
+                        <tbody id="transaction_table">
+                            <tr id="no_records_row">
+                                <td colspan="9" class="text-center text-muted">暂无记录</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr style="border-top: 2px solid #000;">
+                                <td colspan="2" ><strong>总消费金额:</strong></td>
+                                <td id="total_spend" colspan="1" >0</td>
+                                <td colspan="2"><strong>总开户金额:</strong></td>
+                                <td id="total_new_member" colspan="1">0</td>
+                                <td colspan="2""><strong>总充值金额:</strong></td>
+                                <td id="total_add_credit" colspan="1">0</td>
+                            </tr>
+                        </tfoot>
                     </table>
 
                 </div>

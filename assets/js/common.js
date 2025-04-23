@@ -392,9 +392,6 @@ function generateNavigation(id) {
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto">
                         <div class="hori-selector"><div class="left"></div><div class="right"></div></div>
-                        <li id="navHome" class="nav-item">
-                            <a class="nav-link" href="./home.html">Overview</a>
-                        </li>
                         <li id="navVip" class="nav-item">
                             <a class="nav-link" href="./membermanagement.html">VIP Management</a>
                         </li>
@@ -431,9 +428,6 @@ function generateNavigation(id) {
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ml-auto">
                             <div class="hori-selector"><div class="left"></div><div class="right"></div></div>
-                            <li id="navHome" class="nav-item">
-                                <a class="nav-link" href="./home.html">Overview</a>
-                            </li>
                             <li id="navVip" class="nav-item">
                                 <a class="nav-link" href="./membermanagement.html">VIP Management</a>
                             </li>

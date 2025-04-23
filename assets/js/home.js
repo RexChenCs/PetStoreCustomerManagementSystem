@@ -46,6 +46,7 @@ function readMembershipOverviewTable() {
         // clear up old data to reduce duplication
         // table.innerHTML = '<tr class="header"> <th style="width:20%;">宠物名</th><th style="width:20%;">会员号</th><th style="width:20%;">电话</th> <th style="width:20%;">会员折扣</th> <th style="width:20%;">余额</th></tr>';
         table.innerHTML =null;
+        var total=0;
         snapshot.forEach(function (childSnapshot) {
             var table = document.getElementById('membershipOverviewTableBody');
             var data = childSnapshot;
@@ -55,7 +56,7 @@ function readMembershipOverviewTable() {
             var memberDiscountRate = data.child("memberDiscountRate").val();
             var memberBalance = data.child("memberBalance").val();
             var memberId = data.key;
-
+            total = total+Number(data.child("memberBalance").val());
 
             var row = '<tr>' +
                 '<td>' + memberPetName + '</td>' +
@@ -67,6 +68,7 @@ function readMembershipOverviewTable() {
             table.innerHTML += row;
 
         });
+        alert(total);
         navBar();
     });
 }

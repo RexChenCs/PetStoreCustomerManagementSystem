@@ -1,14 +1,16 @@
 //////////////////////////////////////////////////////////---------LOGIN/REGISTER---------/////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 firebase.auth().onAuthStateChanged(function (user) {
-    if (user === null && (window.location == authDomain + "/layouts/home.html" ||
+    if (user === null && (
+        // window.location == authDomain + "/layouts/home.html" ||
         window.location == authDomain + "/layouts/transactionreview.html" ||
         window.location == authDomain + "/layouts/membermanagement.html" ||
         window.location == authDomain + "/layouts/tools.html" ||
         window.location == authDomain + "/layouts/export.html" ||
         window.location == authDomain + "/layouts/admin.html")) {
         window.location.href = authDomain + "/index.html";
-    } else if (window.location == authDomain + "/layouts/home.html" ||
+    } else if (
+        // window.location == authDomain + "/layouts/home.html" ||
         window.location == authDomain + "/layouts/transactionreview.html" ||
         window.location == authDomain + "/layouts/membermanagement.html" ||
         window.location == authDomain + "/layouts/export.html" ||
@@ -19,11 +21,11 @@ firebase.auth().onAuthStateChanged(function (user) {
                 var isAdmin = snapshot.child('isAdmin').val();
                 var accessForAdminSection = snapshot.child('accessGroup').child('adminSectionForReview').val();
                 if ((accessForAdminSection !== "true" && isAdmin !== 'true') && window.location == authDomain + "/layouts/admin.html") {
-                    window.location.href = authDomain + "/layouts/home.html";
+                    window.location.href = authDomain + "/layouts/membermanagement.html";
                 }
             } else {
                 if (window.location == authDomain + "/layouts/admin.html") {
-                    window.location.href = authDomain + "/layouts/home.html";
+                    window.location.href = authDomain + "/layouts/membermanagement.html";
                 }
             }
         });
@@ -89,7 +91,7 @@ function login() {
                                         showConfirmButton: false,
                                         timer: 1500
                                     }).then(function () {
-                                        window.location.href = authDomain + "/layouts/home.html";
+                                        window.location.href = authDomain + "/layouts/membermanagement.html";
                                     });
                                 } else{
                                     firebase.auth().signOut();
